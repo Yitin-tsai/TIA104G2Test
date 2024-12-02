@@ -24,4 +24,10 @@ public class PokemonVO {
 	public void setPokeName(String pokeName) {
 		PokeName = pokeName;
 	}
+	
+	public int addattackpower() {
+		public int adpower;
+		public int appower;
+		
+	}
 }
