@@ -32,6 +32,7 @@ async function initMap() {
   const {Map} = await google.maps.importLibrary("maps");
 
   center = { lat: 35.689381,lng: 139.69181, };
+  console.log(center);
   map = new Map(document.getElementById("map"), {
     center: center,
     zoom: 14,
@@ -75,7 +76,7 @@ async function findPlaces() {
       console.log(places);
       
       const { LatLngBounds } = await google.maps.importLibrary("core");
-      const bounds = new LatLngBounds();
+      let bounds = new LatLngBounds();
   
       // 循環並顯示每個搜尋到的地點
       places.forEach((place) => {
@@ -149,11 +150,19 @@ async function findPlaces() {
 
         // 將這個地點的HTML元素添加到搜尋結果區域
         resultsContainer.appendChild(placeElement);
+        console.log(place.location.lat());
+        localStorage.lat = place.location.lat();
+        localStorage.lng =  place.location.lng();
+        
+        
       });
   
       // 調整地圖視野到所有標記的中心
+     
+     
+     
+      map.setCenter(bounds.getCenter());    
       
-      map.setCenter(bounds.getCenter());
       } else {
         resultsContainer.innerHTML = "<p>未找到任何結果。</p>";
       }
@@ -161,6 +170,7 @@ async function findPlaces() {
 }
 async function nearbySearch() {
   //@ts-ignore
+  
   const resultsContainer = document.getElementById("searchResults");
   const {Map} = await google.maps.importLibrary("maps");
   const { Place, SearchNearbyRankPreference } = await google.maps.importLibrary(
@@ -168,7 +178,15 @@ async function nearbySearch() {
   );
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
    // Restrict within the map viewport.
-  // const center = map.getCenter;
+   const { LatLng } = await google.maps.importLibrary("core");
+   const { LatLngBounds } = await google.maps.importLibrary("core");
+  const newlat = localStorage.lat;
+  const newlng = localStorage.lng;
+  console.log(newlat);
+  console.log(newlng);
+  center = { lat: parseFloat(newlat) ,lng: parseFloat(newlng) };
+  
+  console.log(center)
    const request = {
      // required parameters
      fields: ["displayName", "location", "businessStatus","adrFormatAddress","rating","photos"],
@@ -189,7 +207,7 @@ async function nearbySearch() {
     
     const { LatLngBounds } = await google.maps.importLibrary("core");
     const bounds = new LatLngBounds();
-
+    
     // 循環並顯示每個搜尋到的地點
     places.forEach((place) => {
       const markerView = new AdvancedMarkerElement({
@@ -199,7 +217,7 @@ async function nearbySearch() {
       });
 
       bounds.extend(place.location);
-      console.log(place);
+    
 
       // 創建結果項的HTML
       const placeElement = document.createElement('div');
