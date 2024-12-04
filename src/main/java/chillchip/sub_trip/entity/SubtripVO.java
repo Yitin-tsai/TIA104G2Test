@@ -8,7 +8,7 @@ public class SubtripVO implements Serializable{
 	private Integer subtripid;
 	private Integer tripid;
 	private Integer index;
-	private Clob context;
+	private Clob content;
 	
 	
 	public Integer getSubtripid() {
@@ -35,12 +35,12 @@ public class SubtripVO implements Serializable{
 		this.index = index;
 	}
 
-	public Clob getContext() {
-		return context;
+	public Clob getContent() {
+		return content;
 	}
 
-	public void setContect(Clob context) {
-		this.context = context;
+	public void setContect(Clob content) {
+		this.content = content;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class SubtripVO implements Serializable{
 				.append("subtripid=").append(subtripid)
 				.append(",tripid=").append(tripid)
 				.append(",index=").append(index)
-				.append(",context=").append(context)
+				.append(",content=").append(content)
 				.append("]").toString();
 				}
 }

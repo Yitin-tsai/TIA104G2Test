@@ -25,11 +25,11 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	private String userid = "root";
 	private String passwd = "123456";
 
-	private static final String INSERT_STMT = "INSERT INTO location (address,creat_time, comments_number, score, location_name) VALUES (?,?,?,?,?);";
-	private static final String GET_ALL_STMT = "SELECT location_id,address, creat_time, comments_number ,score, location_name FROM location order by location_id";
-	private static final String GET_ONE_STMT = "SELECT location_id,address, creat_time, comments_number ,score, location_name, FROM location WHERE location_id=?";
+	private static final String INSERT_STMT = "INSERT INTO location (address,create_time, comments_number, score, location_name) VALUES (?,?,?,?,?);";
+	private static final String GET_ALL_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location order by location_id";
+	private static final String GET_ONE_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name, FROM location WHERE location_id=?";
 	private static final String DELETE = "DELETE FROM location where location_id=?";
-	private static final String UPDATE = "UPDATE location set address=?, creat_time=?, comments_number=?, score=?, account_status=?, nick_name=? where location_id = ?";
+	private static final String UPDATE = "UPDATE location set address=?, create_time=?, comments_number=?, score=?, account_status=?, nick_name=? where location_id = ?";
 
 	public LocationDAOImplJDBC() {
 
@@ -98,7 +98,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 				LocationVO LocationVO = new LocationVO();
 				LocationVO.setLocationid(rs.getInt("Location_id"));
 				LocationVO.setAddress(rs.getString("address"));
-				LocationVO.setCreate_time(rs.getString("creat_time"));
+				LocationVO.setCreate_time(rs.getString("create_time"));
 				LocationVO.setComments_number(rs.getString("comments_number"));
 				LocationVO.setScore(rs.getString("score"));
 				LocationVO.setLocation_name(rs.getString("location_name"));
@@ -121,7 +121,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 					LocationVO = new LocationVO();
 					LocationVO.setLocationid(rs.getInt("Location_id"));
 					LocationVO.setAddress(rs.getString("address"));
-					LocationVO.setCreate_time(rs.getString("creat_time"));
+					LocationVO.setCreate_time(rs.getString("create_time"));
 					LocationVO.setComments_number(rs.getString("comments_number"));
 					LocationVO.setScore(rs.getString("score"));
 					LocationVO.setLocation_name(rs.getString("location_name"));
