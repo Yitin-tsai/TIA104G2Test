@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import chillchip.location.entity.LocationVO;
 
@@ -103,6 +105,31 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 				LocationVO.setScore(rs.getString("score"));
 				LocationVO.setLocation_name(rs.getString("location_name"));
 				list.add(LocationVO);
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+		}
+		return list;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getAllPro() {
+		List<Map<String, Object>> list = new ArrayList<>();
+		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALL_STMT);
+				ResultSet rs = pstmt.executeQuery()) {
+
+			while (rs.next()) {
+				
+				Map<String,Object> map = new HashMap<>();
+				
+				map.put("Location_id", rs.getInt("Location_id"));
+				map.put("address", rs.getString("address"));
+				map.put("create_time", rs.getString("create_time"));
+				map.put("comments_number", rs.getString("comments_number"));
+				map.put("score", rs.getString("score"));
+				map.put("location_name", rs.getString("location_name"));
+				list.add(map);
 			}
 
 		} catch (SQLException se) {
