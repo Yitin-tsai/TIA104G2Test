@@ -89,6 +89,7 @@ public class AdminServlet extends HttpServlet {
 				String url = "/admin/update_admin_input.jsp";
 				RequestDispatcher succesView = req.getRequestDispatcher(url);
 				succesView.forward(req, res);
+				break;
 				
 			}
 			case "update":
@@ -188,7 +189,7 @@ public class AdminServlet extends HttpServlet {
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
 				
-				
+				break;
 			}
 			case"insert":
 			{
@@ -197,7 +198,7 @@ public class AdminServlet extends HttpServlet {
 				// send the ErrorPage view.
 				req.setAttribute("errorMsgs", errorMsgs);
 				
-//				Integer adminid = Integer.valueOf(req.getParameter("adminid").trim());
+				
 				
 				String adminaccount = req.getParameter("adminaccount");
 				String adminacReg =  "^[(a-zA-Z0-9_)]{5,20}$";
@@ -232,7 +233,7 @@ public class AdminServlet extends HttpServlet {
 					errorMsgs.add("管理員名稱只能是中、英文字母、數字和_ , 且長度必需在2到20之間");
 				}
 				
-				String phone = req.getParameter("adminname");
+				String phone = req.getParameter("phone");
 				String phoneReg = "^[((0-9_)]{9,13}$";
 				if(phone==null||phone.trim().length() ==0) {
 					errorMsgs.add("電話號碼請勿空白");
@@ -277,6 +278,8 @@ public class AdminServlet extends HttpServlet {
 				String url = "/admin/listAllAdmin.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url);
 				successView.forward(req, res);
+				
+				break;
 
 			}	
 			
@@ -297,7 +300,7 @@ public class AdminServlet extends HttpServlet {
 				
 				
 				
-				
+				break;
 			}
 			
 			

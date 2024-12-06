@@ -44,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
 		adminVO.setPhone(phone);
 		adminVO.setStatus(status);
 		adminVO.setAdminnickname(adminnickname);
-		dao.insert(adminVO);
+		dao.update(adminVO);
 
 		return adminVO;
 	}
