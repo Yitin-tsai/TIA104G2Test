@@ -21,6 +21,7 @@ public class SubtripDAOImplJDBC {
 	private static final String GET_ONE_STMT = "SELECT sub_trip_id, trip_id, index, content FROM sub_trip where sub_trip_id=?";
 	private static final String DELETE = "DELETE FROM sub_trip where sub_trip_id=?";
 	private static final String UPDATE = "UPDATE sub_trip set trip_id=?, index=?, content=? where sub_trip_id=?";
+
 	
 	public SubtripDAOImplJDBC() {
 		
@@ -35,6 +36,7 @@ public class SubtripDAOImplJDBC {
 	private Connection getConnection() {
 		return this.connection;
 	}
+
 	
 	
 	
