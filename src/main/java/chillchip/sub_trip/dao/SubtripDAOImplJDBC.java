@@ -1,6 +1,8 @@
 package chillchip.sub_trip.dao;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class SubtripDAOImplJDBC {
 	
@@ -21,7 +23,20 @@ public class SubtripDAOImplJDBC {
 	private static final String UPDATE = "UPDATE sub_trip set trip_id=?, index=?, content=? where sub_trip_id=?";
 
 	
+	public SubtripDAOImplJDBC() {
+		
+		try {
+			Class.forName(driver);
+			this.connection = DriverManager.getConnection(url, userid, passwd);
+			} catch (ClassNotFoundException | SQLException e) {
+				throw new RuntimeException("Couldn't load database driver or connect to database." + e.getMessage());
+			}
+	}
 	
+	private Connection getConnection() {
+		return this.connection;
+	}
+
 	
 	
 	
