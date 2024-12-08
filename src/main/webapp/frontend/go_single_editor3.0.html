@@ -54,11 +54,24 @@
     <link href="css/yuki_style.css" rel="stylesheet" />
 
     <style>
+      .editor_top_container {
+        box-sizing: border-box;
+        width: 100%; /* 確保編輯器頂部容器佔滿整個頁面 */
+        margin: 0;
+        padding: 0;
+      }
+
       #editor_container {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
         font-family: Arial, "微軟正黑體", sans-serif;
+      }
+
+      .inner_editor_top {
+        height: 100%; /* 保持高度佔滿視窗 */
+        width: 100%; /* 確保寬度佔滿頁面 */
+        /* background-color: #f4f4f4; 可以根據需要啟用背景色 */
       }
 
       #inner_editor_container {
@@ -95,11 +108,26 @@
       }
 
       .breadcrumb-item a:hover {
-        color: #ff6600 !important; /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+        color: coral !important; /* 滑鼠移動到 a 標籤上時顯示為橘色 */
       }
 
       .breadcrumb-item.active {
-        color: #ff6600 !important; /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+        color: coral !important; /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+      }
+
+      .container-fluid {
+        border-top: 1px coral!important;
+        box-sizing: border-box !important;
+        border-bottom: 1px solid #ddd;
+        padding: 20px !important;
+      }
+
+      .list-container {
+        width: 100%;
+        background-color: #ffffff;
+        border-right: 1px solid #e0e0e0;
+        padding: 20px;
+        overflow-y: auto;
       }
 
       .sidebar {
@@ -120,6 +148,7 @@
         margin-bottom: 15px;
         border-bottom: 2px solid #e0e0e0;
       }
+
       .tab {
         flex-grow: 1;
         text-align: center;
@@ -132,9 +161,10 @@
       }
       .tab.active {
         color: #333;
-        border-bottom-color: #007bff;
+        border-bottom-color: coral;
       }
       .tab-content {
+        width: 100%;
         display: none;
       }
       .tab-content.active {
@@ -145,6 +175,28 @@
         flex-wrap: wrap;
         gap: 10px;
       }
+
+      .spot-card-top {
+        width: 250px;
+        height: 300px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+      .spot-card-top img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .spot-card-top .info {
+        padding: 8px;
+        text-align: center;
+      }
+
       .spot-card {
         width: calc(50% - 5px);
         border: 1px solid #ddd;
@@ -163,7 +215,7 @@
       }
       #map-container {
         width: 100%;
-        height: 500px;
+        height: 800px;
         background-color: #f0f0f0;
       }
       .map-search {
@@ -298,11 +350,13 @@
         color: white;
       }
       .publish-btn {
-        background-color: #28a745;
+        background-color: coral;
         color: white;
       }
     </style>
   </head>
+
+
   <body>
     <!------網站header------>
     <div id="app">
@@ -322,7 +376,7 @@
                 id="ChillTrip_logo"
                 src="./img/logo_black.png"
                 alt="Chill Trip"
-                style="width: 150px; height: auto; cursor: pointer;"
+                style="width: 150px; height: auto; cursor: pointer"
               />
             </a>
           </div>
@@ -353,90 +407,166 @@
     </div>
 
     <!------網站Breadcrumb Navigation（麵包屑導航）------>
-      <div class="top-nav">
-        <div aria-label="breadcrumb">
-          <ul class="breadcrumb" id="breadcrumb-nav">
-            <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
-          </ul>
+    <div class="top-nav">
+      <div aria-label="breadcrumb">
+        <ul class="breadcrumb" id="breadcrumb-nav">
+          <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+        </ul>
+      </div>
+    </div>
+
+    <!------行程編輯器------>
+    <div class="container-fluid py-5">
+      <div class="row">
+        <div class="inner_editor_top">
+          <div class="list-container">
+            <div class="tab-container">
+              <div class="tab active" data-tab="itinerary-list">行程列表</div>
+              <div class="tab" data-tab="map-search">地圖搜索</div>
+            </div>
+
+            <div id="itinerary-list" class="tab-content active">
+              <div class="spot-list">
+                <div class="spot-card-top">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
+
+                <div class="spot-card-top">
+                  <img src="/api/placeholder/200/150" alt="故宮博物院" />
+                  <div class="info">
+                    <h4>故宮博物院</h4>
+                    <p>文化 | 歷史景點</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
+
+                <div class="spot-card-top">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
+
+                <div class="spot-card-top">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
+                <!-- 其他景點卡片 -->
+              </div>
+            </div>
+
+            <div id="map-search" class="tab-content">
+              <input type="text" class="map-search" placeholder="搜索地點" />
+              <div id="map-container">
+                <!-- Google Maps 佔位 -->
+                <div style="text-align: center; padding-top: 200px">
+                  <!--Google Maps 載入區域-->
+                  <div class="map-container">
+                    <div class="map" id="map"></div>
+                  </div>
+                </div>
+              </div>
+              <button class="select-btn">確認選取景點</button>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
 
-    <div id="deitor_container">
-      <div id="inner_editor_container">
-        <div class="sidebar">
-          <div class="tab-container">
-            <div class="tab active" data-tab="itinerary-list">行程列表</div>
-            <div class="tab" data-tab="map-search">地圖搜索</div>
-          </div>
+    <!------行程編輯列表------>
+    <div class="container-fluid py-5">
+      <div id="deitor_container">
+        <div id="inner_editor_container">
+          <div class="sidebar">
+            <div class="tab-container">
+              <div class="spot-list">
+                <div class="spot-card">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
 
-          <div id="itinerary-list" class="tab-content active">
-            <div class="spot-list">
-              <div class="spot-card">
-                <img src="/api/placeholder/200/150" alt="台北101" />
-                <div class="info">
-                  <h4>台北101</h4>
-                  <p>商業區 | 觀景台</p>
-                  <label> <input type="checkbox" /> 選擇此景點 </label>
+                <div class="spot-card">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
+
+                <div class="spot-card">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
+                </div>
+
+                <div class="spot-card">
+                  <img src="/api/placeholder/200/150" alt="台北101" />
+                  <div class="info">
+                    <h4>台北101</h4>
+                    <p>商業區 | 觀景台</p>
+                    <label> <input type="checkbox" /> 選擇此景點 </label>
+                  </div>
                 </div>
               </div>
-              <div class="spot-card">
-                <img src="/api/placeholder/200/150" alt="故宮博物院" />
-                <div class="info">
-                  <h4>故宮博物院</h4>
-                  <p>文化 | 歷史景點</p>
-                  <label> <input type="checkbox" /> 選擇此景點 </label>
-                </div>
-              </div>
-              <!-- 其他景點卡片 -->
             </div>
           </div>
 
-          <div id="map-search" class="tab-content">
-            <input type="text" class="map-search" placeholder="搜索地點" />
-            <div id="map-container">
-              <!-- Google Maps 佔位 -->
-              <div style="text-align: center; padding-top: 200px">
-                Google Maps 載入區域
-              </div>
-            </div>
-            <button class="select-btn">確認選取景點</button>
-          </div>
-        </div>
-
-        <div class="main-content">
-          <div class="blog-editor">
-            <input type="text" class="title-input" placeholder="輸入文章標題" />
-
-            <!------文章編輯器------>
-            <div class="summernote-container">
-              <div id="summernote"></div>
-            </div>
-
-            <div class="tag-section">
+          <div class="main-content">
+            <div class="blog-editor">
               <input
                 type="text"
-                class="tag-input"
-                id="tag-input"
-                placeholder="輸入標籤（最多3個）"
+                class="title-input"
+                placeholder="輸入文章標題"
               />
-              <div class="tag-list" id="tag-list">
-                <!-- 動態生成的標籤將出現在這裡 -->
+
+              <!------文章編輯器------>
+              <div class="summernote-container">
+                <div id="summernote"></div>
               </div>
-            </div>
 
-            <div class="privacy-section">
-              <span>文章權限：</span>
-              <select id="privacy-select">
-                <option value="public">公開</option>
-                <option value="private">私人</option>
-              </select>
-            </div>
+              <div class="tag-section">
+                <input
+                  type="text"
+                  class="tag-input"
+                  id="tag-input"
+                  placeholder="輸入標籤（最多3個）"
+                />
+                <div class="tag-list" id="tag-list">
+                  <!-- 動態生成的標籤將出現在這裡 -->
+                </div>
+              </div>
 
-            <div class="action-buttons" style="justify-content: flex-end;">
-              <button class="action-btn draft-btn">儲存草稿</button>
-              <button class="action-btn publish-btn">發佈文章</button>
-            </div>
-            </div>
+              <div class="privacy-section">
+                <span>文章權限：</span>
+                <select id="privacy-select">
+                  <option value="public">公開</option>
+                  <option value="private">私人</option>
+                </select>
+              </div>
+
+              <div class="action-buttons" style="justify-content: flex-end">
+                <button class="action-btn draft-btn">儲存草稿</button>
+                <button class="action-btn publish-btn">發佈文章</button>
+              </div>
             </div>
           </div>
         </div>
@@ -507,19 +637,83 @@
         }
       });
 
-      // 文字樣式處理
-      document.getElementById("bold-btn").addEventListener("click", () => {
-        document.execCommand("bold", false, null);
-      });
+      // Google Maps 邏輯
 
-      document.getElementById("italic-btn").addEventListener("click", () => {
-        document.execCommand("italic", false, null);
-      });
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 8,
+        });
 
-      document.getElementById("subtitle-btn").addEventListener("click", () => {
-        document.execCommand("formatBlock", false, "h2");
-      });
+        const searchBox = new google.maps.places.SearchBox(
+          document.getElementById("search-box")
+        );
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+          document.getElementById("search-box")
+        );
+
+        searchBox.addListener("places_changed", function () {
+          const places = searchBox.getPlaces();
+          if (places.length == 0) {
+            return;
+          }
+
+          const bounds = new google.maps.LatLngBounds();
+          places.forEach(function (place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+
+            if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });
+      }
+
+      document
+        .getElementById("bold-btn")
+        .addEventListener("click", function () {
+          document.execCommand("bold");
+        });
+
+      document
+        .getElementById("italic-btn")
+        .addEventListener("click", function () {
+          document.execCommand("italic");
+        });
+
+      document
+        .getElementById("save-draft-btn")
+        .addEventListener("click", function () {
+          const title = document.getElementById("article-title").value;
+          const content = document.getElementById("article-content").value;
+          const keywords = document.getElementById("keywords").value;
+          const privacy = document.getElementById("article-privacy").value;
+          // 儲存草稿邏輯
+          console.log("儲存草稿", { title, content, keywords, privacy });
+        });
+
+      document
+        .getElementById("publish-btn")
+        .addEventListener("click", function () {
+          const title = document.getElementById("article-title").value;
+          const content = document.getElementById("article-content").value;
+          const keywords = document.getElementById("keywords").value;
+          const privacy = document.getElementById("article-privacy").value;
+          // 發佈文章邏輯
+          console.log("發佈文章", { title, content, keywords, privacy });
+        });
     </script>
+    <script
+      type="module"
+      src="https://unpkg.com/@googlemaps/extended-component-library@0.6"
+    ></script>
+    <script src="./js/map.js"></script>
     <script src="js/nav.js"></script>
   </body>
 </html>
