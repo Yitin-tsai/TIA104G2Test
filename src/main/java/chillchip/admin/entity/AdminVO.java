@@ -2,6 +2,7 @@ package chillchip.admin.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -44,13 +45,13 @@ public class AdminVO implements Serializable {
 	private Integer status;
 
 	@Column(name = "create_time", updatable = false)
-	private Date createtime;
+	private Timestamp createtime;
 
 	@Column(name = "nick_name")
 	private String adminnickname;
 	
-	@OneToMany(mappedBy = "adminVO" , cascade = CascadeType.ALL)
-	@OrderBy("announcementid asc")
+	@OneToMany(mappedBy = "adminvo" , cascade = CascadeType.ALL)
+	@OrderBy("announceid asc")
 	private Set<AnnounceVO> announces;
 
 	public Integer getAdminid() {
@@ -109,14 +110,14 @@ public class AdminVO implements Serializable {
 		this.status = status;
 	}
 
-	public Date getCreatetime() {
+	public Timestamp getCreatetime() {
 		return createtime;
 	}
 
-	public void setCreatetime(Date createtime) {
+	public void setCreatetime(Timestamp createtime) {
 		java.util.Date now = new java.util.Date();
 		long longnow = now.getTime();
-		java.sql.Date today = new java.sql.Date(longnow);
+		Timestamp today = new java.sql.Timestamp(longnow);
 	     if (createtime == null) {
 	            this.createtime = today;
 	        } else {

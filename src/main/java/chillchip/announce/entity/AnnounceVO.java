@@ -5,17 +5,22 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import chillchip.admin.entity.AdminVO;
 
 @Entity
+
 @Table(name = "announcement")
 public class AnnounceVO {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "announcement_id", updatable = false)
 	private Integer announceid;
 	
@@ -24,9 +29,11 @@ public class AnnounceVO {
 	private AdminVO adminvo;
 	
 	@Column(name = "title")
+	@Lob
 	private String  title;
 	
 	@Column(name = "content")
+	@Lob
 	private String  content;
 	
 	@Column(name = "start_time")
@@ -36,7 +43,11 @@ public class AnnounceVO {
 	private Date endtime;
 	
 	@Column(name = "cover_photo")
+	@Lob
 	private byte[] coverphoto;
+	
+	
+	
 	public Integer getAnnounceid() {
 		return announceid;
 	}
@@ -86,7 +97,7 @@ public class AnnounceVO {
 				+ content + ", starttime=" + starttime + ", endtime=" + endtime + ", coverphoto="
 				+ Arrays.toString(coverphoto) + "]";
 	}
-	
+
 
 	
 
