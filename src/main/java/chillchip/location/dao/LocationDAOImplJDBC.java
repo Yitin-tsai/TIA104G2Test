@@ -13,10 +13,10 @@ import java.util.Map;
 import chillchip.location.entity.LocationVO;
 
 public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
-	
+
 	// 屬性建立用private，因為只有這個類別會用到
 	// 建議資料庫連線字串設定在外部設定檔，這裡只是為了方便範例，所以直接寫在程式碼中(不然每次都要寫相同字串搞人)
-    // 建議userid和passwd也設定在外部設定檔，這裡只是為了方便範例，所以直接寫在程式碼中(不然每次都要寫相同字串搞人)
+	// 建議userid和passwd也設定在外部設定檔，這裡只是為了方便範例，所以直接寫在程式碼中(不然每次都要寫相同字串搞人)
 	// 這裡沒有使用finally關閉連線，是因為這裡使用了AutoCloseable，所以在try-with-resources中使用，會自動關閉連線
 	// PreparedStatement、ResultSet也是AutoCloseable，所以也會自動關閉
 	// LocationDAOImplJDBC自己本身也是AutoCloseable，所以在try-with-resources中使用，會自動關閉
@@ -29,9 +29,10 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
 	private static final String INSERT_STMT = "INSERT INTO location (address,create_time, comments_number, score, location_name) VALUES (?,?,?,?,?);";
 	private static final String GET_ALL_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location order by location_id";
-	private static final String GET_ONE_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name, FROM location WHERE location_id=?";
+	private static final String GET_ONE_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location WHERE location_id=?";
+	private static final String GET_BY_LOCATION_NAME_STMT = "SELECT location_id, address, create_time, comments_number ,score, location_name FROM location WHERE location_name =?";
 	private static final String DELETE = "DELETE FROM location where location_id=?";
-	private static final String UPDATE = "UPDATE location set address=?, create_time=?, comments_number=?, score=?, account_status=?, nick_name=? where location_id = ?";
+	private static final String UPDATE = "UPDATE location set address=?, create_time=?, comments_number=?, score=?, location_name=? where location_id = ?";
 
 	public LocationDAOImplJDBC() {
 
@@ -112,7 +113,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> getAllPro() {
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -120,9 +121,9 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 				ResultSet rs = pstmt.executeQuery()) {
 
 			while (rs.next()) {
-				
-				Map<String,Object> map = new HashMap<>();
-				
+
+				Map<String, Object> map = new HashMap<>();
+
 				map.put("Location_id", rs.getInt("Location_id"));
 				map.put("address", rs.getString("address"));
 				map.put("create_time", rs.getString("create_time"));
@@ -159,6 +160,34 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
 		return LocationVO;
+	}
+
+	@Override
+	public List<Map<String, Object>> getByLocationName(String location_name) {
+		List<Map<String, Object>> list = new ArrayList<>();
+		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_LOCATION_NAME_STMT);) {
+			// 設定參數
+			pstmt.setString(1, location_name);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+
+					Map<String, Object> map = new HashMap<>();
+
+					map.put("Location_id", rs.getInt("Location_id"));
+					map.put("address", rs.getString("address"));
+					map.put("create_time", rs.getString("create_time"));
+					map.put("comments_number", rs.getString("comments_number"));
+					map.put("score", rs.getString("score"));
+					map.put("location_name", rs.getString("location_name"));
+					list.add(map);
+				}
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+		}
+		return list;
 	}
 
 	@Override

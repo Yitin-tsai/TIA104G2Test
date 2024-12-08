@@ -18,15 +18,15 @@ public class LocationList extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = res.getWriter();
 
 		String location_name = req.getParameter("location_name");
+
 		if (location_name.trim().length() == 0) {
 			try (LocationDAOImplJDBC builder = new LocationDAOImplJDBC()) {
 				List<Map<String, Object>> locationlist = builder.getAllPro();
 //				out.println(locationlist);
-				
-				//用getallpro把物件拆成 key/value的方式放到表格中
+
+				// 用getallpro把物件拆成 key/value的方式放到表格中
 				StringBuilder tableHtml = new StringBuilder();
 				tableHtml.append("<table border='1'><thead><tr>");
 
@@ -51,7 +51,7 @@ public class LocationList extends HttpServlet {
 
 				res.getWriter().write("<dev id='result'>" + tableHtml.toString() + "</dev>");
 
-				// 方法一：測試把後端資料丟給瀏覽器解析-->瀏覽器不認識list
+				// 方法一：測試把後端資料丟給瀏覽器解析-->瀏覽器不認識list怎麼辦（？）-->只能在後端處理好再丟？
 //				out.println("<div class=table>");
 //				out.println("<table style=font-size:20px;>");
 //				out.println("<tr>");
@@ -83,8 +83,43 @@ public class LocationList extends HttpServlet {
 //				out.println("</script>");
 
 			}
+		} else
+			try {
+				System.out.println(location_name);
+				if (location_name.trim().length() != 0) { // 不為空-->根據查詢條件列出物件
+					try (LocationDAOImplJDBC builder = new LocationDAOImplJDBC()) {
+						List<Map<String, Object>> locationlist = builder.getByLocationName(location_name.trim());
 
-		}
+						StringBuilder tableHtml = new StringBuilder();
+						tableHtml.append("<table border='1'><thead><tr>");
+
+						if (!locationlist.isEmpty()) {
+							Map<String, Object> firstRow = locationlist.get(0);
+							for (String column : firstRow.keySet()) {
+								tableHtml.append("<th>").append(column).append("</th>");
+							}
+							tableHtml.append("</tr></thead><tbody>");
+
+							for (Map<String, Object> row : locationlist) {
+								tableHtml.append("<tr>");
+								for (Object value : row.values()) {
+									tableHtml.append("<td>").append(value).append("</td>");
+								}
+								tableHtml.append("</tr>");
+							}
+							tableHtml.append("</tbody></table>");
+						} else {
+							tableHtml.append("<tr><td colspan='2'>無資料</td></tr></tbody></table>");
+						}
+
+						res.getWriter().write("<dev id='result'>" + tableHtml.toString() + "</dev>");
+
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 //		}
 //		out.println("<HTML>");
