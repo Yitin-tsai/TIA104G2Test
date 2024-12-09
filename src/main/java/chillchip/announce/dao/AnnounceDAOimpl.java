@@ -1,6 +1,5 @@
 package chillchip.announce.dao;
 
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ import chillchip.announce.entity.AnnounceVO;
 import chillchip.util.HibernateUtil;
 
 public class AnnounceDAOimpl implements AnnounceDAO {
-	int  PAGE_MAX_RESULT = 3 ;
+	int PAGE_MAX_RESULT = 3;
 	private SessionFactory factory;
 
 	public AnnounceDAOimpl() {
@@ -54,11 +53,11 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		try {
 			getSession().beginTransaction();
 			getSession().update(annouceVO);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
 		}
-		
+
 	}
 
 	@Override
@@ -68,7 +67,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		try {
 			getSession().beginTransaction();
 			getSession().delete(announceVO);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
 		}
@@ -76,7 +75,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 
 	@Override
 	public List<AnnounceVO> getAll() {
-		// TODO Auto-generated method stub	
+		// TODO Auto-generated method stub
 		getSession().beginTransaction();
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
 	}
@@ -86,11 +85,11 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		if (map.size() == 0)
 			return getAll();
-		
+
 		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<AnnounceVO> criteria = builder.createQuery(AnnounceVO.class);
 		Root<AnnounceVO> root = criteria.from(AnnounceVO.class);
-		
+
 		List<Predicate> predicates = new ArrayList<>();
 		for (Map.Entry<String, String> row : map.entrySet()) {
 			if ("title".equals(row.getKey())) {
@@ -109,7 +108,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 			}
 
 		}
-		
+
 		criteria.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
 		criteria.orderBy(builder.asc(root.get("Announceid")));
 		TypedQuery<AnnounceVO> query = getSession().createQuery(criteria);
@@ -120,27 +119,39 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public List<AnnounceVO> getAll(int currentPage) {
 		int first = (currentPage - 1) * PAGE_MAX_RESULT;
-		return getSession().createQuery("from AnnounceVO", AnnounceVO.class)
-				.setFirstResult(first)
-				.setMaxResults(PAGE_MAX_RESULT)
-				.list();
+		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).setFirstResult(first)
+				.setMaxResults(PAGE_MAX_RESULT).list();
+	}
+
+
+
+	@Override
+	public List<AnnounceVO> getByadminid(Integer adminid) {
+		// TODO Auto-generated method stub
+		Session session = getSession();
+		session.beginTransaction();
+		List<AnnounceVO> list = new ArrayList<AnnounceVO>();
+		AdminVO admin = session.get(AdminVO.class, adminid);
+		for(AnnounceVO a :admin.getAnnounces()) {
+			list.add(a);
+		}
+		
+		return (List)list ;
 	}
 	
-		
 	public static void main(String[] args) {
-		
+
 		AnnounceDAOimpl dao = new AnnounceDAOimpl();
 		java.util.Date now = new java.util.Date();
-		long long1 = now.getTime(); 
+		long long1 = now.getTime();
 		java.sql.Date date1 = new java.sql.Date(long1);
 		AnnounceVO announce = new AnnounceVO();
-		AdminVO et =new AdminVO();
+		AdminVO et = new AdminVO();
 		AdminServiceImpl ser = new AdminServiceImpl();
 		et = ser.getOneAdmin(1);
 		System.out.println(et);
-		
-		
-		//新增
+
+		// 新增
 		announce.setAdminvo(et);
 		announce.setContent("我今天真的好累");
 		announce.setTitle("明天看的到太陽嗎");
@@ -149,11 +160,8 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		announce.setCoverphoto(null);
 		System.out.println(announce);
 		dao.insert(announce);
-	
 		
+		System.out.println(dao.getByadminid(1));
+
 	}
-
 }
-
-
-	

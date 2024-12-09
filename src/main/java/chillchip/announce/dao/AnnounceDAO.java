@@ -13,5 +13,5 @@ public interface AnnounceDAO {
 	public List<AnnounceVO> getAll();
 	public List<AnnounceVO>  getByCompositeQuery(Map<String, String> map);
 	public List<AnnounceVO> getAll(int currentPage);
-
+	public List<AnnounceVO>  getByadminid(Integer adminid);
 }

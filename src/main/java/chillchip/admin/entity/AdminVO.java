@@ -54,6 +54,14 @@ public class AdminVO implements Serializable {
 	@OrderBy("announceid asc")
 	private Set<AnnounceVO> announces;
 
+	public Set<AnnounceVO> getAnnounces() {
+		return announces;
+	}
+
+	public void setAnnounces(Set<AnnounceVO> announces) {
+		this.announces = announces;
+	}
+
 	public Integer getAdminid() {
 		return adminid;
 	}

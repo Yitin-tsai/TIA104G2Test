@@ -98,7 +98,11 @@
 	</tr>
 	<tr>
 		<td>ª¬ºA:</td>
-		<td><input type="TEXT" name="status"  value="<%=adminVO.getStatus()%>" size="45"/></td>
+		 <td>
+        <input type="radio" name="status" value="0" <%= adminVO.getStatus() == 0 ? "checked" : "" %> /> 0
+        <input type="radio" name="status" value="1" <%= adminVO.getStatus() == 1 ? "checked" : "" %> /> 1
+        <input type="radio" name="status" value="2" <%= adminVO.getStatus() == 2 ? "checked" : "" %> /> 2
+    	</td>
 	</tr>
 
 	<jsp:useBean id="adminSvc" scope="page" class="chillchip.admin.service.AdminServiceImpl" />
