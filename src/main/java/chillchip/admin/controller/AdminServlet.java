@@ -121,9 +121,9 @@ public class AdminServlet extends HttpServlet {
 				String email = req.getParameter("email");
 				String emailReg = "^\\w{1,63}@[a-zA-Z0-9]{2,63}\\.[a-zA-Z]{2,63}(\\.[a-zA-Z]{5,50})?$";
 				if(email==null||email.trim().length() ==0) {
-					errorMsgs.add("管理員密碼請勿空白");
+					errorMsgs.add("信箱請勿空白");
 				}else if (!email.trim().matches(emailReg)) {
-					errorMsgs.add("信箱格式不符合");
+					errorMsgs.add("管理員信箱格式不符");
 				}
 				
 				
@@ -198,11 +198,10 @@ public class AdminServlet extends HttpServlet {
 				// send the ErrorPage view.
 				req.setAttribute("errorMsgs", errorMsgs);
 				
-				
-				
+		
 				String adminaccount = req.getParameter("adminaccount");
 				String adminacReg =  "^[(a-zA-Z0-9_)]{5,20}$";
-				if(adminaccount==null||adminaccount.trim().length() ==0) {
+				if(adminaccount==null||adminaccount.trim().length()==0) {
 					errorMsgs.add("管理員帳號請勿空白");
 				}else if (!adminaccount.trim().matches(adminacReg)) {
 					errorMsgs.add("管理員帳號只能是英文字母數字和_，長度需在5~20之間");
@@ -217,11 +216,11 @@ public class AdminServlet extends HttpServlet {
 				}
 
 				String email = req.getParameter("email");
-				String emailReg = "^[(a-zA-Z0-9_)]{5,50}$";
+				String emailReg = "^\\w{1,63}@[a-zA-Z0-9]{2,63}\\.[a-zA-Z]{2,63}(\\.[a-zA-Z]{5,50})?$";
 				if(email==null||email.trim().length() ==0) {
-					errorMsgs.add("管理員密碼請勿空白");
+					errorMsgs.add("管理員信箱請勿空白");
 				}else if (!email.trim().matches(emailReg)) {
-					errorMsgs.add("管理員密碼只能是英文字母數字和_，長度需在5~20之間");
+					errorMsgs.add("管理員信箱格式不符");
 				}
 				
 				
@@ -263,6 +262,7 @@ public class AdminServlet extends HttpServlet {
 				}	
 				
 				AdminVO adminVO = new AdminVO();
+				
 				adminVO.setAdminaccount(adminaccount);
 				adminVO.setAdminpassword(adminpassword);
 				adminVO.setEmail(email);
@@ -270,6 +270,13 @@ public class AdminServlet extends HttpServlet {
 				adminVO.setAdminnickname(adminnickname);
 				adminVO.setPhone(phone);
 				adminVO.setStatus(status);
+				
+				if (!errorMsgs.isEmpty()) {
+					req.setAttribute("adminVO", adminVO);
+					RequestDispatcher failureView = req.getRequestDispatcher("/admin/addAdmin.jsp");
+					failureView.forward(req, res);
+					return; //程式中斷
+				}
 				//開始新增資料
 				AdminServiceImpl adminSvc = new AdminServiceImpl();
 				adminVO = adminSvc.addAdmin(email, adminaccount, adminpassword, adminname, phone, status, adminnickname);

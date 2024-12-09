@@ -97,7 +97,11 @@
 	</tr>
 	<tr>
 		<td>ª¬ºA:</td>
-		<td><input type="TEXT" name="status"  value="<%=(adminVO==null)? "0" : adminVO.getStatus()%>" size="45"/></td>
+		 <td>
+        <input type="radio" name="status" value="0"  checked/> 0
+        <input type="radio" name="status" value="1"   /> 1
+        <input type="radio" name="status" value="2"   /> 2
+    	</td>
 	</tr>
 
 </table>
