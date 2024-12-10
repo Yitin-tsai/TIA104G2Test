@@ -1,5 +1,5 @@
-<%@page import="chillchip.admin.entity.AdminVO"%>
-<%@page import="chillchip.admin.service.AdminServiceImpl"%>
+<%@page import="chillchip.admin.model.AdminVO"%>
+<%@page import="chillchip.admin.model.AdminService"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.*"%>
@@ -7,7 +7,7 @@
 <%-- 此頁練習採用 EL 的寫法取值 --%>
 
 <%
-    AdminServiceImpl adminSvc = new AdminServiceImpl();
+AdminService adminSvc = new AdminService();
     List<AdminVO> list = adminSvc.getAll();
     pageContext.setAttribute("list",list);
 %>

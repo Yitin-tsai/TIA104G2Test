@@ -60,7 +60,7 @@
     </FORM>
   </li>
 
-  <jsp:useBean id="adminSvc" scope="page" class="chillchip.admin.service.AdminServiceImpl" />
+  <jsp:useBean id="adminSvc" scope="page" class="chillchip.admin.model.AdminService" />
    
   <li>
      <FORM METHOD="post" ACTION="admin.do" >

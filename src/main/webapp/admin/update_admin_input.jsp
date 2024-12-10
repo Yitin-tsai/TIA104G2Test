@@ -1,4 +1,4 @@
-<%@page import="chillchip.admin.entity.AdminVO"%>
+<%@page import="chillchip.admin.model.AdminVO"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="chillchip.admin.*"%>
@@ -105,7 +105,7 @@
     	</td>
 	</tr>
 
-	<jsp:useBean id="adminSvc" scope="page" class="chillchip.admin.service.AdminServiceImpl" />
+	<jsp:useBean id="adminSvc" scope="page" class="chillchip.admin.model.AdminService" />
 	
 
 </table>

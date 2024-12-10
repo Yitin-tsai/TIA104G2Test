@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="chillchip.admin.entity.*"%>
+<%@ page import="chillchip.admin.model.*"%>
 
 <% //見com.emp.controller.EmpServlet.java第238行存入req的empVO物件 (此為輸入格式有錯誤時的empVO物件)
  AdminVO adminVO = (AdminVO) request.getAttribute("adminVO");

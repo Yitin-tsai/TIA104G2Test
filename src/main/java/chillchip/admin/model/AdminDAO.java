@@ -1,9 +1,8 @@
-package chillchip.admin.dao;
+package chillchip.admin.model;
 
 import java.util.List;
 
-import chillchip.admin.entity.AdminVO;
-import chillchip.announce.entity.AnnounceVO;
+import chillchip.announce.modal.AnnounceVO;
 
 public interface AdminDAO {
 

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import chillchip.admin.entity.AdminVO;
-import chillchip.admin.service.AdminServiceImpl;
+import chillchip.admin.model.AdminService;
+import chillchip.admin.model.AdminVO;
 
 @WebServlet("/admin/admin.do")
 public class AdminServlet extends HttpServlet {
@@ -58,7 +58,7 @@ public class AdminServlet extends HttpServlet {
 					return;
 				}
 				// 查詢資料
-				AdminServiceImpl adminSvc = new AdminServiceImpl();
+				AdminService adminSvc = new AdminService();
 				AdminVO adminVO = adminSvc.getOneAdmin(adminid);
 				if (adminVO == null) {
 					errorMsgs.add("查無資料");
@@ -82,7 +82,7 @@ public class AdminServlet extends HttpServlet {
 				
 				Integer adminid = Integer.valueOf(req.getParameter("adminid"));
 				
-				AdminServiceImpl adminSvc = new AdminServiceImpl();
+				AdminService adminSvc = new AdminService();
 				AdminVO adminVO = adminSvc.getOneAdmin(adminid);
 				
 				req.setAttribute("adminVO", adminVO);
@@ -181,7 +181,7 @@ public class AdminServlet extends HttpServlet {
 					return; //程式中斷
 				}
 				//開始修改資料
-				AdminServiceImpl adminSvc = new AdminServiceImpl();
+				AdminService adminSvc = new AdminService();
 				adminVO = adminSvc.updateAdmin(adminid, email, adminaccount, adminpassword, adminname, phone, status, adminnickname);
 				//修改完成準備轉交
 				req.setAttribute("adminVO", adminVO);
@@ -278,7 +278,7 @@ public class AdminServlet extends HttpServlet {
 					return; //程式中斷
 				}
 				//開始新增資料
-				AdminServiceImpl adminSvc = new AdminServiceImpl();
+				AdminService adminSvc = new AdminService();
 				adminVO = adminSvc.addAdmin(email, adminaccount, adminpassword, adminname, phone, status, adminnickname);
 				//新增完成準備轉交
 				
@@ -298,7 +298,7 @@ public class AdminServlet extends HttpServlet {
 				//接受請求
 				Integer adminid = Integer.valueOf(req.getParameter("adminid"));
 				//開始刪除
-				AdminServiceImpl adminSvc = new AdminServiceImpl();
+				AdminService adminSvc = new AdminService();
 				adminSvc.deleteAdmin(adminid);;
 				//刪除完成 轉交頁面
 				String url = "/admin/listAllAdmin.jsp";
