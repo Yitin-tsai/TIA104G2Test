@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
-<%@ page import="chillchip.admin.entity.AdminVO"%>
+<%@ page import="chillchip.admin.model.AdminVO"%>
 <%-- 此頁暫練習採用 Script 的寫法取值 --%>
 
 <%

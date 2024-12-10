@@ -1,6 +1,7 @@
-package chillchip.announce.dao;
+package chillchip.announce.modal;
 
 import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +15,13 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import chillchip.admin.entity.AdminVO;
-import chillchip.admin.service.AdminServiceImpl;
-import chillchip.announce.entity.AnnounceVO;
+import chillchip.admin.model.AdminService;
+import chillchip.admin.model.AdminVO;
 import chillchip.util.HibernateUtil;
+import  static chillchip.util.Constants.PAGE_MAX_RESULT;
 
 public class AnnounceDAOimpl implements AnnounceDAO {
-	int PAGE_MAX_RESULT = 3;
+	
 	private SessionFactory factory;
 
 	public AnnounceDAOimpl() {
@@ -122,9 +123,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).setFirstResult(first)
 				.setMaxResults(PAGE_MAX_RESULT).list();
 	}
-
-
-
+	
 	@Override
 	public List<AnnounceVO> getByadminid(Integer adminid) {
 		// TODO Auto-generated method stub
@@ -139,29 +138,34 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		return (List)list ;
 	}
 	
-	public static void main(String[] args) {
-
-		AnnounceDAOimpl dao = new AnnounceDAOimpl();
-		java.util.Date now = new java.util.Date();
-		long long1 = now.getTime();
-		java.sql.Date date1 = new java.sql.Date(long1);
-		AnnounceVO announce = new AnnounceVO();
-		AdminVO et = new AdminVO();
-		AdminServiceImpl ser = new AdminServiceImpl();
-		et = ser.getOneAdmin(1);
-		System.out.println(et);
-
-		// 新增
-		announce.setAdminvo(et);
-		announce.setContent("我今天真的好累");
-		announce.setTitle("明天看的到太陽嗎");
-		announce.setStarttime(date1);
-		announce.setEndtime(date1);
-		announce.setCoverphoto(null);
-		System.out.println(announce);
-		dao.insert(announce);
-		
-		System.out.println(dao.getByadminid(1));
-
+	@Override
+	public long getTotal() {
+		return getSession().createQuery("select count(*) from AnnounceVO", Long.class).uniqueResult();
 	}
+//	public static void main(String[] args) {
+//
+//		AnnounceDAOimpl dao = new AnnounceDAOimpl();
+//		java.util.Date now = new java.util.Date();
+//		long long1 = now.getTime();
+//		java.sql.Date date1 = new java.sql.Date(long1);
+//		AnnounceVO announce = new AnnounceVO();
+//		AdminVO et = new AdminVO();
+//		AdminService ser = new AdminService();
+//		et = ser.getOneAdmin(1);
+//		System.out.println(et);
+//
+//		// 新增
+//		announce.setAdminvo(et);
+//		announce.setContent("我今天真的好累");
+//		announce.setTitle("明天看的到太陽嗎");
+//		announce.setStarttime(date1);
+//		announce.setEndtime(date1);
+//		announce.setCoverphoto(null);
+//		System.out.println(announce);
+//		dao.insert(announce);
+//		
+//		System.out.println(dao.getByadminid(1));
+//
+//	}
+
 }

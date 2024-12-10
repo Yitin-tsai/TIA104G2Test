@@ -1,4 +1,4 @@
-package chillchip.announce.entity;
+package chillchip.announce.modal;
 
 import java.sql.Date;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import chillchip.admin.entity.AdminVO;
+import chillchip.admin.model.AdminVO;
 
 @Entity
 

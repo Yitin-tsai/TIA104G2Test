@@ -1,4 +1,4 @@
-package chillchip.admin.dao;
+package chillchip.admin.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,12 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
-import chillchip.admin.entity.AdminVO;
 
 public class AdminDAOImplJDBC implements AdminDAO {
 	

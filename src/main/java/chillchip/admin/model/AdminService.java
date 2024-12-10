@@ -1,20 +1,16 @@
-package chillchip.admin.service;
+package chillchip.admin.model;
 
 import java.util.List;
 
-import chillchip.admin.dao.AdminDAO;
-import chillchip.admin.dao.AdminDAOImplJDBC;
-import chillchip.admin.entity.AdminVO;
 
-public class AdminServiceImpl implements AdminService {
+public class AdminService  {
 
 	private AdminDAO dao;
 
-	public AdminServiceImpl() {
+	public AdminService() {
 		dao = new AdminDAOImplJDBC();
 	}
 
-	@Override
 	public AdminVO addAdmin(String email, String adminaccount, String adminpassword, String adminname, String phone,
 			Integer status, String adminnickname) {
 		AdminVO adminVO = new AdminVO();
@@ -31,7 +27,7 @@ public class AdminServiceImpl implements AdminService {
 		return adminVO;
 	}
 
-	@Override
+	
 	public AdminVO updateAdmin(Integer adminid, String email, String adminaccount, String adminpassword,
 			String adminname, String phone, Integer status, String adminnickname) {
 		AdminVO adminVO = new AdminVO();
@@ -49,18 +45,18 @@ public class AdminServiceImpl implements AdminService {
 		return adminVO;
 	}
 
-	@Override
+
 	public void deleteAdmin(Integer adminid) {
 		dao.delete(adminid);
 
 	}
 
-	@Override
+
 	public List<AdminVO> getAll() {
 		return dao.getAll();
 	}
 
-	@Override
+	
 	public AdminVO getOneAdmin(Integer adminid) {
 		// TODO Auto-generated method stub
 		return dao.getById(adminid);

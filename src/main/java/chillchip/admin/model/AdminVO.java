@@ -1,4 +1,4 @@
-package chillchip.admin.entity;
+package chillchip.admin.model;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import chillchip.announce.entity.AnnounceVO;
+import chillchip.announce.modal.AnnounceVO;
 
 @Entity
 @Table(name = "administrator")
