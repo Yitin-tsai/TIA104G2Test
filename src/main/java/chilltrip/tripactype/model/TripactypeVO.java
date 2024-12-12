@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -24,11 +25,12 @@ public class TripactypeVO {
 	@Column(name = "event_type_id", updatable = false, insertable = false)
 	private Integer eventtypeid;
 	
+	@Lob
 	@Column(name = "event_content")
 	private String eventcontent;
 	
-	@OneToMany(mappedBy = "eventype", cascade = CascadeType.ALL)
-	@OrderBy("eventtyperelaid asc")
+	@OneToMany(mappedBy = "eventtypeid", cascade = CascadeType.ALL)
+	@OrderBy("eventtypeid asc")
 	private Set<TripactyperelaVO> relationship;
 
 	public Integer getEventtypeid() {
