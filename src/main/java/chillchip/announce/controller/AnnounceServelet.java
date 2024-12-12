@@ -1,7 +1,10 @@
 package chillchip.announce.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,8 +12,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import chillchip.admin.model.AdminService;
+import chillchip.admin.model.AdminDAO;
+import chillchip.admin.model.AdminDAOImplJDBC;
+import chillchip.admin.model.AdminVO;
 import chillchip.announce.modal.AnnounceService;
 import chillchip.announce.modal.AnnounceVO;
 
@@ -47,9 +53,6 @@ public class AnnounceServelet extends HttpServlet {
 			case"compositeQuery":
 				forwardPath = getCompositeQuery(req,res);
 				break;
-			case"getOneUpdate":	
-				forwardPath = getOneUpdate(req,res);
-				break;
 			case"upadate":
 				forwardPath = update(req,res);
 				break;
@@ -58,6 +61,7 @@ public class AnnounceServelet extends HttpServlet {
 		RequestDispatcher dispatcher = req.getRequestDispatcher(forwardPath);
 		dispatcher.forward(req, res);
 	}
+	
 	
 	private String getAllAnnounce(HttpServletRequest req, HttpServletResponse res) {
 		String page = req.getParameter("page");
@@ -93,31 +97,77 @@ public class AnnounceServelet extends HttpServlet {
 		announceSvc.deleteannounce(announceid);		
 		return "/announce/listAllAnnounce.jsp";
 	}
-	private String addAnnounce(HttpServletRequest req, HttpServletResponse res) {
+	private String addAnnounce(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		
+		Integer adminid = Integer.valueOf(req.getParameter("adminid"));
+		String title = req.getParameter("title");
+		String content = req.getParameter("content");
+		Date starttime = Date.valueOf(req.getParameter("starttime").trim());
+		Date endtime = Date.valueOf(req.getParameter("endtime").trim());
+		
+		byte[] photo = null; // 初始化圖片資料為 null
+		Part part = req.getPart("photo");
+		InputStream in = part.getInputStream();
+		photo = new byte[in.available()]; // byte[] buf = in.readAllBytes(); // Java 9 的新方法
+		in.read(photo);
+		in.close();
+		
+	    AdminDAO dao = new AdminDAOImplJDBC();
+	    AdminVO  adminvo = dao.getById(adminid);
+		
+		AnnounceVO announce = new AnnounceVO();
+		
+		announce.setAdminvo(adminvo);
+		announce.setContent(content);
+		announce.setTitle(title);
+		announce.setStarttime(starttime);
+		announce.setEndtime(endtime);
+		announce.setCoverphoto(photo);
+		announceSvc.addannounce(announce);
 		
 		
-		
-		
-		return "/announce/AdminAnnounce.jsp";
+		return "/announce/AdminAnnounceList.jsp";
 	}
 	private String getCompositeQuery(HttpServletRequest req, HttpServletResponse res) {
+		Map<String, String[]> map = req.getParameterMap();
 		
-		
-		
-		
-		
+		if (map!= null) {
+			List<AnnounceVO> announceList = announceSvc.getAnnounceByCompositeQuery(map);
+			req.setAttribute("anounceList", announceList);
+		}else {
+			return"/frontend/index.html";
+		}
+					
 		return "/announce/listCompositeQueryAnnounce.jsp";
 	}
-	private String getOneUpdate(HttpServletRequest req, HttpServletResponse res) {
+
+	private String update(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		
+		Integer adminid = Integer.valueOf(req.getParameter("adminid"));
+		String title = req.getParameter("title");
+		String content = req.getParameter("content");
+		Date starttime = Date.valueOf(req.getParameter("starttime").trim());
+		Date endtime = Date.valueOf(req.getParameter("endtime").trim());
 		
+		byte[] photo = null; // 初始化圖片資料為 null
+		Part part = req.getPart("photo");
+		InputStream in = part.getInputStream();
+		photo = new byte[in.available()];
+		in.read(photo);
+		in.close();
 		
+	    AdminDAO dao = new AdminDAOImplJDBC();
+	    AdminVO  adminvo = dao.getById(adminid);
 		
+		AnnounceVO announce = new AnnounceVO();
 		
-		return "/announce/updateAnnounceInput.jsp";
-	}
-	private String update(HttpServletRequest req, HttpServletResponse res) {
-		
+		announce.setAdminvo(adminvo);
+		announce.setContent(content);
+		announce.setTitle(title);
+		announce.setStarttime(starttime);
+		announce.setEndtime(endtime);
+		announce.setCoverphoto(photo);
+		announceSvc.updateannounce(announce);
 		
 		
 		
