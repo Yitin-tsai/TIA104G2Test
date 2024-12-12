@@ -1,4 +1,4 @@
-package chillchip.announce.modal;
+package chillchip.announce.model;
 
 import java.sql.Date;
 import java.util.Arrays;

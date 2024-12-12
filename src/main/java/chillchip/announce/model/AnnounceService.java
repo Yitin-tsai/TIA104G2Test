@@ -1,4 +1,4 @@
-package chillchip.announce.modal;
+package chillchip.announce.model;
 
 import  static chillchip.util.Constants.PAGE_MAX_RESULT;
 
