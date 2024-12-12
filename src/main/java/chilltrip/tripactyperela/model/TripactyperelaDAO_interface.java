@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface TripactyperelaDAO_interface {
 
+	
 	public void insert(TripactyperelaVO tripactyperelaVO);
 	public void update(TripactyperelaVO tripactyperelaVO);
 	public void delete(Integer eventtyperelaid);

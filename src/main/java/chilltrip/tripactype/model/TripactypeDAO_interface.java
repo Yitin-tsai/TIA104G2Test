@@ -2,6 +2,7 @@ package chilltrip.tripactype.model;
 
 import java.util.List;
 
+
 public interface TripactypeDAO_interface {
 	
 	public void insert(TripactypeVO itineraryActivityTypeVO);

@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import chillchip.util.HibernateUtil;
 import chilltrip.tripactype.model.TripactypeVO;
 
+
 public class TripactyperelaDAO implements TripactyperelaDAO_interface{
 	// 每頁最大顯示的結果數量
 	// int PAGE_MAX_RESULT = 3;

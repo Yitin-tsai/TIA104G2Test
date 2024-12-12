@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import chilltrip.tripactype.model.TripactypeVO;
 
+
 @Entity
 @Table(name = "itinerary_activity_type_relationship")
 public class TripactyperelaVO {

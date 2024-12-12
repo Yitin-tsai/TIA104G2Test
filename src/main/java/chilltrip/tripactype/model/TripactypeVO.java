@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import chilltrip.tripactyperela.model.TripactyperelaVO;
 
+
 @Entity
 @Table(name = "itinerary_activity_type")
 public class TripactypeVO {
