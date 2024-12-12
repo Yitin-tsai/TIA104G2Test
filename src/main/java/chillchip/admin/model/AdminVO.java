@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import chillchip.announce.modal.AnnounceVO;
+import chillchip.announce.model.AnnounceVO;
 
 @Entity
 @Table(name = "administrator")

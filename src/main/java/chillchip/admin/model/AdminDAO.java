@@ -2,7 +2,7 @@ package chillchip.admin.model;
 
 import java.util.List;
 
-import chillchip.announce.modal.AnnounceVO;
+import chillchip.announce.model.AnnounceVO;
 
 public interface AdminDAO {
 

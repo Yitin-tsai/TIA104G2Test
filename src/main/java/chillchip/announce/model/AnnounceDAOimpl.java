@@ -1,4 +1,4 @@
-package chillchip.announce.modal;
+package chillchip.announce.model;
 
 import java.sql.Date;
 
@@ -66,7 +66,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		AnnounceVO announceVO = getSession().get(AnnounceVO.class, annouceid);
 		try {
-			getSession().beginTransaction();
+//			getSession().beginTransaction();
 			getSession().delete(announceVO);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,6 +79,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		getSession().beginTransaction();
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
+		
 	}
 
 	@Override
