@@ -20,5 +20,9 @@
 		<mapping class="chillchip.announce.entity.AnnounceVO"/>
 		<mapping class="chillchip.admin.entity.AdminVO"/>
 		
+		
+		
+		<mapping class="chilltrip.tripactyperela.model.tripactyperelaVO"/>
+		<mapping class="chilltrip.tripactype.model.tripactypeVO"/>
 	</session-factory>
 </hibernate-configuration>
