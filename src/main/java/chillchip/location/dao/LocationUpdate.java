@@ -31,7 +31,6 @@ public class LocationUpdate extends HttpServlet {
 		LocationVO location = new LocationVO();
 		location.setLocationid(location_id);
 		location.setAddress(address);
-		location.setCreate_time(create_time);
 		location.setComments_number(comments_number);
 		location.setScore(score);
 		location.setLocation_name(location_name);
