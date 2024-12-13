@@ -3,14 +3,20 @@ package chilltrip.member.model;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import chilltrip.locationcomment.model.LocationCommentVO;
 
 @Entity
 
@@ -69,6 +75,11 @@ public class MemberVO {
 	@Column(name = "photo")
 	@Lob
 	private byte[] photo;
+	
+	
+	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<LocationCommentVO> locationComment;
 	
 	public Integer getMemberId() {
 		return memberId;
