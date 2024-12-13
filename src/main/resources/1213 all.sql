@@ -1,6 +1,5 @@
 CREATE DATABASE IF NOT EXISTS tia104g2;
 
-
 USE tia104g2;
 
 drop table IF EXISTS member;
