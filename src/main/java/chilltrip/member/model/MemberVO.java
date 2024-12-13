@@ -183,6 +183,12 @@ public class MemberVO {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
+	public Set<LocationCommentVO> getLocationComment() {
+		return locationComment;
+	}
+	public void setLocationComment(Set<LocationCommentVO> locationComment) {
+		this.locationComment = locationComment;
+	}
 	@Override
 	public String toString() {
 		return "MemberVO [memberId=" + memberId + ", email=" + email + ", account=" + account + ", password=" + password

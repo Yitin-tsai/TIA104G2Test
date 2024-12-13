@@ -24,8 +24,8 @@ public class LocationInsert extends HttpServlet {
 
 		Integer location_id = Integer.valueOf(req.getParameter("location_id"));
 		String address = req.getParameter("address");
-		String comments_number = req.getParameter("comments_number");
-		String score = req.getParameter("score");
+		Integer comments_number = Integer.valueOf(req.getParameter("comments_number"));
+		Float score = Float.valueOf(req.getParameter("score"));
 		String location_name = req.getParameter("location_name");
 
 //		System.out.println(location_id+address+create_time+comments_number+score+location_name);
