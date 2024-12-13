@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS TIA104G2;
+CREATE DATABASE IF NOT EXISTS tia104g2;
 
-USE TIA104G2;
+USE tia104g2;
 
 drop table IF EXISTS member;
 drop table IF EXISTS administrator;
@@ -18,6 +18,7 @@ drop table IF EXISTS itinerary_activity_type_relationship;
 drop table IF EXISTS trip_comment;
 drop table IF EXISTS trip_location_relation;
 drop table IF EXISTS trip_photo;
+drop table IF EXISTS traffic_type;
 
 -- 平台方 --
 CREATE TABLE administrator (
@@ -55,6 +56,7 @@ E_receipt_carrier	VARCHAR(20) COMMENT '手機載具',
 credit_card         VARCHAR(19) COMMENT '信用卡號',
 tracking_number     INT(10) COMMENT '追蹤數',
 fans_number         INT(10) COMMENT '粉絲數',
+photo               LONGBLOB COMMENT '照片',
 CONSTRAINT pk_member_id PRIMARY KEY (member_id),
 CONSTRAINT uk_email UNIQUE (email),
 CONSTRAINT uk_account UNIQUE (account),
@@ -70,7 +72,7 @@ CONSTRAINT uk_phone UNIQUE (phone)
 create table trip (
 trip_id					int(11) not null auto_increment comment'行程ID',
 member_id				int(11) not null comment'會員ID',
-abstract				text not null comment'行程概述',
+abstract				longtext not null comment'行程概述',
 create_time				timestamp default current_timestamp not null comment'文章建立時間',
 collections				int(8) comment'收藏數',
 status				    int(1) not null comment'文章狀態',
@@ -90,7 +92,6 @@ insert into trip (member_id,abstract,create_time,collections,status,overall_scor
 insert into trip (member_id,abstract,create_time,collections,status,overall_score,location_number,article_title) values ('1','1','大阪三日遊，第一天...第二天...第三天','2024-12-01','4.5','3','大阪三日遊的第三天'); -- 我是大阪 --
 
 
-drop table IF EXISTS sub_trip;
 -- 子行程 --
 create table sub_trip(
 sub_trip_id						int(11) not null comment'子行程ID',
@@ -109,7 +110,7 @@ insert into sub_trip (trip_id,`index`,content) values ('1','3','東京三日遊�
 -- 景點 --
 create table location(
 location_id				int(11) not null auto_increment comment'景點ID',
-address					text not null comment'地址',
+address					longtext not null comment'地址',
 create_time				timestamp default current_timestamp not null comment'建立時間',
 comments_number			int(8) comment'評論數',
 score					float(2) not null comment'評分',
@@ -125,8 +126,8 @@ insert into location (address,create_time,comments_number,score,location_name) v
  CREATE TABLE announcement (
 announcement_id         INT(11) NOT NULL AUTO_INCREMENT,
 admin_id				INT NOT NULL ,
-title					text not null,
-content          		 TEXT NOT NULL ,
+title					LONGTEXT not null,
+content          		LONGTEXT NOT NULL ,
 create_time			timestamp DEFAULT CURRENT_TIMESTAMP  NOT NULL,
 start_time			DATE NOT NULL ,
 end_time           DATE NOT NULL ,
@@ -145,7 +146,7 @@ Create table  location_comment(
 location_comment_id 	INT(11) NOT NULL AUTO_INCREMENT,
 member_id				INT(11) NOT NULL ,
 location_id        		INT(11) NOT NULL ,
-content           		TEXT NOT NULL ,
+content           		LONGTEXT NOT NULL ,
 photo					LONGBLOB,
 score 					INT(1) NOT NULL,
 create_time				timestamp DEFAULT CURRENT_TIMESTAMP  NOT NULL,
@@ -201,7 +202,7 @@ constraint track_users_id_pk primary key (track_users_id));
  CREATE TABLE itinerary_area (
 trip_location_id         INT(11) NOT NULL AUTO_INCREMENT COMMENT '行程地區ID',
 trip_id                  INT(11) NOT NULL COMMENT '行程ID',
-region_content           TEXT  NOT NULL COMMENT'地區類型內容',
+region_content           LONGTEXT  NOT NULL COMMENT'地區類型內容',
 CONSTRAINT pk_trip_location_id PRIMARY KEY (trip_location_id),
 CONSTRAINT fk_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id)
 )COMMENT '行程地區表';
@@ -209,13 +210,11 @@ CONSTRAINT fk_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id)
  insert into itinerary_area(trip_id,region_content) values('1','東京');
  insert into itinerary_area(trip_id,region_content) values('2','台北');
  insert into itinerary_area(trip_id,region_content) values('3','桃園');
- insert into itinerary_area(trip_id,region_content) values('4','台中');
- insert into itinerary_area(trip_id,region_content) values('5','彰化');
 
 -- 行程活動類型表 --
  CREATE TABLE itinerary_activity_type (
 event_type_id         INT(11) NOT NULL AUTO_INCREMENT COMMENT '活動類型ID',
-event_content         TEXT  NOT NULL COMMENT '活動類型內容',
+event_content         LONGTEXT  NOT NULL COMMENT '活動類型內容',
 CONSTRAINT pk_event_type_id PRIMARY KEY (event_type_id)
 )COMMENT '行程活動類型表';
 
@@ -236,6 +235,8 @@ CREATE TABLE itinerary_activity_type_relationship (
     CONSTRAINT fk_itinerary_activity_type_relationship_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id),
     CONSTRAINT fk_itinerary_activity_type_relationship_event_type_id FOREIGN KEY (event_type_id) REFERENCES itinerary_activity_type(event_type_id)
 ) COMMENT '行程活動類型關係表';
+
+ insert into itinerary_activity_type_relationship(trip_id,event_type_id) values(1,1);
 
 
 -- 行程留言表 --
@@ -286,29 +287,6 @@ constraint fk_trip_photo_trip_trip_id
 foreign key(trip_id) references trip(trip_id),
 constraint trip_photo_id primary key(trip_photo_id));
 
-
-
-CREATE TABLE trip_comment (
-    trip_comment_id INT(11) NOT NULL AUTO_INCREMENT COMMENT '行程留言ID',
-    member_id INT(11) NOT NULL COMMENT '會員ID',
-    trip_id INT(11) NOT NULL COMMENT '行程ID',
-    score INT(1) NOT NULL COMMENT '評分',
-    photo LONGBLOB COMMENT '照片',
-    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
-    content LONGTEXT NOT NULL COMMENT '留言內容',
-    CONSTRAINT pk_trip_comment_id PRIMARY KEY (trip_comment_id),
-    CONSTRAINT fk_trip_comment_member_id FOREIGN KEY (member_id) REFERENCES member(member_id),
-    CONSTRAINT fk_trip_comment_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id)
-) COMMENT '行程留言表';
-
-CREATE TABLE itinerary_activity_type_relationship (
-    itinerary_activity_relationship_id INT(11) NOT NULL AUTO_INCREMENT COMMENT '行程活動類型關係ID',
-    trip_id INT(11) NOT NULL COMMENT '行程ID',
-    event_type_id INT(11) NOT NULL COMMENT '活動類型ID',
-    CONSTRAINT pk_itinerary_activity_relationship_id PRIMARY KEY (itinerary_activity_relationship_id),
-    CONSTRAINT fk_itinerary_activity_type_relationship_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id),
-    CONSTRAINT fk_itinerary_activity_type_relationship_event_type_id FOREIGN KEY (event_type_id) REFERENCES itinerary_activity_type(event_type_id)
-) COMMENT '行程活動類型關係表';
 
 -- 交通方式 --
 create table traffic_type(
