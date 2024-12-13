@@ -2,6 +2,7 @@ package chilltrip.locationcomment.model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -34,9 +36,11 @@ public class LocationCommentVO {
 	private MemberVO membervo;
 	
 	@Column(name = "content")
+	@Lob
 	private String content;
 	
 	@Column(name = "photo")
+	@Lob
 	private byte[] photo;
 	
 	@Column(name = "score")
@@ -44,5 +48,12 @@ public class LocationCommentVO {
 	
 	@Column(name = "create_time")
 	private Timestamp createTime;
+
+	@Override
+	public String toString() {
+		return "LocationCommentVO [locationCommitId=" + locationCommitId + ", locationvo=" + locationvo + ", membervo="
+				+ membervo + ", content=" + content + ", photo=" + Arrays.toString(photo) + ", score=" + score
+				+ ", createTime=" + createTime + "]";
+	}
 
 }

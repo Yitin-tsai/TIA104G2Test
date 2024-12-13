@@ -24,8 +24,8 @@ public class LocationUpdate extends HttpServlet {
 
 		String address = req.getParameter("address");
 		String create_time = req.getParameter("create_time");
-		String comments_number = req.getParameter("comments_number");
-		String score = req.getParameter("score");
+		Integer comments_number = Integer.valueOf(req.getParameter("comments_number"));
+		Float score = Float.valueOf(req.getParameter("score"));
 		String location_name = req.getParameter("location_name");
 
 		LocationVO location = new LocationVO();

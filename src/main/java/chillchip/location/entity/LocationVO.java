@@ -35,18 +35,26 @@ public class LocationVO implements Serializable {
 	private Timestamp create_time;
 	
 	@Column(name = "comments_number", updatable = false)
-	private String comments_number;
+	private Integer comments_number;
 	
 	@Column(name = "score", updatable = false)
-	private String score;
+	private Float score;
 	
 	@Column(name = "location_name", updatable = false)
 	private String location_name;
 	
 	@OneToMany(mappedBy= "locationvo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
-	private Set<LocationCommentVO> locationCommit;
+	private Set<LocationCommentVO> locationComment;
 	
+	public Set<LocationCommentVO> getLocationComment() {
+		return locationComment;
+	}
+
+	public void setLocationComment(Set<LocationCommentVO> locationComment) {
+		this.locationComment = locationComment;
+	}
+
 	public Integer getLocationid() {
 		return Locationid;
 	}
@@ -71,19 +79,19 @@ public class LocationVO implements Serializable {
 		this.create_time = create_time;
 	}
 
-	public String getComments_number() {
+	public Integer getComments_number() {
 		return comments_number;
 	}
 
-	public void setComments_number(String comments_number) {
+	public void setComments_number(Integer comments_number) {
 		this.comments_number = comments_number;
 	}
 
-	public String getScore() {
+	public Float getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public void setScore(Float score) {
 		this.score = score;
 	}
 

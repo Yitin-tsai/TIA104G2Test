@@ -20,6 +20,11 @@
 
 		<mapping class="chillchip.announce.model.AnnounceVO"/>
 		<mapping class="chillchip.admin.model.AdminVO"/>
+		<mapping class="chilltrip.locationcomment.model.LocationCommentVO"/>
+		<mapping class="chilltrip.member.model.MemberVO"/>
+		
+		
+		<mapping class="chillchip.location.entity.LocationVO"/>
 		
 		<mapping class="chilltrip.tripactype.model.TripactypeVO"/>
 		<mapping class="chilltrip.tripactyperela.model.TripactyperelaVO"/>

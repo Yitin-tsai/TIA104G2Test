@@ -37,7 +37,6 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		try {
 			Session session = getSession();
-			session.beginTransaction();
 			session.save(annouceVO);
 			session.getTransaction().commit();
 

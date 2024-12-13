@@ -53,8 +53,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	public void insert(LocationVO LocationVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT)) {
 			pstmt.setString(1, LocationVO.getAddress());
-			pstmt.setString(2, LocationVO.getComments_number());
-			pstmt.setString(3, LocationVO.getScore());
+			pstmt.setInt(2, LocationVO.getComments_number());
+			pstmt.setFloat(3, LocationVO.getScore());
 			pstmt.setString(4, LocationVO.getLocation_name());
 			pstmt.executeUpdate();
 
@@ -67,8 +67,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	public void update(LocationVO LocationVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE)) {
 			pstmt.setString(1, LocationVO.getAddress());
-			pstmt.setString(2, LocationVO.getComments_number());
-			pstmt.setString(3, LocationVO.getScore());
+			pstmt.setInt(2, LocationVO.getComments_number());
+			pstmt.setFloat(3, LocationVO.getScore());
 			pstmt.setString(4, LocationVO.getLocation_name());
 			pstmt.setInt(5, LocationVO.getLocationid());
 			pstmt.executeUpdate();
@@ -100,8 +100,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 				LocationVO.setLocationid(rs.getInt("Location_id"));
 				LocationVO.setAddress(rs.getString("address"));
 				LocationVO.setCreate_time(rs.getTimestamp("create_time"));
-				LocationVO.setComments_number(rs.getString("comments_number"));
-				LocationVO.setScore(rs.getString("score"));
+				LocationVO.setComments_number(rs.getInt("comments_number"));
+				LocationVO.setScore(rs.getFloat("score"));
 				LocationVO.setLocation_name(rs.getString("location_name"));
 				list.add(LocationVO);
 			}
@@ -148,8 +148,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 					LocationVO.setLocationid(rs.getInt("Location_id"));
 					LocationVO.setAddress(rs.getString("address"));
 					LocationVO.setCreate_time(rs.getTimestamp("create_time"));
-					LocationVO.setComments_number(rs.getString("comments_number"));
-					LocationVO.setScore(rs.getString("score"));
+					LocationVO.setComments_number(rs.getInt("comments_number"));
+					LocationVO.setScore(rs.getFloat("score"));
 					LocationVO.setLocation_name(rs.getString("location_name"));
 				}
 			}
@@ -206,8 +206,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			LocationVO LocationVO = new LocationVO();
 			LocationVO.setAddress("日本東京都文京區後樂");
 			
-			LocationVO.setComments_number("3");
-			LocationVO.setScore("5.0");
+			LocationVO.setComments_number(3);
+			LocationVO.setScore(5.0f);
 			LocationVO.setLocation_name("東京巨蛋");
 			dao.insert(LocationVO);
 		} catch (RuntimeException e) {
