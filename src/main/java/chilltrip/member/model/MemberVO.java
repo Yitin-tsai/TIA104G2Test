@@ -4,23 +4,70 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+
+@Entity
+
+@Table(name = "member")
 public class MemberVO {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "member_id", updatable = false)
 	private Integer memberId;
+	
+	@Column(name = "email")
 	private String email;
+	
+	@Column(name = "account")
 	private String account;
+	
+	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "phone")
 	private String phone;
+	
+	@Column(name = "status")
 	private Integer status;
+	
+	@Column(name = "create_time")
 	private Timestamp createTime;
+	
+	@Column(name = "nick_name")
 	private String nickName;
+	
+	@Column(name = "gender")
 	private Integer gender;
+	
+	@Column(name = "birthday")
 	private Date birthday;
+	
+	@Column(name = "company_id")
 	private String companyId;
+	
+	@Column(name = "E_receipt_carrier")
 	private String ereceiptCarrier;
+	
+	@Column(name = "credit_card")
 	private String creditCard;
+	
+	@Column(name = "tracking_number")
 	private Integer trackingNumber;
+	
+	@Column(name = "fans_number")
 	private Integer fansNumber;
+	
+	@Column(name = "photo")
+	@Lob
 	private byte[] photo;
 	
 	public Integer getMemberId() {

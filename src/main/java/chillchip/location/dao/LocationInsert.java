@@ -24,7 +24,6 @@ public class LocationInsert extends HttpServlet {
 
 		Integer location_id = Integer.valueOf(req.getParameter("location_id"));
 		String address = req.getParameter("address");
-		String create_time = req.getParameter("create_time");
 		String comments_number = req.getParameter("comments_number");
 		String score = req.getParameter("score");
 		String location_name = req.getParameter("location_name");
@@ -34,7 +33,6 @@ public class LocationInsert extends HttpServlet {
 		LocationVO location = new LocationVO();
 		location.setLocationid(location_id);
 		location.setAddress(address);
-		location.setCreate_time(create_time);
 		location.setComments_number(comments_number);
 		location.setScore(score);
 		location.setLocation_name(location_name);
