@@ -162,7 +162,7 @@ public class AnnounceServelet extends HttpServlet {
 		announce.setEndtime(endtime);
 		announce.setCoverphoto(photo);
 		announceSvc.addannounce(announce);
-
+		
 		return "add success";
 	}
 

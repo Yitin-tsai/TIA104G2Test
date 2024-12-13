@@ -77,7 +77,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public List<AnnounceVO> getAll() {
 		// TODO Auto-generated method stub
-		getSession().beginTransaction();
+//		getSession().beginTransaction();
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
 		
 	}

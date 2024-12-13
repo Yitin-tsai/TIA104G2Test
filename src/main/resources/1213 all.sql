@@ -1,3 +1,4 @@
+drop database if exists tia104g2;
 CREATE DATABASE IF NOT EXISTS tia104g2;
 
 USE tia104g2;
@@ -87,14 +88,15 @@ foreign key (member_id) references member(member_id),
 constraint trip_id_pk primary key(trip_id)
 )comment'行程表';
 
-insert into trip (member_id,abstract,create_time,collections,status,overall_score,location_number,article_title) values ('1','1','東京三日遊，第一天...第二天...第三天','2024-12-01','4.5','3','東京三日遊的第一天'); -- 我是東京 --
-insert into trip (member_id,abstract,create_time,collections,status,overall_score,location_number,article_title) values ('1','1','京都三日遊，第一天...第二天...第三天','2024-12-01','4.5','3','京都三日遊的第二天'); -- 我是京都 --
-insert into trip (member_id,abstract,create_time,collections,status,overall_score,location_number,article_title) values ('1','1','大阪三日遊，第一天...第二天...第三天','2024-12-01','4.5','3','大阪三日遊的第三天'); -- 我是大阪 --
+insert into trip (member_id,abstract,collections,status,overall_score,location_number,article_title) values ('1','東京三日遊，第一天...第二天...第三天','0','1','0','0','東京三日遊'); -- 我是東京 --
+insert into trip (member_id,abstract,collections,status,overall_score,location_number,article_title) values ('1','京都三日遊，第一天...第二天...第三天','0','1','0','0','京都三日遊'); -- 我是京都 --
+insert into trip (member_id,abstract,collections,status,overall_score,location_number,article_title) values ('1','大阪三日遊，第一天...第二天...第三天','0','1','0','0','大阪三日遊'); -- 我是大阪 --
 
 
 -- 子行程 --
+
 create table sub_trip(
-sub_trip_id						int(11) not null comment'子行程ID',
+sub_trip_id						int(11) not null auto_increment  comment'子行程ID',
 trip_id							int(11) not null comment'行程ID',
 `index`							int(2) not null comment'在行程中的順序',
 content							longtext not null comment'文章內容',
@@ -173,6 +175,9 @@ constraint fk_trip_collection_trip_trip_id
 foreign key (trip_id) references trip (trip_id),
 constraint trip_collection_id_pk primary key (trip_collection_id));
 
+insert into trip_collection(trip_id,member_id) values('1','1');
+insert into trip_collection(trip_id,member_id) values('2','2');
+insert into trip_collection(trip_id,member_id) values('3','3');
 -- 按讚行程  FK 行程 會員--
 create table trip_like(
 trip_like_id    		INT(11) NOT NULL AUTO_INCREMENT,
@@ -184,6 +189,10 @@ foreign key (member_id) references member (member_id),
 constraint fk_trip_like_trip_trip_id
 foreign key (trip_id) references trip (trip_id),
 constraint trip_like_id_pk primary key (trip_like_id));
+
+insert into trip_like(trip_id, member_id) values('1','1');
+insert into trip_like(trip_id, member_id) values('2','2');
+insert into trip_like(trip_id, member_id) values('3','3');
 
 -- 追蹤用戶  FK 會員 --
 create table track_users(
@@ -197,6 +206,9 @@ constraint fk_track_users_being_tracked_member_id_member_member_id
 foreign key (being_tracked_member_id) references member (member_id),			
 constraint track_users_id_pk primary key (track_users_id));
 
+insert into track_users(track_member_id,being_tracked_member_id) values('1','2');
+insert into track_users(track_member_id,being_tracked_member_id) values('2','3');
+insert into track_users(track_member_id,being_tracked_member_id) values('3','2');
  
 -- 行程地區表 --
  CREATE TABLE itinerary_area (
@@ -237,6 +249,8 @@ CREATE TABLE itinerary_activity_type_relationship (
 ) COMMENT '行程活動類型關係表';
 
  insert into itinerary_activity_type_relationship(trip_id,event_type_id) values(1,1);
+insert into itinerary_activity_type_relationship(trip_id,event_type_id) values(1,2);
+insert into itinerary_activity_type_relationship(trip_id,event_type_id) values(1,3);
 
 
 -- 行程留言表 --
