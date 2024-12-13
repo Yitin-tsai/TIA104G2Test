@@ -134,13 +134,13 @@ public class TripactyperelaDAO implements TripactyperelaDAO_interface{
 		
 		TripactyperelaDAO dao = new TripactyperelaDAO();
 		TripactyperelaVO tripactyperela = new TripactyperelaVO();
-		TripVO trip = new TripVO();
-		trip.setTripid(1);
+//		TripVO trip = new TripVO();
+//		trip.setTripid(1);
 		TripactypeVO tripactype = new TripactypeVO();
 		tripactype.setEventtypeid(1);
 		
 		// 新增
-		tripactyperela.setTripid(trip);
+//		tripactyperela.setTripid(trip);
 		tripactyperela.setEventtypeid(tripactype);
 		
 		System.out.println(tripactyperela);
