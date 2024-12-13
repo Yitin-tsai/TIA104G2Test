@@ -50,12 +50,12 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	}
 
 	@Override
-	public void insert(LocationVO LocationVO) {
+	public void insert(LocationVO locationVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT)) {
-			pstmt.setString(1, LocationVO.getAddress());
-			pstmt.setInt(2, LocationVO.getComments_number());
-			pstmt.setFloat(3, LocationVO.getScore());
-			pstmt.setString(4, LocationVO.getLocation_name());
+			pstmt.setString(1, locationVO.getAddress());
+			pstmt.setInt(2, locationVO.getComments_number());
+			pstmt.setFloat(3, locationVO.getScore());
+			pstmt.setString(4, locationVO.getLocation_name());
 			pstmt.executeUpdate();
 
 		} catch (SQLException se) {
@@ -64,13 +64,13 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	}
 
 	@Override
-	public void update(LocationVO LocationVO) {
+	public void update(LocationVO locationVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE)) {
-			pstmt.setString(1, LocationVO.getAddress());
-			pstmt.setInt(2, LocationVO.getComments_number());
-			pstmt.setFloat(3, LocationVO.getScore());
-			pstmt.setString(4, LocationVO.getLocation_name());
-			pstmt.setInt(5, LocationVO.getLocationid());
+			pstmt.setString(1, locationVO.getAddress());
+			pstmt.setInt(2, locationVO.getComments_number());
+			pstmt.setFloat(3, locationVO.getScore());
+			pstmt.setString(4, locationVO.getLocation_name());
+			pstmt.setInt(5, locationVO.getLocationid());
 			pstmt.executeUpdate();
 
 		} catch (SQLException se) {
@@ -79,9 +79,9 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	}
 
 	@Override
-	public void delete(Integer Locationid) {
+	public void delete(Integer locationid) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(DELETE)) {
-			pstmt.setInt(1, Locationid);
+			pstmt.setInt(1, locationid);
 			pstmt.executeUpdate();
 
 		} catch (SQLException se) {
@@ -96,14 +96,14 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 				ResultSet rs = pstmt.executeQuery()) {
 
 			while (rs.next()) {
-				LocationVO LocationVO = new LocationVO();
-				LocationVO.setLocationid(rs.getInt("Location_id"));
-				LocationVO.setAddress(rs.getString("address"));
-				LocationVO.setCreate_time(rs.getTimestamp("create_time"));
-				LocationVO.setComments_number(rs.getInt("comments_number"));
-				LocationVO.setScore(rs.getFloat("score"));
-				LocationVO.setLocation_name(rs.getString("location_name"));
-				list.add(LocationVO);
+				LocationVO locationVO = new LocationVO();
+				locationVO.setLocationid(rs.getInt("location_id"));
+				locationVO.setAddress(rs.getString("address"));
+				locationVO.setCreate_time(rs.getTimestamp("create_time"));
+				locationVO.setComments_number(rs.getInt("comments_number"));
+				locationVO.setScore(rs.getFloat("score"));
+				locationVO.setLocation_name(rs.getString("location_name"));
+				list.add(locationVO);
 			}
 
 		} catch (SQLException se) {
@@ -122,7 +122,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
 				Map<String, Object> map = new HashMap<>();
 
-				map.put("Location_id", rs.getInt("Location_id"));
+				map.put("Location_id", rs.getInt("location_id"));
 				map.put("address", rs.getString("address"));
 				map.put("create_time", rs.getString("create_time"));
 				map.put("comments_number", rs.getString("comments_number"));
@@ -138,26 +138,26 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	}
 
 	@Override
-	public LocationVO getById(Integer Locationid) {
-		LocationVO LocationVO = null;
+	public LocationVO getById(Integer locationid) {
+		LocationVO locationVO = null;
 		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ONE_STMT)) {
-			pstmt.setInt(1, Locationid);
+			pstmt.setInt(1, locationid);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					LocationVO = new LocationVO();
-					LocationVO.setLocationid(rs.getInt("Location_id"));
-					LocationVO.setAddress(rs.getString("address"));
-					LocationVO.setCreate_time(rs.getTimestamp("create_time"));
-					LocationVO.setComments_number(rs.getInt("comments_number"));
-					LocationVO.setScore(rs.getFloat("score"));
-					LocationVO.setLocation_name(rs.getString("location_name"));
+					locationVO = new LocationVO();
+					locationVO.setLocationid(rs.getInt("location_id"));
+					locationVO.setAddress(rs.getString("address"));
+					locationVO.setCreate_time(rs.getTimestamp("create_time"));
+					locationVO.setComments_number(rs.getInt("comments_number"));
+					locationVO.setScore(rs.getFloat("score"));
+					locationVO.setLocation_name(rs.getString("location_name"));
 				}
 			}
 
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
-		return LocationVO;
+		return locationVO;
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
 					Map<String, Object> map = new HashMap<>();
 
-					map.put("Location_id", rs.getInt("Location_id"));
+					map.put("location_id", rs.getInt("location_id"));
 					map.put("address", rs.getString("address"));
 					map.put("create_time", rs.getString("create_time"));
 					map.put("comments_number", rs.getString("comments_number"));
@@ -203,13 +203,13 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		try (LocationDAOImplJDBC dao = new LocationDAOImplJDBC()) {
 			// 測試程式碼
 			// 插入SQL 測試
-			LocationVO LocationVO = new LocationVO();
-			LocationVO.setAddress("日本東京都文京區後樂");
+			LocationVO locationVO = new LocationVO();
+			locationVO.setAddress("日本東京都文京區後樂");
 			
-			LocationVO.setComments_number(3);
-			LocationVO.setScore(5.0f);
-			LocationVO.setLocation_name("東京巨蛋");
-			dao.insert(LocationVO);
+			locationVO.setComments_number(3);
+			locationVO.setScore(5.0f);
+			locationVO.setLocation_name("東京巨蛋");
+			dao.insert(locationVO);
 		} catch (RuntimeException e) {
 			System.err.println("An unexpected error occurred: " + e.getMessage());
 			e.printStackTrace();
