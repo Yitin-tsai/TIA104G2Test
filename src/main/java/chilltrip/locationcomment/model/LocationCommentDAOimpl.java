@@ -49,8 +49,9 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 	}
 
 	@Override
-	public void delete(LocationCommentVO locationCommentVO) {
+	public void delete(Integer locationCommentId) {
 		// TODO Auto-generated method stub
+		LocationCommentVO locationCommentVO =getSession().get(LocationCommentVO.class, locationCommentId);
 		try {
 			Session session = getSession();
 			session.beginTransaction();

@@ -27,20 +27,20 @@ public class LocationVO implements Serializable {
 	@Column(name = "location_id", updatable = false)
 	private Integer Locationid;
 	
-	@Column(name = "address", updatable = false)
+	@Column(name = "address")
 	@Lob
 	private String address;
 	
 	@Column(name = "create_time", updatable = false)
 	private Timestamp create_time;
 	
-	@Column(name = "comments_number", updatable = false)
+	@Column(name = "comments_number")
 	private Integer comments_number;
 	
-	@Column(name = "score", updatable = false)
+	@Column(name = "score")
 	private Float score;
 	
-	@Column(name = "location_name", updatable = false)
+	@Column(name = "location_name")
 	private String location_name;
 	
 	@OneToMany(mappedBy= "locationvo",cascade = CascadeType.ALL)
