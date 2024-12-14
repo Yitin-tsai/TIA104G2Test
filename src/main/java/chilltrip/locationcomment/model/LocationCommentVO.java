@@ -56,4 +56,60 @@ public class LocationCommentVO {
 				+ ", createTime=" + createTime + "]";
 	}
 
+	public Integer getLocationCommitId() {
+		return locationCommitId;
+	}
+
+	public void setLocationCommitId(Integer locationCommitId) {
+		this.locationCommitId = locationCommitId;
+	}
+
+	public LocationVO getLocationvo() {
+		return locationvo;
+	}
+
+	public void setLocationvo(LocationVO locationvo) {
+		this.locationvo = locationvo;
+	}
+
+	public MemberVO getMembervo() {
+		return membervo;
+	}
+
+	public void setMembervo(MemberVO membervo) {
+		this.membervo = membervo;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
 }
