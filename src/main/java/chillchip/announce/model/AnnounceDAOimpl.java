@@ -3,6 +3,7 @@ package chillchip.announce.model;
 import java.sql.Date;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		if (map.size() == 0)
 			return getAll();
-
+		getSession().beginTransaction();
 		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<AnnounceVO> criteria = builder.createQuery(AnnounceVO.class);
 		Root<AnnounceVO> root = criteria.from(AnnounceVO.class);
@@ -111,7 +112,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		}
 
 		criteria.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
-		criteria.orderBy(builder.asc(root.get("Announceid")));
+		criteria.orderBy(builder.asc(root.get("announceid")));
 		TypedQuery<AnnounceVO> query = getSession().createQuery(criteria);
 
 		return query.getResultList();
@@ -142,9 +143,9 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	public long getTotal() {
 		return getSession().createQuery("select count(*) from AnnounceVO", Long.class).uniqueResult();
 	}
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //
-//		AnnounceDAOimpl dao = new AnnounceDAOimpl();
+		AnnounceDAOimpl dao = new AnnounceDAOimpl();
 //		java.util.Date now = new java.util.Date();
 //		long long1 = now.getTime();
 //		java.sql.Date date1 = new java.sql.Date(long1);
@@ -165,7 +166,13 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 //		dao.insert(announce);
 //		
 //		System.out.println(dao.getByadminid(1));
-//
-//	}
+//		
+		Map<String,String> map  =new HashMap<String, String>();
+		map.put("title", "冬季");
+		System.out.println(dao.getByCompositeQuery(map));;
+		System.out.println(dao.getTotal());
+		System.out.println(dao.getAll(1));
+		
+	}
 
 }
