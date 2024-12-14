@@ -7,11 +7,11 @@ import chillchip.location.entity.LocationVO;
 
 public interface LocationDAO {
 
-	public void insert(LocationVO LocationVO);
-	public void update(LocationVO LocationVO);
-	public void delete(Integer Locationid);
+	public void insert(LocationVO locationVO);
+	public void update(LocationVO locationVO);
+	public void delete(Integer locationid);
 	public List<LocationVO> getAll();
 	public List<Map<String, Object>> getAllPro();
-	public LocationVO getById(Integer Locationid);
+	public LocationVO getById(Integer locationid);
 	public List<Map<String, Object>> getByLocationName(String location_name);
 }

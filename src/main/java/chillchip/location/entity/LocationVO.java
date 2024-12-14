@@ -25,7 +25,7 @@ public class LocationVO implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "location_id", updatable = false)
-	private Integer Locationid;
+	private Integer locationid;
 	
 	@Column(name = "address", updatable = false)
 	@Lob
@@ -56,11 +56,11 @@ public class LocationVO implements Serializable {
 	}
 
 	public Integer getLocationid() {
-		return Locationid;
+		return locationid;
 	}
 
-	public void setLocationid(Integer Locationid) {
-		this.Locationid = Locationid;
+	public void setLocationid(Integer locationid) {
+		this.locationid = locationid;
 	}
 
 	public String getAddress() {
@@ -105,7 +105,7 @@ public class LocationVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "LocationVO [Locationid=" + Locationid + ", address=" + address + ", create_time=" + create_time
+		return "locationVO [locationid=" + locationid + ", address=" + address + ", create_time=" + create_time
 				+ ", comments_number=" + comments_number + ", score=" + score + ", location_name=" + location_name
 				+ "]";
 	}

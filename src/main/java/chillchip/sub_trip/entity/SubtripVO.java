@@ -3,11 +3,38 @@ package chillchip.sub_trip.entity;
 import java.io.Serializable;
 import java.sql.Clob;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import chillchip.trip.entity.TripVO;
+
+@Entity
+
+@Table(name="sub_trip")
 public class SubtripVO implements Serializable{
 	
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	@Column(name="sub_trip_id" , updatable = false)
 	private Integer subtripid;
-	private Integer tripid;
+	
+	@ManyToOne
+	@JoinColumn(name="trip_id" ,referencedColumnName = "trip_id")
+	private TripVO tripVO;
+	//private Integer tripid;
+	
+	@Column (name = "index")
 	private Integer index;
+	
+	@Column (name = "content")
+	@Lob
 	private Clob content;
 	
 	
@@ -18,13 +45,13 @@ public class SubtripVO implements Serializable{
 	public void setSubtripid(Integer subtripid) {
 		this.subtripid = subtripid;
 	}
-
-	public Integer getTripid() {
-		return tripid;
+	
+	public TripVO getTripVO() {
+		return tripVO;
 	}
-
-	public void setTripid(Integer tripid) {
-		this.tripid = tripid;
+	
+	public setTripVO (TripVO tripVO) {
+		this.tripVO = tripVO;
 	}
 
 	public Integer getIndex() {
@@ -48,7 +75,7 @@ public class SubtripVO implements Serializable{
 		// TODO Auto-generated method stub
 		return new StringBuilder("SubtripVO [")
 				.append("subtripid=").append(subtripid)
-				.append(",tripid=").append(tripid)
+				.append(",tripVO=").append(tripVO)
 				.append(",index=").append(index)
 				.append(",content=").append(content)
 				.append("]").toString();
