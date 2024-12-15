@@ -16,7 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import chillchip.trip.entity.TripVO;
 import chilltrip.locationcomment.model.LocationCommentVO;
+import chilltrip.tripcollection.model.TripCollectionVO;
 
 @Entity
 
@@ -78,6 +80,18 @@ public class MemberVO {
 	
 	private String photo_base64;
 	
+	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<LocationCommentVO> locationComment;
+	
+	
+	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<TripCollectionVO> tripCollectionvo ;
+	
+	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<TripVO> tripvo ;
 	
 	public String getPhoto_base64() {
 		return photo_base64;
@@ -87,9 +101,6 @@ public class MemberVO {
 		this.photo_base64 = photo_base64;
 	}
 	
-	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
-	@OrderBy("createTime desc")
-	private Set<LocationCommentVO> locationComment;
 	
 	public Integer getMemberId() {
 		return memberId;
@@ -199,6 +210,27 @@ public class MemberVO {
 	public void setLocationComment(Set<LocationCommentVO> locationComment) {
 		this.locationComment = locationComment;
 	}
+	
+	
+	
+	
+	
+	public Set<TripCollectionVO> getTripCollectionvo() {
+		return tripCollectionvo;
+	}
+
+	public void setTripCollectionvo(Set<TripCollectionVO> tripCollectionvo) {
+		this.tripCollectionvo = tripCollectionvo;
+	}
+
+	public Set<TripVO> getTripvo() {
+		return tripvo;
+	}
+
+	public void setTripvo(Set<TripVO> tripvo) {
+		this.tripvo = tripvo;
+	}
+
 	@Override
 	public String toString() {
 		return "MemberVO [memberId=" + memberId + ", email=" + email + ", account=" + account + ", password=" + password

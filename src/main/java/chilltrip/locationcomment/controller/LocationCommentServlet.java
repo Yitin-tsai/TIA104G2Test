@@ -40,9 +40,6 @@ public class LocationCommentServlet {
 		case "getLocationCommentByLocation":
 			getByLocation(req, res);
 			break;
-		case "deleteLocationComment":
-			deleteLocationComment(req, res);
-			break;
 		}
 
 	}
@@ -107,10 +104,9 @@ public class LocationCommentServlet {
 		commentSvc.addLocationComment(locationCommentVO);
 
 	}
-
-	private void deleteLocationComment(HttpServletRequest req, HttpServletResponse res) {
+	/*@PutMapping("/delete")/{id}*/
+	private void deleteLocationComment(/*@PathVariabl("id")*/Integer id ) {
 		// TODO Auto-generated method stub
-		Integer id = Integer.valueOf(req.getParameter("id"));
 		commentSvc.deleteLocationComment(id);
 	}
 
