@@ -240,9 +240,9 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 				memberVO.setTrackingNumber(rs.getInt("tracking_number"));
 				memberVO.setFansNumber(rs.getInt("fans_number"));
 				memberVO.setPhoto(rs.getBytes("photo"));
-				if(rs.getBytes("photo") != null) {
-					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
-				}
+//				if(rs.getBytes("photo") != null) {
+//					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
+//				}
 			}
 			
 		}catch(ClassNotFoundException e) {
@@ -312,9 +312,9 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 				memberVO.setTrackingNumber(rs.getInt("tracking_number"));
 				memberVO.setFansNumber(rs.getInt("fans_number"));
 				memberVO.setPhoto(rs.getBytes("photo"));
-				if(rs.getBytes("photo") != null) {
-					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
-				}
+//				if(rs.getBytes("photo") != null) {
+//					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
+//				}
 				
 				list.add(memberVO);  // 將該行資料儲存在 list 集合中
 				
