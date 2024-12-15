@@ -2,6 +2,7 @@ package chillchip.sub_trip.entity;
 
 import java.io.Serializable;
 import java.sql.Clob;
+import java.sql.SQLException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,45 +13,56 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.sql.rowset.serial.SerialClob;
+import javax.sql.rowset.serial.SerialException;
 
 import chillchip.trip.entity.TripVO;
 
 @Entity
 
-@Table(name="sub_trip")
-public class SubtripVO implements Serializable{
-	
+@Table(name = "sub_trip")
+public class SubtripVO implements Serializable {
+
 	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name="sub_trip_id" , updatable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "sub_trip_id", updatable = false)
 	private Integer subtripid;
-	
+
 	@ManyToOne
-	@JoinColumn(name="trip_id" ,referencedColumnName = "trip_id")
+	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
 	private TripVO tripVO;
-	//private Integer tripid;
-	
-	@Column (name = "index")
+	// private Integer tripid;
+
+	private Integer tripid;
+
+	@Column(name = "index")
 	private Integer index;
-	
-	@Column (name = "content")
+
+	@Column(name = "content")
 	@Lob
 	private Clob content;
-	
-	
+
 	public Integer getSubtripid() {
 		return subtripid;
 	}
-	
+
 	public void setSubtripid(Integer subtripid) {
 		this.subtripid = subtripid;
 	}
-	
+
+	public void setTripid(Integer tripid) {
+		this.tripid = tripid;
+	}
+
+	public Integer getTripid() {
+		return tripid;
+	}
+
 	public TripVO getTripVO() {
 		return tripVO;
 	}
-	
-	public setTripVO (TripVO tripVO) {
+
+	public void setTripVO(TripVO tripVO) {
 		this.tripVO = tripVO;
 	}
 
@@ -66,18 +78,15 @@ public class SubtripVO implements Serializable{
 		return content;
 	}
 
-	public void setContect(Clob content) {
-		this.content = content;
+	public void setContent(String content) throws SerialException, SQLException {
+		Clob clob = new SerialClob(content.toCharArray());
+		this.content = clob;
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return new StringBuilder("SubtripVO [")
-				.append("subtripid=").append(subtripid)
-				.append(",tripVO=").append(tripVO)
-				.append(",index=").append(index)
-				.append(",content=").append(content)
-				.append("]").toString();
-				}
+		return new StringBuilder("SubtripVO [").append("subtripid=").append(subtripid).append(",tripVO=").append(tripVO)
+				.append(",index=").append(index).append(",content=").append(content).append("]").toString();
+	}
 }
