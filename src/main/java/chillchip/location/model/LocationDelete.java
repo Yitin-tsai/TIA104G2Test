@@ -1,4 +1,4 @@
-package chillchip.location.dao;
+package chillchip.location.model;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,6 +9,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import chillchip.location.dao.LocationDAOImplJDBC;
 
 @WebServlet("/LocationDelete")
 public class LocationDelete extends HttpServlet {

@@ -1,5 +1,7 @@
 package chillchip.location.dao;
 
+import static chillchip.util.Constants.PAGE_MAX_RESULT;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import chillchip.announce.model.AnnounceVO;
 import chillchip.location.entity.LocationVO;
 
 public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
@@ -87,6 +90,13 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
+	}
+	
+	@Override
+	public List<LocationVO> getAll(int currentPage) {
+		int first = (currentPage - 1) * PAGE_MAX_RESULT;
+		return getSession().createQuery("from LocationVO", LocationVO.class).setFirstResult(first)
+				.setMaxResults(PAGE_MAX_RESULT).list();
 	}
 
 	@Override
