@@ -65,6 +65,7 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 		Session session = getSession();
 		session.beginTransaction();
 		return session.createQuery("FROM TripCollectionVO tc WHERE tc.membervo.memberId = :memberId" ,TripCollectionVO.class)
+				.setParameter("memberId", memberId)
 				.setFirstResult(first)
 				.setMaxResults(PAGE_MAX_RESULT)
 				.list();
@@ -78,5 +79,9 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 		return getSession().createQuery("select count(*) FROM TripCollectionVO tc WHERE tc.membervo.memberId = :memberId", Long.class).uniqueResult();
 		
 	}
-
+	
+	public static void main(String[] args) {
+		TripCollectionDAO dao = new TripCollectionDAOImpl();
+		System.out.println(dao.getByMember(1, 1));
+	}
 }

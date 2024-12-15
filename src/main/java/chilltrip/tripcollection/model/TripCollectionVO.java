@@ -7,11 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import chillchip.trip.entity.TripVO;
 import chilltrip.member.model.MemberVO;
 
 @Entity
+@Table(name = "trip_collection")
 public class TripCollectionVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,4 +51,12 @@ public class TripCollectionVO {
 	public void setMembervo(MemberVO membervo) {
 		this.membervo = membervo;
 	}
+
+	@Override
+	public String toString() {
+		return "TripCollectionVO [tripCollectionId=" + tripCollectionId + ", tripvo=" + tripvo + ", membervo="
+				+ membervo + "]";
+	}
+	
+	
 }

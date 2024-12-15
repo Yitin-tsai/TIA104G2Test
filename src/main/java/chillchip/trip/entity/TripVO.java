@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -29,7 +30,7 @@ public class TripVO implements Serializable{
 	@Column(name = "trip_id", updatable = false)
 	private Integer trip_id;
 	
-	private Integer memberId; //這個格式與yuki對應
+//	private Integer memberId; //這個格式與yuki對應
 	
 	@ManyToOne
 	@JoinColumn(name = "member_id",  referencedColumnName = "member_id")  //hibernate 關聯 et留
@@ -41,6 +42,7 @@ public class TripVO implements Serializable{
 
 	
 	@Column(name = "abstract")
+	@Lob
 	private String trip_abstract; //abstract是保留字，所以做了修改
 	
 	@Column(name = "create_time")
@@ -55,7 +57,7 @@ public class TripVO implements Serializable{
 	@Column(name = "overall_score")
 	private Integer overall_score;
 	
-	@Column(name = "ovelall_score_people")
+	@Column(name = "overall_scored_people")
 	private Integer overall_scored_people;
 	
 	@Column(name = "location_number")
@@ -76,12 +78,12 @@ public class TripVO implements Serializable{
 	public void setTrip_id(Integer trip_id) {
 		this.trip_id = trip_id;
 	}
-	public Integer getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
-	}
+//	public Integer getMemberId() {
+//		return memberId;
+//	}
+//	public void setMemberId(Integer memberId) {
+//		this.memberId = memberId;
+//	}
 	public String getTrip_abstract() {
 		return trip_abstract;
 	}

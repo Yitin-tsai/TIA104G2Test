@@ -78,7 +78,13 @@ public class MemberVO {
 	@Lob
 	private byte[] photo;
 	
-	private String photo_base64;
+//	private String photo_base64;  ET: 為了轉base64更動vo增加一個String photo  以及set方法不是太好，現在看來只是想要把byte[]的屬性轉成base64格式傳給前端才會多出這個屬性
+//									這樣造成hibernate對應問題，還會有重複檔案問題，我覺得在member.daojdbc中的getone方法中應該專注處理資料庫操作，
+//									將資料庫中的byte[]轉成base64 應該在controller中得到member物件後 在req.setattribute這邊在來處理轉型的問題 
+//									會像是 membervo = membersvc.getOneMember(Integer memberId) 之後 我們在將byte[] photo = membervo.getphoto
+//									然後才會是String photoBase64 = Base64.getEncoder().encodeToString(photo) , 在將photoBase64回傳給前端。
+//                                  這樣操作才是mvc分層架構的意義。
+	
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
@@ -92,14 +98,14 @@ public class MemberVO {
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
 	private Set<TripVO> tripvo ;
-	
-	public String getPhoto_base64() {
-		return photo_base64;
-	}
-	
-	public void setPhoto_base64(String photo_base64) {
-		this.photo_base64 = photo_base64;
-	}
+//	
+//	public String getPhoto_base64() {
+//		return photo_base64;
+//	}
+//	
+//	public void setPhoto_base64(String photo_base64) {
+//		this.photo_base64 = photo_base64;
+//	}
 	
 	
 	public Integer getMemberId() {

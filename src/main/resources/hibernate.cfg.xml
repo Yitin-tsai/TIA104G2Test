@@ -22,6 +22,8 @@
 		<mapping class="chillchip.admin.model.AdminVO"/>
 		<mapping class="chilltrip.locationcomment.model.LocationCommentVO"/>
 		<mapping class="chilltrip.member.model.MemberVO"/>
+		<mapping class="chilltrip.tripcollection.model.TripCollectionVO"/>
+		<mapping class="chillchip.trip.entity.TripVO"/>
 		
 		
 		<mapping class="chillchip.location.entity.LocationVO"/>
