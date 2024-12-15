@@ -1,17 +1,21 @@
 package chilltrip.member.model;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import chilltrip.tripcomment.model.TripCommentVO;
 
 public class MemberJDBCDAO implements MemberDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";
-	String url = "jdbc:mysql://localhost:3306/tia104G2?serverTimezone=Asia/Taipei";
+	String url = "jdbc:mysql://localhost:3306/tia104g2?serverTimezone=Asia/Taipei";
 	String userid = "root";
 	String password = "123456";
 
@@ -20,7 +24,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	private static final String GET_ONE_STMT = "SELECT member_id,email,account,password,name,phone,status,create_time,nick_name,gender,birthday,company_id,E_receipt_carrier,credit_card,tracking_number,fans_number,photo FROM member WHERE member_id = ?";
 	private static final String DELETE_MEMBER = "DELETE FROM member WHERE member_id = ?";
 	private static final String DELETE_TRIP_COMMENT = "DELETE FROM trip_comment WHERE member_id = ?";
-	private static final String UPDATE = "UPDATE member set email=?,account=?,password=?,name=?,phone=?,status=?,create_time=?,nick_name=?,gender=?,birthday=?,company_id=?,E_receipt_carrier=?,credit_card=?,tracking_number=?,fans_number=?,photo=? WHERE member_id";
+	private static final String UPDATE = "UPDATE member set email=?,account=?,password=?,name=?,phone=?,status=?,create_time=?,nick_name=?,gender=?,birthday=?,company_id=?,E_receipt_carrier=?,credit_card=?,tracking_number=?,fans_number=?,photo=? WHERE member_id = ?";
 	private static final String GET_TRIPCOMMENT_BY_MEMBER = "SELECT * FROM tia104g2.trip_comment WHERE member_id=? ORDER BY trip_comment_id";
 	
 	@Override
@@ -235,7 +239,10 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 				memberVO.setCreditCard(rs.getString("credit_card"));
 				memberVO.setTrackingNumber(rs.getInt("tracking_number"));
 				memberVO.setFansNumber(rs.getInt("fans_number"));
-				memberVO.setPhoto(rs.getBytes("photo"));	
+				memberVO.setPhoto(rs.getBytes("photo"));
+				if(rs.getBytes("photo") != null) {
+					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
+				}
 			}
 			
 		}catch(ClassNotFoundException e) {
@@ -305,6 +312,9 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 				memberVO.setTrackingNumber(rs.getInt("tracking_number"));
 				memberVO.setFansNumber(rs.getInt("fans_number"));
 				memberVO.setPhoto(rs.getBytes("photo"));
+				if(rs.getBytes("photo") != null) {
+					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
+				}
 				
 				list.add(memberVO);  // 將該行資料儲存在 list 集合中
 				
@@ -423,17 +433,17 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //		Date birthday = Date.valueOf("2004-12-05");
 //		memberVO1.setBirthday(birthday);
 //		
-//		memberVO1.setCompanyId(new String(""));
-//		memberVO1.setEreceiptCarrier(new String(""));
-//		memberVO1.setCreditCard(new String(""));
-//		memberVO1.setTrackingNumber(new Integer(""));
-//		memberVO1.setFansNumber(new Integer(""));
+//		memberVO1.setCompanyId(null);
+//		memberVO1.setEreceiptCarrier(null);
+//		memberVO1.setCreditCard(null);
+//		memberVO1.setTrackingNumber(0);
+//		memberVO1.setFansNumber(0);
 //		
 //		// 讀取圖片並轉換為 byte[]
 //		byte[] photoBytes = null;
 //		BufferedInputStream bis = null;
 //		try {
-//			FileInputStream fis = new FileInputStream("src/main/webapp/resource/images/tokyo.jpg");
+//			FileInputStream fis = new FileInputStream("src/main/webapp/frontend/img/user.jpg");
 //			bis = new BufferedInputStream(fis);
 //			photoBytes = bis.readAllBytes();  // 讀取檔案並轉換為 byte[]
 //		}catch(IOException e) {
@@ -470,19 +480,19 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //		Date birthday2 = Date.valueOf("2004-12-05");
 //		memberVO2.setBirthday(birthday2);
 //		
-//		memberVO2.setCompanyId(new String(""));
-//		memberVO2.setEreceiptCarrier(new String(""));
-//		memberVO2.setCreditCard(new String(""));
-//		memberVO2.setTrackingNumber(new Integer(""));
-//		memberVO2.setFansNumber(new Integer(""));
+//		memberVO2.setCompanyId(null);
+//		memberVO2.setEreceiptCarrier(null);
+//		memberVO2.setCreditCard(null);
+//		memberVO2.setTrackingNumber(0);
+//		memberVO2.setFansNumber(0);
 //		
 //		// 讀取圖片並轉換為 byte[]
-//		byte[] photoBytes2 = null;
-//		BufferedInputStream bis2 = null;
+//		byte[] photoBytes = null;
+//		BufferedInputStream bis = null;
 //		try {
-//			FileInputStream fis = new FileInputStream("src/main/webapp/resource/images/tokyo.jpg");
+//			FileInputStream fis = new FileInputStream("src/main/webapp/frontend/img/course-2.jpg");
 //			bis = new BufferedInputStream(fis);
-//			photoBytes2 = bis2.readAllBytes();  // 讀取檔案並轉換為 byte[]
+//			photoBytes = bis.readAllBytes();  // 讀取檔案並轉換為 byte[]
 //		}catch(IOException e) {
 //			e.printStackTrace();
 //		}finally {
@@ -494,65 +504,65 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //				}
 //			}
 //		}
-//		memberVO2.setPhoto(photoBytes);   // 將圖片設置到 memberVO1 物件的 photo 屬性
+//		memberVO2.setPhoto(photoBytes);   // 將圖片設置到 memberVO2 物件的 photo 屬性
 //
 //		// 呼叫 DAO 方法插入資料
 //		dao.update(memberVO2);
 //		
 //		// 查詢
-		MemberVO memberVO3 = dao.findByPrimaryKey(1);
-		System.out.print(memberVO3.getMemberId() + ",");
-		System.out.print(memberVO3.getEmail() + ",");
-		System.out.print(memberVO3.getAccount() + ",");
-		System.out.print(memberVO3.getPassword() + ",");
-		System.out.print(memberVO3.getName() + ",");
-		System.out.print(memberVO3.getPhone() + ",");
-		System.out.print(memberVO3.getStatus() + ",");
-		System.out.print(memberVO3.getCreateTime() + ",");
-		System.out.print(memberVO3.getNickName() + ",");
-		System.out.print(memberVO3.getGender() + ",");
-		System.out.print(memberVO3.getBirthday() + ",");
-		System.out.print(memberVO3.getCompanyId() + ",");
-		System.out.print(memberVO3.getEreceiptCarrier() + ",");
-		System.out.print(memberVO3.getCreditCard() + ",");
-		System.out.print(memberVO3.getTrackingNumber() + ",");
-		System.out.print(memberVO3.getFansNumber() + ",");
-		System.out.print(memberVO3.getPhoto());
-		System.out.println("---------------------");
-		
-//		// 查詢會員
+//		MemberVO memberVO3 = dao.findByPrimaryKey(1);
+//		System.out.println(memberVO3.getMemberId() + ",");
+//		System.out.println(memberVO3.getEmail() + ",");
+//		System.out.println(memberVO3.getAccount() + ",");
+//		System.out.println(memberVO3.getPassword() + ",");
+//		System.out.println(memberVO3.getName() + ",");
+//		System.out.println(memberVO3.getPhone() + ",");
+//		System.out.println(memberVO3.getStatus() + ",");
+//		System.out.println(memberVO3.getCreateTime() + ",");
+//		System.out.println(memberVO3.getNickName() + ",");
+//		System.out.println(memberVO3.getGender() + ",");
+//		System.out.println(memberVO3.getBirthday() + ",");
+//		System.out.println(memberVO3.getCompanyId() + ",");
+//		System.out.println(memberVO3.getEreceiptCarrier() + ",");
+//		System.out.println(memberVO3.getCreditCard() + ",");
+//		System.out.println(memberVO3.getTrackingNumber() + ",");
+//		System.out.println(memberVO3.getFansNumber() + ",");
+//		System.out.println(memberVO3.getPhoto());
+//		System.out.println("---------------------");
+//		
+//		// 查詢全部會員
 //		List<MemberVO> list = dao.getAll();
 //		for(MemberVO member : list) {
-//			System.out.print(member.getMemberId() + ",");
-//			System.out.print(member.getEmail() + ",");
-//			System.out.print(member.getAccount() + ",");
-//			System.out.print(member.getPassword() + ",");
-//			System.out.print(member.getName() + ",");
-//			System.out.print(member.getPhone() + ",");
-//			System.out.print(member.getStatus() + ",");
-//			System.out.print(member.getCreateTime() + ",");
-//			System.out.print(member.getNickName() + ",");
-//			System.out.print(member.getGender() + ",");
-//			System.out.print(member.getBirthday() + ",");
-//			System.out.print(member.getCompanyId() + ",");
-//			System.out.print(member.getEreceiptCarrier() + ",");
-//			System.out.print(member.getCreditCard() + ",");
-//			System.out.print(member.getTrackingNumber() + ",");
-//			System.out.print(member.getFansNumber() + ",");
-//			System.out.print(member.getPhoto());
+//			System.out.println(member.getMemberId() + ",");
+//			System.out.println(member.getEmail() + ",");
+//			System.out.println(member.getAccount() + ",");
+//			System.out.println(member.getPassword() + ",");
+//			System.out.println(member.getName() + ",");
+//			System.out.println(member.getPhone() + ",");
+//			System.out.println(member.getStatus() + ",");
+//			System.out.println(member.getCreateTime() + ",");
+//			System.out.println(member.getNickName() + ",");
+//			System.out.println(member.getGender() + ",");
+//			System.out.println(member.getBirthday() + ",");
+//			System.out.println(member.getCompanyId() + ",");
+//			System.out.println(member.getEreceiptCarrier() + ",");
+//			System.out.println(member.getCreditCard() + ",");
+//			System.out.println(member.getTrackingNumber() + ",");
+//			System.out.println(member.getFansNumber() + ",");
+//			System.out.println(member.getPhoto());
 //			System.out.println();
 //		}
 //		
-//		// 查詢會員的某留言
+//		// 查詢某會員的留言
 //		Set<TripCommentVO> set = dao.getTripCommentByMember(1);
 //		for(TripCommentVO aTripcom : set) {
-//			System.out.print(aTripcom.getTripCommentId() + ",");
-//			System.out.print(aTripcom.getMemberId() + ",");
-//			System.out.print(aTripcom.getTripId() + ",");
-//			System.out.print(aTripcom.getScore() + ",");
-//			System.out.print(aTripcom.getPhoto() + ",");
-//			System.out.print(aTripcom.getCreateTime() + ",");
-//			System.out.print(aTripcom.getContent());
+//			System.out.println(aTripcom.getTripCommentId() + ",");
+//			System.out.println(aTripcom.getMemberId() + ",");
+//			System.out.println(aTripcom.getTripId() + ",");
+//			System.out.println(aTripcom.getScore() + ",");
+//			System.out.println(aTripcom.getPhoto() + ",");
+//			System.out.println(aTripcom.getCreateTime() + ",");
+//			System.out.println(aTripcom.getContent());
 //			System.out.println();
 //		}
 //

@@ -31,19 +31,8 @@ import chilltrip.tripcomment.model.TripCommentVO;
 @WebServlet("/back-end/trip-comment/comment.do")
 public class TripCommentServlet extends HttpServlet {
 
-	private DataSource dataSource;
-
 	@Override
 	public void init() throws ServletException {
-		try {
-			// 獲取 JNDI Context
-			Context initContext = new InitialContext();
-			// 查找 DataSource 資源
-			dataSource = (DataSource) initContext.lookup("java:comp/env/jdbc/TestDB");
-		} catch (NamingException e) {
-			e.printStackTrace();
-			throw new ServletException("JNDI DataSource 初始化失敗: " + e.getMessage());
-		}
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

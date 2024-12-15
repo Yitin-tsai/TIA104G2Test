@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import chillchip.trip.entity.TripVO;
 import chillchip.util.HibernateUtil;
 import chilltrip.tripactype.model.TripactypeVO;
 
@@ -134,20 +135,29 @@ public class TripactyperelaDAO implements TripactyperelaDAO_interface{
 		
 		TripactyperelaDAO dao = new TripactyperelaDAO();
 		TripactyperelaVO tripactyperela = new TripactyperelaVO();
-//		TripVO trip = new TripVO();
-//		trip.setTripid(1);
+		TripVO trip = new TripVO();
+		trip.setTrip_id(1);
 		TripactypeVO tripactype = new TripactypeVO();
 		tripactype.setEventtypeid(1);
 		
 		// 新增
-//		tripactyperela.setTripid(trip);
+		tripactyperela.setTripid(trip);
 		tripactyperela.setEventtypeid(tripactype);
-		
-		System.out.println(tripactyperela);
 		dao.insert(tripactyperela);
 		
-		System.out.println(dao.getByeventtypeid(1));
-		
+//		// 修改
+//		tripactyperela.setRelaid(4);
+//		tripactyperela.setTripid(trip);
+//		tripactyperela.setEventtypeid(tripactype);
+//		dao.update(tripactyperela);
+//		
+//		// 查詢
+//		for(TripactyperelaVO rela : dao.getAll()) {
+//			System.out.println(rela);
+//		}
+//		
+//		// 刪除
+//		dao.delete(4);
 		
 	}
 	

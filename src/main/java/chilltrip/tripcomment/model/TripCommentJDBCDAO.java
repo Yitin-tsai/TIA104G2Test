@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class TripCommentJDBCDAO implements TripCommentDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";
-	String url = "jdbc:mysql://localhost:3306/TIA104G2?serverTimezone=Asia/Taipei";
+	String url = "jdbc:mysql://localhost:3306/tia104g2?serverTimezone=Asia/Taipei";
 	String userid = "root";
 	String passwd = "123456";
 
@@ -350,31 +350,31 @@ public class TripCommentJDBCDAO implements TripCommentDAO_interface {
 //		// 呼叫 DAO 方法更新資料
 //		dao.update(tripcom2);
 
-//		// 查詢
+//		// 用主鍵查詢單筆行程留言
 //		TripCommentVO tripcom3 = dao.findByPrimaryKey(4);
-//		System.out.print(tripcom3.getTripCommentId() + ",");
-//		System.out.print(tripcom3.getMemberId() + ",");
-//		System.out.print(tripcom3.getTripId() + ",");
-//		System.out.print(tripcom3.getScore() + ",");
-//		System.out.print(tripcom3.getPhoto() + ",");
-//		System.out.print(tripcom3.getCreateTime() + ",");
+//		System.out.println(tripcom3.getTripCommentId() + ",");
+//		System.out.println(tripcom3.getMemberId() + ",");
+//		System.out.println(tripcom3.getTripId() + ",");
+//		System.out.println(tripcom3.getScore() + ",");
+//		System.out.println(tripcom3.getPhoto() + ",");
+//		System.out.println(tripcom3.getCreateTime() + ",");
 //		System.out.println(tripcom3.getContent());
 //		System.out.println("---------------------");
 
-		// 查詢
+		// 查詢全部
 //		List<TripCommentVO> list = dao.getAll();
 //		for (TripCommentVO aTripcom : list) {
-//			System.out.print(aTripcom.getTripCommentId() + ",");
-//			System.out.print(aTripcom.getMemberId() + ",");
-//			System.out.print(aTripcom.getTripId() + ",");
-//			System.out.print(aTripcom.getScore() + ",");
-//			System.out.print(aTripcom.getPhoto() + ",");
-//			System.out.print(aTripcom.getCreateTime() + ",");
-//			System.out.print(aTripcom.getContent());
+//			System.out.println(aTripcom.getTripCommentId() + ",");
+//			System.out.println(aTripcom.getMemberId() + ",");
+//			System.out.println(aTripcom.getTripId() + ",");
+//			System.out.println(aTripcom.getScore() + ",");
+//			System.out.println(aTripcom.getPhoto() + ",");
+//			System.out.println(aTripcom.getCreateTime() + ",");
+//			System.out.println(aTripcom.getContent());
 //			System.out.println();
 //		}
 
-//		// 呼叫 DAO 刪除資料
+//		// 刪除資料
 //		dao.delete(4);
 	}
 }
