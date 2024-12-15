@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import chillchip.trip.entity.TripVO;
 import chilltrip.tripactype.model.TripactypeVO;
 
 
@@ -22,9 +23,9 @@ public class TripactyperelaVO {
 	@Column(name = "itinerary_activity_relationship_id", updatable = false, insertable = false)
 	private Integer relaid;
 	
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
-//	private TripVO tripid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
+	private TripVO tripid;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "event_type_id", referencedColumnName = "event_type_id")
@@ -39,13 +40,13 @@ public class TripactyperelaVO {
 		this.relaid = relaid;
 	}
 
-//	public TripVO getTripid() {
-//		return tripid;
-//	}
+	public TripVO getTripid() {
+		return tripid;
+	}
 
-//	public void setTripid(TripVO tripid) {
-//		this.tripid = tripid;
-//	}
+	public void setTripid(TripVO tripid) {
+		this.tripid = tripid;
+	}
 
 	public TripactypeVO getEventtypeid() {
 		return eventtypeid;
