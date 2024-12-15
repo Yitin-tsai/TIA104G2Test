@@ -1,4 +1,4 @@
-package chillchip.location.dao;
+package chillchip.location.model;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -9,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import chillchip.location.dao.LocationDAOImplJDBC;
 import chillchip.location.entity.LocationVO;
 
 @WebServlet("/LocationList")

@@ -1,6 +1,7 @@
-package chillchip.location.dao;
+package chillchip.location.model;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import chillchip.location.dao.LocationDAOImplJDBC;
 import chillchip.location.entity.LocationVO;
 
-@WebServlet("/LocationUpdate")
-public class LocationUpdate extends HttpServlet {
+@WebServlet("/LocationInsert")
+
+public class LocationInsert extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -21,12 +24,12 @@ public class LocationUpdate extends HttpServlet {
 		res.setContentType("text/html; charset=UTF-8");
 
 		Integer location_id = Integer.valueOf(req.getParameter("location_id"));
-
 		String address = req.getParameter("address");
-		String create_time = req.getParameter("create_time");
 		Integer comments_number = Integer.valueOf(req.getParameter("comments_number"));
 		Float score = Float.valueOf(req.getParameter("score"));
 		String location_name = req.getParameter("location_name");
+
+//		System.out.println(location_id+address+create_time+comments_number+score+location_name);
 
 		LocationVO location = new LocationVO();
 		location.setLocationid(location_id);
@@ -36,9 +39,10 @@ public class LocationUpdate extends HttpServlet {
 		location.setLocation_name(location_name);
 //		System.out.println(location);
 
-		try (LocationDAOImplJDBC updateLocation = new LocationDAOImplJDBC()) {
-			updateLocation.update(location);
-			List<Map<String, Object>> locationlist = updateLocation.getAllPro();
+		try (LocationDAOImplJDBC locationInsert = new LocationDAOImplJDBC()) {
+			locationInsert.insert(location);
+			
+			List<Map<String, Object>> locationlist = locationInsert.getAllPro();
 			StringBuilder tableHtml = new StringBuilder();
 			tableHtml.append("<table border='1'><thead><tr>");
 
@@ -62,6 +66,7 @@ public class LocationUpdate extends HttpServlet {
 			}
 
 			res.getWriter().write("<dev id='result'>" + tableHtml.toString() + "</dev>");
+
 		}
 
 	}

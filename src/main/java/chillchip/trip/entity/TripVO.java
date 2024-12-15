@@ -17,6 +17,7 @@ public class TripVO implements Serializable{
 	private String article_title;
 	private Integer visitors_number;
 	private Integer likes;
+	
 	public Integer getTrip_id() {
 		return trip_id;
 	}
