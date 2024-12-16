@@ -69,7 +69,7 @@ public class LocationCommentServlet {
 
 	}
 
-	private void getByMember(HttpServletRequest req, HttpServletResponse res) throws IOException {
+	public void getByMember(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		Integer memberid = Integer.valueOf(req.getParameter("locationid"));
 		List<LocationCommentVO> commentList = commentSvc.getLocationCommentByLocation(memberid);
 		JSONArray jsonArray = new JSONArray();
