@@ -32,40 +32,41 @@ public class AnnounceServelet extends HttpServlet {
 
 	public void init() {
 		announceSvc = new AnnounceService();
+		adminSvc = new AdminService();
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		doPost(req, res);
 	}
 
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		res.setContentType("text/html; charset=UTF-8");
-		String action = req.getParameter("action");
+//	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+//		req.setCharacterEncoding("UTF-8");
+//		res.setContentType("text/html; charset=UTF-8");
+//		String action = req.getParameter("action");
+//
+//		switch (action) {
+//		case "getAll":
+//			getAllAnnounce(req, res);
+//			break;
+//		case "getAnnounceByAdmin":
+//			getByAdmin(req, res);
+//			break;
+//		case "delete":
+//			deleteAnnounce(req, res);
+//			break;
+//		case "addAnnounce":
+//			addAnnounce(req, res);
+//			break;
+//		case "compositeQuery":
+//			getCompositeQuery(req, res);
+//			break;
+//		case "upadate":
+//			update(req, res);
+//			break;
+//
+//		}
 
-		switch (action) {
-		case "getAll":
-			getAllAnnounce(req, res);
-			break;
-		case "getAnnounceByAdmin":
-			getByAdmin(req, res);
-			break;
-		case "delete":
-			deleteAnnounce(req, res);
-			break;
-		case "addAnnounce":
-			addAnnounce(req, res);
-			break;
-		case "compositeQuery":
-			getCompositeQuery(req, res);
-			break;
-		case "upadate":
-			update(req, res);
-			break;
-
-		}
-
-	}
+//	}
 
 	private void getAllAnnounce(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String page = req.getParameter("page");
