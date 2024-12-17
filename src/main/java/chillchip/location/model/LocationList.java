@@ -89,7 +89,7 @@ public class LocationList extends HttpServlet {
 				System.out.println(location_name);
 				if (location_name.trim().length() != 0) { // 不為空-->根據查詢條件列出物件
 					try (LocationDAOImplJDBC builder = new LocationDAOImplJDBC()) {
-						List<Map<String, Object>> locationlist = builder.getByLocationName(location_name.trim());
+						List<Map<String, Object>> locationlist = builder.getLocationByName(location_name.trim());
 
 						StringBuilder tableHtml = new StringBuilder();
 						tableHtml.append("<table border='1'><thead><tr>");

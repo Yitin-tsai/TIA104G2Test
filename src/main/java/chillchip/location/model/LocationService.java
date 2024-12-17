@@ -47,7 +47,7 @@ public class LocationService {
 	}
 	
 	public List<Map<String, Object>> getLocationByName(String locationname) {
-		return dao.getByLocationName(locationname);
+		return dao.getLocationByName(locationname);
 		
 	}
 	

@@ -170,7 +170,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	}
 
 	@Override
-	public List<Map<String, Object>> getByLocationName(String location_name) {
+	public List<Map<String, Object>> getLocationByName(String location_name) {
 		List<Map<String, Object>> list = new ArrayList<>();
 		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_LOCATION_NAME_STMT);) {
 			// 設定參數
