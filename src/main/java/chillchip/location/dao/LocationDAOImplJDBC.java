@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import chillchip.announce.model.AnnounceVO;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import chillchip.location.entity.LocationVO;
+import chillchip.util.HibernateUtil;
 
 public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
@@ -23,7 +26,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	// 這裡沒有使用finally關閉連線，是因為這裡使用了AutoCloseable，所以在try-with-resources中使用，會自動關閉連線
 	// PreparedStatement、ResultSet也是AutoCloseable，所以也會自動關閉
 	// LocationDAOImplJDBC自己本身也是AutoCloseable，所以在try-with-resources中使用，會自動關閉
-
+	private SessionFactory factory;
 	private Connection connection;
 	private String driver = "com.mysql.cj.jdbc.Driver";
 	private String url = "jdbc:mysql://localhost:3306/TIA104G2?serverTimezone=Asia/Taipei";
@@ -92,6 +95,10 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		}
 	}
 	
+	
+	private Session getSession() {
+		return factory.getCurrentSession();
+	}
 	@Override
 	public List<LocationVO> getAll(int currentPage) {
 		int first = (currentPage - 1) * PAGE_MAX_RESULT;

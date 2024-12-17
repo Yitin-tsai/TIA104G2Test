@@ -12,7 +12,7 @@ public interface LocationDAO {
 	public void update(LocationVO locationVO);
 	public void delete(Integer locationid);
 	public List<LocationVO> getAll();
-	public List<AnnounceVO> getAll(int currentPage);
+	public List<LocationVO> getAll(int currentPage);
 	public List<Map<String, Object>> getAllPro();
 	public LocationVO getById(Integer locationid);
 	public List<Map<String, Object>> getByLocationName(String location_name);

@@ -41,11 +41,11 @@ public class LocationService {
 		
 	}
 	
-	public int getLocationPageTotal() {
-		long total = dao.getTotal();
-		int pageQty = (int)(total % PAGE_MAX_RESULT == 0 ? (total / PAGE_MAX_RESULT) : (total / PAGE_MAX_RESULT + 1));
-		return pageQty;
-	}
+//	public int getLocationPageTotal() {
+//		long total = dao.getTotal();
+//		int pageQty = (int)(total % PAGE_MAX_RESULT == 0 ? (total / PAGE_MAX_RESULT) : (total / PAGE_MAX_RESULT + 1));
+//		return pageQty;
+//	}
 	 
 	
 
