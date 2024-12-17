@@ -48,7 +48,7 @@ public class LocationServlet extends HttpServlet {
 			getAllLocation(req, res);
 			break;
 		case "getLocationById":
-//			System.out.println(action);
+			System.out.println(action);
 			getLocationById(req, res);
 			break;
 		case "getLocationByName":
