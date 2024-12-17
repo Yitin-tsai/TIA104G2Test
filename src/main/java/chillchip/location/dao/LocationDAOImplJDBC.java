@@ -1,7 +1,5 @@
 package chillchip.location.dao;
 
-import static chillchip.util.Constants.PAGE_MAX_RESULT;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,8 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import chillchip.announce.model.AnnounceVO;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import chillchip.location.entity.LocationVO;
+import chillchip.util.HibernateUtil;
 
 public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
@@ -38,7 +39,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	private static final String UPDATE = "UPDATE location set address=?, comments_number=?, score=?, location_name=? where location_id = ?";
 
 	public LocationDAOImplJDBC() {
-
+		
 		// 建構子一開始確認是否有載入驅動程式，並且建立連線
 		try {
 			Class.forName(driver);
@@ -47,7 +48,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			throw new RuntimeException("Couldn't load database driver or connect to database. " + e.getMessage());
 		}
 	}
-
+	
+	
 	private Connection getConnection() {
 		return this.connection;
 	}
@@ -92,13 +94,6 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		}
 	}
 	
-	@Override
-	public List<LocationVO> getAll(int currentPage) {
-		int first = (currentPage - 1) * PAGE_MAX_RESULT;
-		return getSession().createQuery("from LocationVO", LocationVO.class).setFirstResult(first)
-				.setMaxResults(PAGE_MAX_RESULT).list();
-	}
-
 	@Override
 	public List<LocationVO> getAll() {
 		List<LocationVO> list = new ArrayList<>();
@@ -197,6 +192,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		}
 		return list;
 	}
+	
 
 	@Override
 	public void close() {
@@ -209,20 +205,20 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		}
 	}
 
-	public static void main(String[] args) {
-		try (LocationDAOImplJDBC dao = new LocationDAOImplJDBC()) {
-			// 測試程式碼
-			// 插入SQL 測試
-			LocationVO locationVO = new LocationVO();
-			locationVO.setAddress("日本東京都文京區後樂");
-			
-			locationVO.setComments_number(3);
-			locationVO.setScore(5.0f);
-			locationVO.setLocation_name("東京巨蛋");
-			dao.insert(locationVO);
-		} catch (RuntimeException e) {
-			System.err.println("An unexpected error occurred: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try (LocationDAOImplJDBC dao = new LocationDAOImplJDBC()) {
+//			// 測試程式碼
+//			// 插入SQL 測試
+//			LocationVO locationVO = new LocationVO();
+//			locationVO.setAddress("日本東京都文京區後樂");
+//			
+//			locationVO.setComments_number(100);
+//			locationVO.setScore(5.0f);
+//			locationVO.setLocation_name("東京巨蛋");
+//			dao.insert(locationVO);
+//		} catch (RuntimeException e) {
+//			System.err.println("An unexpected error occurred: " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
 }
