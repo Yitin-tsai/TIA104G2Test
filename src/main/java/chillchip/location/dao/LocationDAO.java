@@ -3,7 +3,6 @@ package chillchip.location.dao;
 import java.util.List;
 import java.util.Map;
 
-import chillchip.announce.model.AnnounceVO;
 import chillchip.location.entity.LocationVO;
 
 public interface LocationDAO {
@@ -16,4 +15,5 @@ public interface LocationDAO {
 	public List<Map<String, Object>> getAllPro();
 	public LocationVO getById(Integer locationid);
 	public List<Map<String, Object>> getByLocationName(String location_name);
+
 }
