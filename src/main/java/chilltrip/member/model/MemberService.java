@@ -13,6 +13,16 @@ public class MemberService {
 		dao = new MemberJDBCDAO();
 	}
 	
+	public MemberVO addMember(MemberVO memberVO) {
+		dao.insert(memberVO);
+		return memberVO;
+	}
+	
+	public MemberVO updateMember(MemberVO memberVO) {
+		dao.update(memberVO);
+		return memberVO;
+	}
+	
 	public List<MemberVO> getAll() {
 		return dao.getAll();
 	}
