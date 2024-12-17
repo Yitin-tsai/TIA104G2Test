@@ -47,6 +47,7 @@ public class LocationServlet extends HttpServlet{
 		}
 		
 	}
+
 	
 	
 	//拿到景點列表，按照pk（ID）排序
@@ -85,4 +86,4 @@ public class LocationServlet extends HttpServlet{
 	
 	
 
-}
+//}

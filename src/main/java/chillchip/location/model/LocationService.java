@@ -40,6 +40,7 @@ public class LocationService {
 		
 	}
 	
+
 	public LocationVO getLocationById(Integer locationid) {
 		return dao.getById(locationid);
 	
