@@ -56,6 +56,7 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 		Session session = getSession();
 		session.beginTransaction();
 		return session.createQuery("FROM TripCollectionVO tc WHERE tc.tripvo.trip_id = :tripId", TripCollectionVO.class)
+				.setParameter("tripId", tripId)
 				.list();
 	}
 

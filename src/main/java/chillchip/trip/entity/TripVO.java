@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import chilltrip.member.model.MemberVO;
 import chilltrip.tripcollection.model.TripCollectionVO;
+import chilltrip.triplike.model.TripLikeVO;
 
 @Entity
 
@@ -39,6 +40,10 @@ public class TripVO implements Serializable{
 	@OneToMany(mappedBy= "tripvo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
 	private Set<TripCollectionVO> tripCollectionvo ;
+	
+	@OneToMany(mappedBy= "tripvo",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<TripLikeVO> tripLikevo ;
 
 	
 	@Column(name = "abstract")

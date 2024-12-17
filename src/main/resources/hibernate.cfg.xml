@@ -24,6 +24,8 @@
 		<mapping class="chilltrip.member.model.MemberVO"/>
 		<mapping class="chilltrip.tripcollection.model.TripCollectionVO"/>
 		<mapping class="chillchip.trip.entity.TripVO"/>
+		<mapping class="chilltrip.triplike.model.TripLikeVO"/>
+		<mapping class="chilltrip.trackmember.model.TrackMemberVO"/>
 		
 		
 		<mapping class="chillchip.location.entity.LocationVO"/>
