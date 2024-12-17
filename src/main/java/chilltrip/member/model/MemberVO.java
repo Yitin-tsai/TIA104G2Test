@@ -18,7 +18,9 @@ import javax.persistence.Table;
 
 import chillchip.trip.entity.TripVO;
 import chilltrip.locationcomment.model.LocationCommentVO;
+import chilltrip.trackmember.model.TrackMemberVO;
 import chilltrip.tripcollection.model.TripCollectionVO;
+import chilltrip.triplike.model.TripLikeVO;
 
 @Entity
 
@@ -97,7 +99,22 @@ public class MemberVO {
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	private Set<TripLikeVO> tripLikevo ;
+	
+	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
 	private Set<TripVO> tripvo ;
+	
+	
+	@OneToMany(mappedBy= "fans",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<TrackMemberVO> fans;
+	
+	@OneToMany(mappedBy= "trackedMember",cascade = CascadeType.ALL)
+	@OrderBy("createTime desc")
+	private Set<TrackMemberVO> trackedMember;
+	
+	
 //	
 //	public String getPhoto_base64() {
 //		return photo_base64;
