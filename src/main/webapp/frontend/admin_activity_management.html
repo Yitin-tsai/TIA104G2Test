@@ -28,138 +28,137 @@
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
 
-   
     <style>
+      /* Header 導航區域 */
+      .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
 
-       /* Header 導航區域 */
-       .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
+      /* 左側導航 */
+      .nav-left {
+        display: flex;
+        align-items: center;
+      }
+
+      /* 中間 Logo */
+      .nav-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* 右側導航 */
+      .nav-right {
+        display: flex;
+        align-items: center;
+      }
+
+      /* 導航連結樣式 */
+      .nav-item {
+        text-decoration: none;
+        color: #212529;
+        padding: 20px 15px;
+        display: inline-block;
+        font-size: 18px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-item:hover {
+        color: #ff6600;
+      }
+
+      /* 下拉選單容器 */
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* 下拉選單按鈕 */
+      .dropdown-toggle {
+        cursor: pointer;
+      }
+
+      .dropdown-toggle::after {
+        content: "";
+        display: inline-block;
+        margin-left: 5px;
+        vertical-align: middle;
+        border-top: 5px solid #212529;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+      }
+
+      /* 下拉選單 */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #fff;
+        min-width: 150px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        z-index: 1000;
+      }
+
+      /* 下拉選單項目 */
+      .dropdown-item {
+        display: block;
+        padding: 10px 15px;
+        color: #212529;
+        text-decoration: none;
+        transition: background-color 0.3s;
+      }
+
+      .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #ff6600;
+      }
+
+      /* 顯示下拉選單 */
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
+
+      /* RWD 設計 */
+      @media (max-width: 768px) {
+        .top-nav {
+          flex-direction: column;
+          padding: 10px;
         }
 
-        /* 左側導航 */
-        .nav-left {
-            display: flex;
-            align-items: center;
-        }
-
-        /* 中間 Logo */
         .nav-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+          position: relative;
+          left: 0;
+          transform: none;
+          margin: 10px 0;
         }
 
-        /* 右側導航 */
+        .nav-left,
         .nav-right {
-            display: flex;
-            align-items: center;
+          flex-direction: column;
+          width: 100%;
         }
 
-        /* 導航連結樣式 */
         .nav-item {
-            text-decoration: none;
-            color: #212529;
-            padding: 20px 15px;
-            display: inline-block;
-            font-size: 18px;
-            font-weight: 500;
-            transition: color 0.3s;
+          padding: 10px;
+          width: 100%;
+          text-align: center;
         }
 
-        .nav-item:hover {
-            color: #FF6600;
-        }
-
-        /* 下拉選單容器 */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* 下拉選單按鈕 */
-        .dropdown-toggle {
-            cursor: pointer;
-        }
-
-        .dropdown-toggle::after {
-            content: '';
-            display: inline-block;
-            margin-left: 5px;
-            vertical-align: middle;
-            border-top: 5px solid #212529;
-            border-right: 5px solid transparent;
-            border-left: 5px solid transparent;
-        }
-
-        /* 下拉選單 */
         .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #fff;
-            min-width: 150px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
-            z-index: 1000;
+          position: static;
+          box-shadow: none;
+          background: #f8f9fa;
         }
-
-        /* 下拉選單項目 */
-        .dropdown-item {
-            display: block;
-            padding: 10px 15px;
-            color: #212529;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            color: #FF6600;
-        }
-
-        /* 顯示下拉選單 */
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        /* RWD 設計 */
-        @media (max-width: 768px) {
-            .top-nav {
-                flex-direction: column;
-                padding: 10px;
-            }
-
-            .nav-center {
-                position: relative;
-                left: 0;
-                transform: none;
-                margin: 10px 0;
-            }
-
-            .nav-left, .nav-right {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .nav-item {
-                padding: 10px;
-                width: 100%;
-                text-align: center;
-            }
-
-            .dropdown-menu {
-                position: static;
-                box-shadow: none;
-                background: #f8f9fa;
-            }
-        }
+      }
 
       .dropdown-menu {
         display: none;
@@ -242,7 +241,7 @@
 
       body {
         font-family: Arial, sans-serif;
-        background-color: #f5f5f5 ;
+        background-color: #f5f5f5;
       }
 
       .container {
@@ -280,6 +279,10 @@
         padding: 6px !important;
         border: 1px solid #ddd !important;
         border-radius: 4px !important;
+      }
+
+      #activityTable{
+        height: 500px;
       }
 
       table {
@@ -538,55 +541,148 @@
         margin-top: 4px;
         display: none;
       }
+
+      /* footer */
+      footer {
+        background-color: #f8f9fa;
+        padding: 30px 0;
+        text-align: center;
+      }
+
+      /* 社交媒體連結區域 */
+      .social-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      /* 社交媒體圓形按鈕 */
+      .social-button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+      }
+
+      .social-button:hover {
+        transform: scale(1.1);
+      }
+
+      /* 各社交媒體顏色 */
+      .facebook {
+        background-color: #3b5998;
+      }
+
+      .instagram {
+        background-color: #e1306c;
+      }
+
+      .youtube {
+        background-color: #ff0000;
+      }
+
+      /* 社交媒體圖標 */
+      .social-icon {
+        color: white;
+        font-size: 24px;
+      }
+
+      /* 版權文字 */
+      .copyright {
+        color: #666;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+
+      /* RWD 設計 */
+      @media screen and (max-width: 768px) {
+        .social-links {
+          flex-direction: row;
+          gap: 15px;
+        }
+
+        .social-button {
+          width: 40px;
+          height: 40px;
+        }
+
+        .social-icon {
+          font-size: 20px;
+        }
+
+        .copyright {
+          font-size: 12px;
+        }
+      }
+
+      /* 動畫效果 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      footer {
+        animation: fadeIn 0.5s ease-out;
+      }
     </style>
   </head>
   <body>
 
     <!------網站header------>
-      <header>
-        <nav class="top-nav">
-          <div class="nav-left">
-            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="./product.html" class="nav-item nav-link" id="nav-product"
-              >購！票券</a
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="./product.html" class="nav-item nav-link" id="nav-product"
+            >購！票券</a
+          >
+          <a href="#" class="nav-item nav-link" id="nav-profile">活動管理</a>
+        </div>
+        <div class="nav-center">
+          <a href="#">
+            <img
+              id="ChillTrip_logo"
+              src="./img/logo_black.png"
+              alt="Chill Trip"
+              style="width: 150px; height: auto; cursor: pointer"
+            />
+          </a>
+        </div>
+        <div class="nav-right">
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              style="color: #212529"
+              >管理員中心</a
             >
-            <a href="#" class="nav-item nav-link" id="nav-profile">活動管理</a>
-          </div>
-          <div class="nav-center">
-            <a href="#">
-              <img
-                id="ChillTrip_logo"
-                src="./img/logo_black.png"
-                alt="Chill Trip"
-                style="width: 150px; height: auto; cursor: pointer"
-              />
-            </a>
-          </div>
-          <div class="nav-right">
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                style="color: #212529"
-                >管理員中心</a
+            <div class="dropdown-menu rounded-0 m-0">
+              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+              <a href="#" class="dropdown-item" id="nav-coupons"
+                >一般會員列表</a
               >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item" id="nav-basic-info"
-                  >基本資料</a
-                >
-                <a href="#" class="dropdown-item" id="nav-coupons"
-                  >一般會員列表</a
-                >
-                <a href="#" class="dropdown-item" id="nav-orders">管理員列表</a>
-              </div>
+              <a href="#" class="dropdown-item" id="nav-orders">管理員列表</a>
             </div>
-            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
           </div>
-        </nav>
-      </header>
-    
-       <!------網站Breadcrumb Navigation（麵包屑導航）------>
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+        </div>
+      </nav>
+    </header>
+
+    <!------網站Breadcrumb Navigation（麵包屑導航）------>
     <div class="top-nav">
       <div aria-label="breadcrumb">
         <ul class="breadcrumb" id="breadcrumb-nav">
@@ -595,103 +691,101 @@
       </div>
     </div>
 
-
-      <div class="header">
-        <div>
-          <button id="batchBtn" class="btn" onclick="toggleBatchMode()">
-            批量操作
-          </button>
-          <button class="btn" onclick="showModal('normal')">
-            新增行程活動
-          </button>
-          <button class="btn" onclick="showAddModal('ticket')">
-            新增票券活動
-          </button>
-          <button
-            id="batchDeleteBtn"
-            class="btn batch-delete-btn"
-            onclick="showBatchDeleteModal()"
-          >
-            刪除所選活動
-          </button>
-        </div>
-        <input type="text" class="search-box" placeholder="搜尋..." />
+    <div class="header">
+      <div>
+        <button id="batchBtn" class="btn" onclick="toggleBatchMode()">
+          批量操作
+        </button>
+        <button class="btn" onclick="showModal('normal')">新增行程活動</button>
+        <button class="btn" onclick="showAddModal('ticket')">
+          新增票券活動
+        </button>
+        <button
+          id="batchDeleteBtn"
+          class="btn batch-delete-btn"
+          onclick="showBatchDeleteModal()"
+        >
+          刪除所選活動
+        </button>
       </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>活動名稱 ▼</th>
-            <th>
-              活動類型
-              <select class="type-select" onchange="filterByType(this.value)">
-                <option value="all">全部</option>
-                <option value="trip">行程活動</option>
-                <option value="ticket">票券活動</option>
-              </select>
-            </th>
-            <th>活動時間 ▼</th>
-            <th>活動簡述 ▼</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr data-type="trip">
-            <td>
-              <div style="display: flex; align-items: center">
-                <input
-                  type="checkbox"
-                  class="row-checkbox"
-                  style="display: none; margin-right: 8px"
-                />
-                <span>冬季促銷</span>
-              </div>
-            </td>
-            <td>行程活動</td>
-            <td>2024/12/1~2025/1/31</td>
-            <td
-              class="truncate"
-              title="這是一段很長的活動簡述文字，超過20個字會被截斷但是可以透過hover看到完整內容"
-            >
-              這是一段很長的活動簡述文字，超過20個字會被截斷但是可以透過hover看到完整內容
-            </td>
-            <td>
-              <button class="action-btn edit-btn">編輯</button>
-              <button
-                class="action-btn delete-btn"
-                onclick="showDeleteModal('冬季促銷')"
-              >
-                刪除
-              </button>
-            </td>
-          </tr>
-          <tr data-type="ticket">
-            <td>
-              <div style="display: flex; align-items: center">
-                <input
-                  type="checkbox"
-                  class="row-checkbox"
-                  style="display: none; margin-right: 8px"
-                />
-                <span>最佳行程比賽</span>
-              </div>
-            </td>
-            <td>票券活動</td>
-            <td>2024/11/1~2024/12/31</td>
-            <td class="truncate" title="票券活動說明">票券活動說明</td>
-            <td>
-              <button class="action-btn edit-btn">編輯</button>
-              <button
-                class="action-btn delete-btn"
-                onclick="showDeleteModal('最佳行程比賽')"
-              >
-                刪除
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <input type="text" class="search-box" placeholder="搜尋..." />
     </div>
+
+  <div id="activityTable">
+    <table>
+      <thead>
+        <tr>
+          <th>活動名稱 ▼</th>
+          <th>
+            活動類型
+            <select class="type-select" onchange="filterByType(this.value)">
+              <option value="all">全部</option>
+              <option value="trip">行程活動</option>
+              <option value="ticket">票券活動</option>
+            </select>
+          </th>
+          <th>活動時間 ▼</th>
+          <th>活動簡述 ▼</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-type="trip">
+          <td>
+            <div style="display: flex; align-items: center">
+              <input
+                type="checkbox"
+                class="row-checkbox"
+                style="display: none; margin-right: 8px"
+              />
+              <span>冬季促銷</span>
+            </div>
+          </td>
+          <td>行程活動</td>
+          <td>2024/12/1~2025/1/31</td>
+          <td
+            class="truncate"
+            title="這是一段很長的活動簡述文字，超過20個字會被截斷但是可以透過hover看到完整內容"
+          >
+            這是一段很長的活動簡述文字，超過20個字會被截斷但是可以透過hover看到完整內容
+          </td>
+          <td>
+            <button class="action-btn edit-btn">編輯</button>
+            <button
+              class="action-btn delete-btn"
+              onclick="showDeleteModal('冬季促銷')"
+            >
+              刪除
+            </button>
+          </td>
+        </tr>
+        <tr data-type="ticket">
+          <td>
+            <div style="display: flex; align-items: center">
+              <input
+                type="checkbox"
+                class="row-checkbox"
+                style="display: none; margin-right: 8px"
+              />
+              <span>最佳行程比賽</span>
+            </div>
+          </td>
+          <td>票券活動</td>
+          <td>2024/11/1~2024/12/31</td>
+          <td class="truncate" title="票券活動說明">票券活動說明</td>
+          <td>
+            <button class="action-btn edit-btn">編輯</button>
+            <button
+              class="action-btn delete-btn"
+              onclick="showDeleteModal('最佳行程比賽')"
+            >
+              刪除
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
     <!-- 新增活動彈窗 -->
     <div id="activityModal" class="modal">
@@ -846,41 +940,119 @@
     <!-- 成功提示 -->
     <div id="successAlert" class="alert"></div>
 
+    <!------網站footer------>
+    <footer>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
 
-
+        <!-- 加載 Font Awesome 圖標庫 -->
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          rel="stylesheet"
+        />
+      </div>
+      <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+    </footer>
 
     <script>
       //header部分
       // 監聽螢幕寬度變化
-      window.addEventListener('resize', function() {
-            const dropdowns = document.querySelectorAll('.dropdown');
-            if (window.innerWidth <= 768) {
-                // 移動端點擊切換下拉選單
-                dropdowns.forEach(dropdown => {
-                    const toggle = dropdown.querySelector('.dropdown-toggle');
-                    const menu = dropdown.querySelector('.dropdown-menu');
-                    toggle.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-                    });
-                });
-            } else {
-                // 桌面端使用 hover
-                dropdowns.forEach(dropdown => {
-                    const menu = dropdown.querySelector('.dropdown-menu');
-                    dropdown.addEventListener('mouseenter', () => {
-                        menu.style.display = 'block';
-                    });
-                    dropdown.addEventListener('mouseleave', () => {
-                        menu.style.display = 'none';
-                    });
-                });
-            }
-        });
+      window.addEventListener("resize", function () {
+        const dropdowns = document.querySelectorAll(".dropdown");
+        if (window.innerWidth <= 768) {
+          // 移動端點擊切換下拉選單
+          dropdowns.forEach((dropdown) => {
+            const toggle = dropdown.querySelector(".dropdown-toggle");
+            const menu = dropdown.querySelector(".dropdown-menu");
+            toggle.addEventListener("click", (e) => {
+              e.preventDefault();
+              menu.style.display =
+                menu.style.display === "block" ? "none" : "block";
+            });
+          });
+        } else {
+          // 桌面端使用 hover
+          dropdowns.forEach((dropdown) => {
+            const menu = dropdown.querySelector(".dropdown-menu");
+            dropdown.addEventListener("mouseenter", () => {
+              menu.style.display = "block";
+            });
+            dropdown.addEventListener("mouseleave", () => {
+              menu.style.display = "none";
+            });
+          });
+        }
+      });
 
-        // 初始觸發一次 resize 事件
-        window.dispatchEvent(new Event('resize'));
-
+      // 初始觸發一次 resize 事件
+      window.dispatchEvent(new Event("resize"));
 
       let batchMode = false;
 
@@ -894,7 +1066,7 @@
           }
         });
       }
-      
+
       document.addEventListener("DOMContentLoaded", function () {
         const breadcrumbNav = document.getElementById("breadcrumb-nav");
 
@@ -921,8 +1093,6 @@
           breadcrumbNav.appendChild(li);
         });
       });
-
-      
 
       function toggleBatchMode() {
         batchMode = !batchMode;
@@ -1191,5 +1361,18 @@
         }
       };
     </script>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
   </body>
 </html>
