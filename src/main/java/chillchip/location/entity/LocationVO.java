@@ -1,6 +1,5 @@
 package chillchip.location.entity;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -20,7 +19,7 @@ import chilltrip.locationcomment.model.LocationCommentVO;
 @Entity
 
 @Table(name = "location")
-public class LocationVO implements Serializable {
+public class LocationVO  {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

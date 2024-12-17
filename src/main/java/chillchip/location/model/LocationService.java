@@ -1,8 +1,7 @@
 package chillchip.location.model;
 
-import static chillchip.util.Constants.PAGE_MAX_RESULT;
-
 import java.util.List;
+import java.util.Map;
 
 import chillchip.location.dao.LocationDAO;
 import chillchip.location.dao.LocationDAOImplJDBC;
@@ -36,16 +35,22 @@ public class LocationService {
 		dao.delete(locationid);
 	}
 	
-	public List<LocationVO> getAllLocationById () {
+	public List<LocationVO> getAllLocation () {
 		return dao.getAll();
 		
 	}
 	
-	public int getLocationPageTotal() {
-		long total = dao.getTotal();
-		int pageQty = (int)(total % PAGE_MAX_RESULT == 0 ? (total / PAGE_MAX_RESULT) : (total / PAGE_MAX_RESULT + 1));
-		return pageQty;
+	public LocationVO getLocationById(Integer locationid) {
+		return dao.getById(locationid);
+	
 	}
+	
+	public List<Map<String, Object>> getLocationByName(String locationname) {
+		return dao.getByLocationName(locationname);
+		
+	}
+	
+	
 	 
 	
 
