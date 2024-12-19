@@ -13,4 +13,6 @@ public interface MemberDAO_interface {
 	public List<MemberVO> getAll();
     // 查詢某會員的行程留言(一對多)(回傳 Set)
 	public Set<TripCommentVO> getTripCommentByMember(Integer memberId);
+	public MemberVO findByEmail(String email);
+	public boolean isEmailExist(String email);
 }

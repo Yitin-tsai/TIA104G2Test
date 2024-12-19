@@ -26,7 +26,9 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	private static final String DELETE_TRIP_COMMENT = "DELETE FROM trip_comment WHERE member_id = ?";
 	private static final String UPDATE = "UPDATE member set email=?,account=?,password=?,name=?,phone=?,status=?,create_time=?,nick_name=?,gender=?,birthday=?,company_id=?,E_receipt_carrier=?,credit_card=?,tracking_number=?,fans_number=?,photo=? WHERE member_id = ?";
 	private static final String GET_TRIPCOMMENT_BY_MEMBER = "SELECT * FROM tia104g2.trip_comment WHERE member_id=? ORDER BY trip_comment_id";
-	
+	private static final String GET_ONE_BY_EMAIL = "SELECT * FROM member WHERE email = ?";
+	private static final String CHECK_EMAIL = "SELECT 1 FROM member WHERE email = ?";
+
 	@Override
 	public void insert(MemberVO memberVO) {
 		Connection con = null;
@@ -141,7 +143,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	@Override
 	public void delete(Integer memberId) {
 		int updateCount_TripComments = 0;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 
@@ -151,15 +153,15 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 			// 建立連線
 			con = DriverManager.getConnection(url, userid, password);
 			// 準備 SQL 指令執行
-			
+
 			// 1.設定於 pstm.executeUpdate()之前
 			con.setAutoCommit(false);
-			
+
 			// 先刪除行程留言
 			pstmt = con.prepareStatement(DELETE_TRIP_COMMENT);
 			pstmt.setInt(1, memberId);
 			updateCount_TripComments = pstmt.executeUpdate();
-			
+
 			// 再刪除會員
 			pstmt = con.prepareStatement(DELETE_MEMBER);
 			pstmt.setInt(1, memberId);
@@ -173,11 +175,11 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
 		} catch (SQLException se) {
-			if(con != null) {
+			if (con != null) {
 				try {
 					// 3.設定於當有exception發生時之catch區塊內
 					con.rollback();
-				}catch(SQLException excep) {
+				} catch (SQLException excep) {
 					throw new RuntimeException("發生 rollback 錯誤" + excep.getMessage());
 				}
 			}
@@ -203,12 +205,12 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 
 	@Override
 	public MemberVO findByPrimaryKey(Integer memberId) {
-		
+
 		MemberVO memberVO = null;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			// 加載 MySQL 驅動程式
 			Class.forName(driver);
@@ -216,12 +218,12 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 			con = DriverManager.getConnection(url, userid, password);
 			// 準備 SQL 指令執行
 			pstmt = con.prepareStatement(GET_ONE_STMT);
-			
+
 			pstmt.setInt(1, memberId);
-			
+
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				memberVO = new MemberVO();
 				memberVO.setMemberId(rs.getInt("member_id"));
 				memberVO.setEmail(rs.getString("email"));
@@ -244,30 +246,30 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
 //				}
 			}
-			
-		}catch(ClassNotFoundException e) {
+
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
-		}catch(SQLException se) {
+		} catch (SQLException se) {
 			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
-		}finally {
-			if(rs != null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
-				}catch(SQLException se) {
+				} catch (SQLException se) {
 					se.printStackTrace(System.err);
 				}
 			}
-			if(pstmt != null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
-				}catch(SQLException se) {
+				} catch (SQLException se) {
 					se.printStackTrace(System.err);
 				}
 			}
-			if(con != null) {
+			if (con != null) {
 				try {
 					con.close();
-				}catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace(System.err);
 				}
 			}
@@ -281,19 +283,19 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 
 		List<MemberVO> list = new ArrayList<MemberVO>();
 		MemberVO memberVO = null;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, userid, password);
 			pstmt = con.prepareStatement(GET_ALL_STMT);
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				
+
+			while (rs.next()) {
+
 				memberVO = new MemberVO();
 				memberVO.setMemberId(rs.getInt("member_id"));
 				memberVO.setEmail(rs.getString("email"));
@@ -315,60 +317,60 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //				if(rs.getBytes("photo") != null) {
 //					memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
 //				}
-				
-				list.add(memberVO);  // 將該行資料儲存在 list 集合中
-				
+
+				list.add(memberVO); // 將該行資料儲存在 list 集合中
+
 			}
-			
-		}catch(ClassNotFoundException e) {
+
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
-		}catch(SQLException se) {
+		} catch (SQLException se) {
 			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
-		}finally {
-			if(rs != null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
-				}catch(SQLException se) {
+				} catch (SQLException se) {
 					se.printStackTrace(System.err);
 				}
 			}
-			if(pstmt != null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
-				}catch(SQLException se){
+				} catch (SQLException se) {
 					se.printStackTrace(System.err);
 				}
 			}
-			if(con != null) {
+			if (con != null) {
 				try {
 					con.close();
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace(System.err);
 				}
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 	@Override
 	public Set<TripCommentVO> getTripCommentByMember(Integer memberId) {
 		Set<TripCommentVO> set = new LinkedHashSet<TripCommentVO>();
 		TripCommentVO tripCommentVO = null;
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
-			
+
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, userid, password);
 			pstmt = con.prepareStatement(GET_TRIPCOMMENT_BY_MEMBER);
 			pstmt.setInt(1, memberId);
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				tripCommentVO = new TripCommentVO();
 				tripCommentVO.setTripCommentId(rs.getInt("trip_comment_id"));
 				tripCommentVO.setTripId(rs.getInt("trip_id"));
@@ -377,46 +379,165 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 				tripCommentVO.setCreateTime(rs.getTimestamp("create_time"));
 				tripCommentVO.setContent(rs.getString("content"));
 				tripCommentVO.setMemberId(rs.getInt("member_id"));
-				if(rs.getBytes("photo") != null) {
-					tripCommentVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
+				if (rs.getBytes("photo") != null) {
+					tripCommentVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));
 				}
 				set.add(tripCommentVO);
 			}
 
-		}catch(ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
-		}catch(SQLException se) {
+		} catch (SQLException se) {
 			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
-		}finally {
-			if(rs != null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
-				}catch(SQLException se) {
+				} catch (SQLException se) {
 					se.printStackTrace(System.err);
 				}
 			}
-			if(pstmt != null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
-				}catch(SQLException se){
+				} catch (SQLException se) {
 					se.printStackTrace(System.err);
 				}
 			}
-			if(con != null) {
+			if (con != null) {
 				try {
 					con.close();
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace(System.err);
 				}
 			}
 		}
-		
+
 		return set;
 	}
 
+	@Override
+	public MemberVO findByEmail(String email) {
+		MemberVO memberVO = null;
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+			pstmt = con.prepareStatement(GET_ONE_BY_EMAIL);
+			
+			pstmt.setString(1, email);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				memberVO = new MemberVO();
+				memberVO.setMemberId(rs.getInt("member_id"));
+				memberVO.setEmail(rs.getString("email"));
+				memberVO.setAccount(rs.getString("account"));
+				memberVO.setPassword(rs.getString("password"));
+				memberVO.setName(rs.getString("name"));
+				memberVO.setPhone(rs.getString("phone"));
+				memberVO.setStatus(rs.getInt("status"));
+				memberVO.setCreateTime(rs.getTimestamp("create_time"));
+				memberVO.setNickName(rs.getString("nick_name"));
+				memberVO.setGender(rs.getInt("gender"));
+				memberVO.setBirthday(rs.getDate("birthday"));
+				memberVO.setCompanyId(rs.getString("company_id"));
+				memberVO.setEreceiptCarrier(rs.getString("E_receipt_carrier"));
+				memberVO.setCreditCard(rs.getString("credit_card"));
+				memberVO.setTrackingNumber(rs.getInt("tracking_number"));
+				memberVO.setFansNumber(rs.getInt("fans_number"));
+				memberVO.setPhoto(rs.getBytes("photo"));
+//					if(rs.getBytes("photo") != null) {
+//						memberVO.setPhoto_base64(new String(Base64.getEncoder().encodeToString(rs.getBytes("photo"))));	
+//					}
+			}
+
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
+		} catch (SQLException se) {
+			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+
+		return memberVO;
+	}
+	
+	// 判斷 email 是否已經存在
+    public boolean isEmailExist(String email) {
+    	Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+        try {
+        	Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+            pstmt = con.prepareStatement(CHECK_EMAIL);
+            pstmt.setString(1, email);
+
+            rs = pstmt.executeQuery();
+
+            // 如果查詢結果不為空，則表示 email 已存在
+            return rs.next();  // 若有結果返回 true，否則返回 false
+        } catch (ClassNotFoundException e) {
+			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
+		} catch (SQLException se) {
+            se.printStackTrace();
+            return false;
+        } finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+
+    }
+
 	public static void main(String[] args) {
 		MemberJDBCDAO dao = new MemberJDBCDAO();
-		
+
 //		// 新增
 //		MemberVO memberVO1 = new MemberVO();
 //		memberVO1.setEmail(new String("123@abc.com"));
@@ -568,7 +689,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 //
 //		// 呼叫 DAO 刪除資料
 //		dao.delete(4);
-		
+
 	}
 
 }
