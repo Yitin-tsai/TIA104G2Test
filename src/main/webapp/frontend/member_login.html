@@ -387,13 +387,13 @@ h2 {
 
 	<main>
 		<div class="container">
-			<form id="loginForm">
+			<form id="loginForm" method="post" action="login">
 				<div class="form-group">
 					<svg class="icon" viewBox="0 0 24 24">
             <path
 							d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
           </svg>
-					<input type="email" id="email" placeholder="帳號/電子信箱" required>
+					<input type="email" id="email" name="email" placeholder="帳號/電子信箱" required>
 				</div>
 
 				<div class="form-group">
@@ -401,7 +401,7 @@ h2 {
             <path
 							d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
           </svg>
-					<input type="password" id="password" placeholder="密碼" required>
+					<input type="password" id="password" name="password" placeholder="密碼" required>
 					<button type="button" class="password-toggle"
 						data-target="password">
 						<svg class="eye-open" viewBox="0 0 24 24">
@@ -419,14 +419,8 @@ h2 {
 					<a href="member_change_password.html">重設密碼</a> <a
 						href="member_registration.html" style="color: #ff4444">沒有帳號？請點擊註冊</a>
 				</div>
-
-				<button type="submit" class="login-button">登入</button>
-
-				<div class="social-login">
-					<a href="#" class="social-button">Facebook登入</a> <a href="#"
-						class="social-button">Google登入</a> <a href="#"
-						class="social-button">Line登入</a>
-				</div>
+				<input type="hidden" name="action" value="login">
+				<input type="submit" class="login-button" value="登入"/>
 			</form>
 		</div>
 	</main>
@@ -562,7 +556,7 @@ h2 {
         breadcrumbNav.appendChild(li);
       });
 
-      form.addEventListener('submit', function (e) {
+     /* form.addEventListener('submit', function (e) {
         e.preventDefault();
 
         // 假設這裡進行簡單的帳號密碼檢查
@@ -589,7 +583,7 @@ h2 {
 
       errorConfirmBtn.addEventListener('click', function () {
         errorModal.classList.remove('show'); // 關閉錯誤彈窗
-      });
+      });  */
     });
 
   </script>
