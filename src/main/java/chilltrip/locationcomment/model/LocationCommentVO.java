@@ -14,7 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import chillchip.location.entity.LocationVO;
+import chillchip.location.model.LocationVO;
 import chilltrip.member.model.MemberVO;
 
 @Entity

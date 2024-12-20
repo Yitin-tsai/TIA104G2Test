@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import chillchip.location.dao.LocationDAOImplJDBC;
-import chillchip.location.entity.LocationVO;
 
 @WebServlet("/LocationUpdate")
 public class LocationUpdate extends HttpServlet {

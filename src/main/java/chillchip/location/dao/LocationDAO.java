@@ -3,7 +3,7 @@ package chillchip.location.dao;
 import java.util.List;
 import java.util.Map;
 
-import chillchip.location.entity.LocationVO;
+import chillchip.location.model.LocationVO;
 
 public interface LocationDAO {
 

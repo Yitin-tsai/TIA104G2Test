@@ -13,7 +13,7 @@ import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import chillchip.location.entity.LocationVO;
+import chillchip.location.model.LocationVO;
 import chillchip.util.HibernateUtil;
 
 public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {

@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import chillchip.location.dao.LocationDAO;
 import chillchip.location.dao.LocationDAOImplJDBC;
-import chillchip.location.entity.LocationVO;
 import chillchip.location.model.LocationService;
+import chillchip.location.model.LocationVO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,14 +41,14 @@ public class LocationServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html; charset=UTF-8");
 		String action = req.getParameter("action");
-		System.out.println(action);
+//		System.out.println(action);
 
 		switch (action) {
 		case "getAllLocation":
 			getAllLocation(req, res);
 			break;
 		case "getLocationById":
-			System.out.println(action);
+//			System.out.println(action);
 			getLocationById(req, res);
 			break;
 		case "getLocationByName":
@@ -94,7 +94,7 @@ public class LocationServlet extends HttpServlet {
 	// 單一查詢（用ID查詢）
 	private void getLocationById(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		Integer locationid = Integer.valueOf(req.getParameter("location_id"));
-		System.out.println(locationid);
+//		System.out.println(locationid);
 		LocationVO locationVO = new LocationVO();
 		locationVO = locationSvc.getLocationById(locationid);
 		JSONObject jsonRes = new JSONObject();

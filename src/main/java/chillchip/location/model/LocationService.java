@@ -5,7 +5,6 @@ import java.util.Map;
 
 import chillchip.location.dao.LocationDAO;
 import chillchip.location.dao.LocationDAOImplJDBC;
-import chillchip.location.entity.LocationVO;
 
 public class LocationService {
 	

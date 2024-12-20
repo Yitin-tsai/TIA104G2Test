@@ -11,14 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 
-import chillchip.location.dao.LocationDAO;
-import chillchip.location.dao.LocationDAOImplJDBC;
-import chillchip.location.entity.LocationVO;
-import chillchip.sub_trip.entity.SubtripVO;
-import chillchip.trip.entity.TripVO;
+import chillchip.sub_trip.model.SubtripVO;
 
 public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 
@@ -37,9 +32,10 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 
 	private static final String INSERT_STMT = "INSERT INTO sub_trip(trip_id, `index`, content)VALUES(?,?,?)";
 	// 按照子行程id排序查詢的SQL
-	private static final String GET_ALLSTMT_BY_TRIPID = "SELECT sub_trip_id, trip_id, `index`, content FROM sub_trip by sub_trip_id";
+	private static final String GET_ALLSTMT_BY_SUBTRIPID = "SELECT sub_trip_id, trip_id, `index`, content FROM sub_trip order by sub_trip_id";
 	// 按照子行程的index排序查詢的SQL（用在部落格文章中展示）
-	private static final String GET_ALLSTMT_BY_TRIP_INDEX = "SELECT sub_trip_id, trip_id, `index`, content FROM sub_trip by `index`";
+	private static final String GET_ALLSTMT_BY_TRIP_INDEX = "SELECT sub_trip_id, trip_id, `index`, content FROM sub_trip where trip_id=? order by `index`";
+
 	// 用id查詢單一子行程
 	private static final String GET_ONE_STMT_BY_ID = "SELECT sub_trip_id, trip_id, `index`, content FROM sub_trip where sub_trip_id=?";
 	// 用名稱查詢單一子行程
@@ -75,16 +71,13 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 		}
 	}
 
-	
-	
-
-	
 	@Override
 	public void update(SubtripVO subtripVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE)) {
-			pstmt.setInt(1, subtripVO.getTripVO().getTrip_id());
+			pstmt.setInt(1, subtripVO.getTripid());
 			pstmt.setInt(2, subtripVO.getIndex());
 			pstmt.setClob(3, subtripVO.getContent());
+			pstmt.setInt(4, subtripVO.getSubtripid());
 			pstmt.executeUpdate();
 
 		} catch (SQLException se) {
@@ -103,18 +96,19 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 		}
 	}
 
-	public List<SubtripVO> getAllBySubtripId() {
+	@Override
+	public List<SubtripVO> getallsubtrip() {
 		List<SubtripVO> list = new ArrayList<>();
-		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALLSTMT_BY_TRIPID);
+		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALLSTMT_BY_SUBTRIPID);
 				ResultSet rs = pstmt.executeQuery()) {
 
 			while (rs.next()) {
 				SubtripVO subtripVO = new SubtripVO();
 				subtripVO.setSubtripid(rs.getInt("sub_trip_id"));
 				subtripVO.setTripid(rs.getInt("trip_id"));
-				subtripVO.setIndex(rs.getInt("`index`"));
+				subtripVO.setIndex(rs.getInt("index"));
 				Clob clob = rs.getClob("content");
-				subtripVO.setContent(clob.getSubString(1, (int)clob.length()));
+				subtripVO.setContent(clob.getSubString(1, (int) clob.length()));
 				list.add(subtripVO);
 			}
 
@@ -124,30 +118,35 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 		return list;
 	}
 
-	public List<Map<String, Object>> getAllByTripIndex() {
+	@Override
+	public List<Map<String, Object>> getByTripId(Integer tripid) {
+
 		List<Map<String, Object>> list = new ArrayList<>();
-		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALLSTMT_BY_TRIP_INDEX);
-				ResultSet rs = pstmt.executeQuery()) {
 
-			while (rs.next()) {
+		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALLSTMT_BY_TRIP_INDEX)) {
+			pstmt.setInt(1, tripid);
+			try (ResultSet rs = pstmt.executeQuery()) {
 
-				Map<String, Object> map = new HashMap<>();
+				while (rs.next()) {
 
-				map.put("sub_trip_id", rs.getInt("sub_trip_id"));
-				map.put("trip_id", rs.getInt("trip_id"));
-				map.put("`index`", rs.getInt("`index`"));
-				map.put("content", rs.getClob("content"));
-				list.add(map);
+					Map<String, Object> map = new HashMap<>();
+
+					map.put("sub_trip_id", rs.getInt("sub_trip_id"));
+					map.put("trip_id", rs.getInt("trip_id"));
+					map.put("index", rs.getInt("index"));
+					map.put("content", rs.getClob("content"));
+					list.add(map);
+				}
 			}
-
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
 		return list;
 	}
+	
 
 	@Override
-	public SubtripVO getById(Integer subtripid) {
+	public SubtripVO getBySubtripId(Integer subtripid) {
 		SubtripVO subtripVO = null;
 		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ONE_STMT_BY_ID)) {
 			pstmt.setInt(1, subtripid);
@@ -156,9 +155,9 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 					subtripVO = new SubtripVO();
 					subtripVO.setSubtripid(rs.getInt("sub_trip_id"));
 					subtripVO.setTripid(rs.getInt("trip_id"));
-					subtripVO.setIndex(rs.getInt("`index`"));
+					subtripVO.setIndex(rs.getInt("index"));
 					Clob clob = rs.getClob("content");
-					subtripVO.setContent(clob.getSubString(1, (int)clob.length()));
+					subtripVO.setContent(clob.getSubString(1, (int) clob.length()));
 				}
 			}
 
@@ -201,9 +200,5 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
 
 }

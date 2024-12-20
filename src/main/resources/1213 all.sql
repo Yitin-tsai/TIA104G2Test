@@ -305,7 +305,7 @@ constraint trip_photo_id primary key(trip_photo_id));
 -- 交通方式 --
 create table traffic_type(
 traffic_type_id		int(11) not null auto_increment comment'交通方式ID',
-type				int(1) not null comment'類型', -- 0未選擇,1開車,2火車,3捷運,4公車,5高鐵,6走路,7飛機 --
+`type`				int(1) not null comment'類型', -- 0未選擇,1開車,2火車,3捷運,4公車,5高鐵,6走路,7飛機 --
 time_spent			int(11) comment'花費時間',
 `index`				int(2) comment'在子行程中的順序',
 trip_location_relation_id	int(11) not null comment'景點行程關係',

@@ -1,6 +1,5 @@
-package chillchip.sub_trip.entity;
+package chillchip.sub_trip.model;
 
-import java.io.Serializable;
 import java.sql.Clob;
 import java.sql.SQLException;
 
@@ -21,7 +20,7 @@ import chillchip.trip.entity.TripVO;
 @Entity
 
 @Table(name = "sub_trip")
-public class SubtripVO implements Serializable {
+public class SubtripVO {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +30,6 @@ public class SubtripVO implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
 	private TripVO tripVO;
-	// private Integer tripid;
 
 	private Integer tripid;
 

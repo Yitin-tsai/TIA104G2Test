@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import chillchip.location.entity.LocationVO;
+import chillchip.location.model.LocationVO;
 import chillchip.util.HibernateUtil;
 import chilltrip.member.model.MemberVO;
 

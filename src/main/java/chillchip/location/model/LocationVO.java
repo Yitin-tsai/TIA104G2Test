@@ -1,4 +1,4 @@
-package chillchip.location.entity;
+package chillchip.location.model;
 
 import java.sql.Timestamp;
 import java.util.Set;
