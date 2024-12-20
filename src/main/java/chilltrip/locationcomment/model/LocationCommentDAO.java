@@ -2,7 +2,7 @@ package chilltrip.locationcomment.model;
 
 import java.util.List;
 
-import chillchip.location.entity.LocationVO;
+import chillchip.location.model.LocationVO;
 
 public interface LocationCommentDAO {
 	

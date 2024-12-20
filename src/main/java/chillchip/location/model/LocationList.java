@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import chillchip.location.dao.LocationDAOImplJDBC;
-import chillchip.location.entity.LocationVO;
 
 @WebServlet("/LocationList")
 public class LocationList extends HttpServlet {
