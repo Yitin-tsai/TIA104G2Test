@@ -357,14 +357,14 @@ select {
 			</div>
 
 			<div class="form-group">
-				<label class="required">會員名稱</label> <input type="text"
-					id="username" name="nickname" required>
+				<label class="required">會員暱稱</label> <input type="text"
+					id="username" name="nickname" placeholder="輸入暱稱" required>
 				
 			</div>
 
 			<div class="form-group">
 				<label class="required">真實姓名</label> <input type="text"
-					id="realname" name="name" required>
+					id="realname" name="name" placeholder="輸入姓名" required>
 			</div>
 
 			<div class="form-group">
@@ -382,23 +382,24 @@ select {
 
 			<div class="form-group">
 				<label class="required">聯絡電話</label> <input type="tel" id="phone"
-					name="phone" required>
+					name="phone" placeholder="輸入聯絡電話" required>
 			</div>
 
 			<div class="form-group">
 				<label class="required">電子信箱</label> <input type="email" id="email"
-					name="email" required>
-				<button type="button" class="verify-button">驗證信箱</button>
+					name="email" placeholder="輸入電子信箱" required>
+				<button type="button" class="verify-button" name="randomcode">傳送驗證碼</button>
 			</div>
 
 			<div class="form-group">
 				<label class="required">信箱驗證碼</label> <input type="text"
-					id="emailCode" name="emailCode" required>
+					id="emailCode" name="emailCode" placeholder="輸入驗證碼" required>
+				<button type="button" class="verify-button" name="checkrandomcode">確認驗證碼</button>
 			</div>
 
 			<div class="form-group">
 				<label class="required">密碼</label> <input type="password"
-					id="password" name="password" required>
+					id="password" name="password" placeholder="輸入密碼" required>
 				<button type="button" class="password-toggle" data-target="password">
 					<svg class="eye-open" viewBox="0 0 24 24">
               <path
@@ -413,7 +414,7 @@ select {
 
 			<div class="form-group">
 				<label class="required">密碼確認</label> <input type="password"
-					id="confirmPassword" required>
+					id="confirmPassword" placeholder="再次輸入密碼" required>
 				<button type="button" class="password-toggle"
 					data-target="confirmPassword">
 					<svg class="eye-open" viewBox="0 0 24 24">
@@ -431,24 +432,24 @@ select {
 			</div>
 
 			<div class="form-group">
-				<label>公司統編</label> <input type="text" id="company" name="companyid">
+				<label>公司統編</label> <input type="text" id="company" name="companyid" placeholder="輸入公司統編">
 			</div>
 
 			<div class="form-group">
 				<label>手機載具</label> <input type="text" id="mobile"
-					name="ereceiptcarrier">
+					name="ereceiptcarrier" placeholder="輸入手機載具">
 			</div>
 
 			<div class="form-group">
 				<label>信用卡號</label> <input type="text" id="creditCard"
-					name="creditcard">
+					name="creditcard" placeholder="輸入信用卡號">
 			</div>
 			<div class="form-group">
 				<label for="photo">上傳頭貼：</label> <input type="file" id="photo"
 					name="photo" accept="image/*"><br>
 				<br>
 			</div>
-			<input type="hidden" name="action" value="register"> <input
+			<input type="hidden" name="register" value="register"> <input
 				type="submit" class="register-button" value="註冊" /> <a
 				href="member_login.html" class="login-link" style="color: #ff4444;">已有帳號?點擊登入</a>
 		</form>
