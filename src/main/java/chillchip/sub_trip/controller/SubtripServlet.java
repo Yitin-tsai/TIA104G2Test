@@ -175,13 +175,13 @@ public class SubtripServlet extends HttpServlet {
 	private String updateSubtrip (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, SerialException, SQLException {
 		
 		Integer subtripid = Integer.valueOf(req.getParameter("subtrip_id"));
-		System.out.println(subtripid);
+//		System.out.println(subtripid);
 		Integer tripid = Integer.valueOf(req.getParameter("trip_id"));
-		System.out.println(tripid);
+//		System.out.println(tripid);
 		Integer index = Integer.valueOf(req.getParameter("subtrip_index"));
-		System.out.println(index);
+//		System.out.println(index);
 		String content = req.getParameter("subtrip_content");
-		System.out.println(content);
+//		System.out.println(content);
 		
 		SubtripDAO dao = new SubtripDAOImplJDBC();
 		SubtripVO subtripVO = dao.getBySubtripId(subtripid);

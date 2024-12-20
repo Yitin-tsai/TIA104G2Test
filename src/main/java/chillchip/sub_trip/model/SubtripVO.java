@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 
-import chillchip.trip.entity.TripVO;
+import chillchip.trip.model.TripVO;
 
 @Entity
 
@@ -72,7 +72,16 @@ public class SubtripVO {
 		this.index = index;
 	}
 
-	public Clob getContent() {
+	public String getContent() {
+		try {
+			return content.getSubString(1, (int) content.length());
+		} catch (Exception e) {
+			return "";
+		}
+
+	}
+
+	public Clob getContentSQL() {
 		return content;
 	}
 

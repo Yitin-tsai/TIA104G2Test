@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import chillchip.trip.entity.TripVO;
+import chillchip.trip.model.TripVO;
 import chilltrip.member.model.MemberVO;
 
 @Entity

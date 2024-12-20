@@ -121,7 +121,7 @@ public class LocationServlet extends HttpServlet {
 			JSONObject jsonLocation = new JSONObject();
 			jsonLocation.put("locationid", location.get("locationid"));
 			jsonLocation.put("address", location.get("address"));
-			jsonLocation.put("create_time", location.get("create_time"));
+			jsonLocation.put("create_time", location.get(" create_time"));
 			jsonLocation.put("comments_number", location.get("comments_number"));
 			jsonLocation.put("score", location.get("score"));
 			jsonLocation.put("location_name", location.get("location_name"));
@@ -150,9 +150,6 @@ public class LocationServlet extends HttpServlet {
 		LocationVO locationVO = new LocationVO();
 
 		locationVO.setAddress(locationaddress);
-		locationVO.setCreate_time(locationcreatetime);
-		locationVO.setComments_number(locationcommentsnumber);
-		locationVO.setScore(locationscore);
 
 		// 處理時間格式
 		try {
@@ -167,6 +164,8 @@ public class LocationServlet extends HttpServlet {
 			System.out.println("時間格式錯誤：" + e.getMessage());
 		}
 		locationVO.setCreate_time(locationcreatetime);
+		locationVO.setComments_number(locationcommentsnumber);
+		locationVO.setScore(locationscore);
 		locationVO.setLocation_name(locationname);
 		locationSvc.addlocation(locationVO);
 
@@ -189,6 +188,16 @@ public class LocationServlet extends HttpServlet {
 		LocationVO locationVO = dao.getById(locationid);
 
 		locationVO.setAddress(locationaddress);
+		// 處理時間格式
+		try {
+			if (timeStr != null && !timeStr.trim().isEmpty()) {
+				locationcreatetime = Timestamp.valueOf(timeStr);
+			}
+		} catch (IllegalArgumentException e) {
+			// 處理時間格式錯誤
+			System.out.println("時間格式錯誤：" + e.getMessage());
+		}
+
 		locationVO.setCreate_time(locationcreatetime);
 		locationVO.setComments_number(locationcommentsnumber);
 		locationVO.setScore(locationscore);
@@ -210,7 +219,7 @@ public class LocationServlet extends HttpServlet {
 
 		// 回傳成功訊息給前端
 		res.getWriter().write("success");
-		
+
 		return "刪除成功";
 
 	}
