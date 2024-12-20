@@ -183,6 +183,7 @@ public class AnnounceServelet extends HttpServlet {
 	private String update(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
 		Integer adminid = Integer.valueOf(req.getParameter("adminid"));
+		Integer announceid = Integer.valueOf(req.getParameter("announceid"));
 		String title = req.getParameter("title");
 		String content = req.getParameter("content");
 		Date starttime = Date.valueOf(req.getParameter("starttime").trim());
@@ -195,11 +196,10 @@ public class AnnounceServelet extends HttpServlet {
 		in.read(photo);
 		in.close();
 
-		AdminDAO dao = new AdminDAOImplJDBC();
-		AdminVO adminvo = dao.getById(adminid);
-
+		
+		AdminVO adminvo = adminSvc.getOneAdmin(adminid);
 		AnnounceVO announce = new AnnounceVO();
-
+		announce.setAnnounceid(announceid);
 		announce.setAdminvo(adminvo);
 		announce.setContent(content);
 		announce.setTitle(title);
