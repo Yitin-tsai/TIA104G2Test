@@ -1,6 +1,7 @@
 package chilltrip.member.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import chilltrip.member.model.MemberService;
 import chilltrip.member.model.MemberVO;
 import redis.clients.jedis.Jedis;
+
 
 @WebServlet("/member")
 @MultipartConfig
@@ -134,15 +136,7 @@ public class MemberServlet extends HttpServlet {
 				errorMsgs.add("此 email 已經註冊過，請使用其他 email");
 			}
 
-			// 驗證信箱驗證碼
-//			String emailCode = req.getParameter("emailCode");
-
-			// 從 Redis db5 中取出驗證碼
-//			String storedCode = jedis.get("verification_code:" + email);
-//
-//			if (storedCode == null || !storedCode.equals(emailCode)) {
-//				errorMsgs.add("無效的驗證碼，請重新驗證");
-//			}
+			String emailCode = req.getParameter("successMessage");
 
 			String password = req.getParameter("password");
 			System.out.println("註冊的密碼：" + password);  // 檢查密碼是否正確接收
@@ -196,7 +190,6 @@ public class MemberServlet extends HttpServlet {
 
 			// 初始化 gender 變數
 			Integer gender = null;
-			System.out.println("註冊的性別：" + gender);  // 檢查性別是否正確接收
 
 			// 根據前端傳來的性別值（字串），轉換為數字
 			if (genderStr != null) {
@@ -206,9 +199,10 @@ public class MemberServlet extends HttpServlet {
 					gender = 1; // 女性對應 1
 				}
 			}
-//
-//			Date birthday = Date.valueOf(req.getParameter("birthday"));
-//			System.out.println("註冊的生日：" + birthday);  // 檢查生日是否正確接收
+			System.out.println("註冊的性別：" + gender);  // 檢查性別是否正確接收
+
+			Date birthday = Date.valueOf(req.getParameter("birthday"));
+			System.out.println("註冊的生日：" + birthday);  // 檢查生日是否正確接收
 			
 
 			String companyId = String.valueOf(req.getParameter("companyid"));
@@ -270,13 +264,14 @@ public class MemberServlet extends HttpServlet {
 			memberVO.setNickName(nickName);
 			memberVO.setStatus(status);
 			memberVO.setGender(gender);
-//			memberVO.setBirthday(birthday);
+			memberVO.setBirthday(birthday);
 			memberVO.setCompanyId(companyId);
 			memberVO.setEreceiptCarrier(ereceiptCarrier);
 			memberVO.setCreditCard(creditCard);
 			memberVO.setTrackingNumber(trackingNumber);
 			memberVO.setFansNumber(fansNumber);
 			memberVO.setPhoto(photo);
+			System.out.println(memberVO);
 
 			// 開始新增資料
 			memberVO = memberSvc.addMember(memberVO);
@@ -287,6 +282,7 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			// 新增完成,準備轉交(Send the Success view)
+			System.out.println("註冊成功，請登入");
 			req.setAttribute("successMessage", "註冊成功，請登入");
 			String url = "/frontend/member_login.html";
 			RequestDispatcher successView = req.getRequestDispatcher(url); // 註冊成功時導到登入頁面
