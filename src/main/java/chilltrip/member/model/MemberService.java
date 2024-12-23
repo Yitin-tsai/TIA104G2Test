@@ -23,6 +23,7 @@ import javax.servlet.http.Part;
 import chilltrip.tripcomment.model.TripCommentVO;
 import redis.clients.jedis.Jedis;
 
+
 public class MemberService {
 
 	private MemberDAO_interface dao;
@@ -144,6 +145,7 @@ public class MemberService {
 		Part part = null;
 		try {
 			part = req.getPart("photo"); // 獲取上傳的文件
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ServletException e) {
@@ -151,31 +153,30 @@ public class MemberService {
 		}
 
 		if (part == null || part.getSize() == 0) {
-			// 如果沒有上傳圖片，則使用預設大頭照
-			System.out.println("未上傳圖片，將使用預設圖片");
-			photo = getDefaultAvatar(req);
-		} else {
-			if (part.getSize() > 5000000) { // 假設限制為 5MB
-				throw new IOException("圖片檔案過大，請選擇小於 5MB 的檔案");
-			}
-
-			// 有上傳圖片，讀取圖片
-			try (InputStream in = part.getInputStream()) {
-				photo = in.readAllBytes(); // Java 9 的新方法
-			} catch (IOException e) {
-				e.printStackTrace();
-				// 如果讀取圖片時發生錯誤，使用預設圖片
-				photo = getDefaultAvatar(req);
-			}
-		}
-
+	        // 如果沒有上傳圖片，則使用預設大頭照
+	        System.out.println("未上傳圖片，將使用預設圖片");
+	        photo = getDefaultAvatar(req);
+	    } else {
+	        if (part.getSize() > 5000000) { // 假設限制為 5MB
+	            throw new IOException("圖片檔案過大，請選擇小於 5MB 的檔案");
+	        }
+	        
+	        // 有上傳圖片，讀取圖片
+	        try (InputStream in = part.getInputStream()) {
+	            photo = in.readAllBytes(); // Java 9 的新方法
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            // 如果讀取圖片時發生錯誤，使用預設圖片
+	            photo = getDefaultAvatar(req);
+	        }
+	    }
+		
 		// 如果 photo 還是 null，則返回預設圖片
-		if (photo == null) {
+		if(photo == null) {
 			photo = getDefaultAvatar(req);
 		}
-
 		return photo;
-	}
+    }
 
 	private byte[] getDefaultAvatar(HttpServletRequest req) throws IOException {
 

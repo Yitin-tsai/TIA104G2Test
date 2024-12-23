@@ -19,6 +19,7 @@ import chilltrip.member.model.MemberService;
 import chilltrip.member.model.MemberVO;
 import redis.clients.jedis.Jedis;
 
+
 @WebServlet("/member")
 @MultipartConfig
 public class MemberServlet extends HttpServlet {
@@ -135,7 +136,6 @@ public class MemberServlet extends HttpServlet {
 				errorMsgs.add("此 email 已經註冊過，請使用其他 email");
 			}
 
-			// 驗證信箱驗證碼
 			String emailCode = req.getParameter("successMessage");
 
 			String password = req.getParameter("password");
