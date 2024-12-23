@@ -57,7 +57,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 			pstmt.setString(13, memberVO.getCreditCard());
 			pstmt.setInt(14, memberVO.getTrackingNumber());
 			pstmt.setInt(15, memberVO.getFansNumber());
-			pstmt.setBytes(16, memberVO.getPhoto());
+			pstmt.setBytes(16, memberVO.getPhoto() != null ? memberVO.getPhoto() : null);
 
 			pstmt.executeUpdate();
 
@@ -112,7 +112,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 			pstmt.setString(13, memberVO.getCreditCard());
 			pstmt.setInt(14, memberVO.getTrackingNumber());
 			pstmt.setInt(15, memberVO.getFansNumber());
-			pstmt.setBytes(16, memberVO.getPhoto());
+			pstmt.setBytes(16, memberVO.getPhoto() != null ? memberVO.getPhoto() : null);
 			pstmt.setInt(17, memberVO.getMemberId());
 
 			pstmt.executeUpdate();
