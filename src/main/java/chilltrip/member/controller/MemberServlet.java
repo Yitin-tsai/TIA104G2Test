@@ -1,13 +1,13 @@
 package chilltrip.member.controller;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +19,7 @@ import chilltrip.member.model.MemberVO;
 import redis.clients.jedis.Jedis;
 
 @WebServlet("/member")
+@MultipartConfig
 public class MemberServlet extends HttpServlet {
 
 	private MemberService memberSvc;
@@ -134,14 +135,14 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			// 驗證信箱驗證碼
-			String emailCode = req.getParameter("emailCode");
+//			String emailCode = req.getParameter("emailCode");
 
 			// 從 Redis db5 中取出驗證碼
-			String storedCode = jedis.get("verification_code:" + email);
-
-			if (storedCode == null || !storedCode.equals(emailCode)) {
-				errorMsgs.add("無效的驗證碼，請重新驗證");
-			}
+//			String storedCode = jedis.get("verification_code:" + email);
+//
+//			if (storedCode == null || !storedCode.equals(emailCode)) {
+//				errorMsgs.add("無效的驗證碼，請重新驗證");
+//			}
 
 			String password = req.getParameter("password");
 			System.out.println("註冊的密碼：" + password);  // 檢查密碼是否正確接收
@@ -205,9 +206,9 @@ public class MemberServlet extends HttpServlet {
 					gender = 1; // 女性對應 1
 				}
 			}
-
-			Date birthday = Date.valueOf(req.getParameter("birthday"));
-			System.out.println("註冊的生日：" + birthday);  // 檢查生日是否正確接收
+//
+//			Date birthday = Date.valueOf(req.getParameter("birthday"));
+//			System.out.println("註冊的生日：" + birthday);  // 檢查生日是否正確接收
 			
 
 			String companyId = String.valueOf(req.getParameter("companyid"));
@@ -269,7 +270,7 @@ public class MemberServlet extends HttpServlet {
 			memberVO.setNickName(nickName);
 			memberVO.setStatus(status);
 			memberVO.setGender(gender);
-			memberVO.setBirthday(birthday);
+//			memberVO.setBirthday(birthday);
 			memberVO.setCompanyId(companyId);
 			memberVO.setEreceiptCarrier(ereceiptCarrier);
 			memberVO.setCreditCard(creditCard);

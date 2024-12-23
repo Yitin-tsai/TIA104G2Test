@@ -144,16 +144,18 @@ public class MemberService {
     	Part part = null;
 		try {
 			part = req.getPart("photo");  // 獲取上傳的文件
+			
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
-		
 		if (part == null || part.getSize() == 0) {
 	        // 如果沒有上傳圖片，則使用預設大頭照
 	        System.out.println("未上傳圖片，將使用預設圖片");
-	        photo = getDefaultAvatar();
+	        photo = getDefaultAvatar(req);
 	    } else {
 	        if (part.getSize() > 5000000) { // 假設限制為 5MB
 	            throw new IOException("圖片檔案過大，請選擇小於 5MB 的檔案");
@@ -165,23 +167,22 @@ public class MemberService {
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            // 如果讀取圖片時發生錯誤，使用預設圖片
-	            photo = getDefaultAvatar();
+	            photo = getDefaultAvatar(req);
 	        }
 	    }
 		
 		// 如果 photo 還是 null，則返回預設圖片
 		if(photo == null) {
-			photo = getDefaultAvatar();
+			photo = getDefaultAvatar(req);
 		}
-		
 		return photo;
     }
 
     
-    private byte[] getDefaultAvatar() throws IOException{
+    private byte[] getDefaultAvatar(HttpServletRequest req) throws IOException{
     	
     	// 如果沒有上傳圖片，則使用預設的大頭照
-    	InputStream defaulAvatar = getClass().getClassLoader().getResourceAsStream("/frontend/img/avatar.png");
+    	InputStream defaulAvatar = req.getSession().getServletContext().getResourceAsStream("/frontend/img/avatar.png");
     	
     	
     	if(defaulAvatar == null) {
