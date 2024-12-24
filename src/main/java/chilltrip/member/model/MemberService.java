@@ -23,7 +23,6 @@ import javax.servlet.http.Part;
 import chilltrip.tripcomment.model.TripCommentVO;
 import redis.clients.jedis.Jedis;
 
-
 public class MemberService {
 
 	private MemberDAO_interface dao;
