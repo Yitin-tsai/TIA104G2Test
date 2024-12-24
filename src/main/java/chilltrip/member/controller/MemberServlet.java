@@ -208,25 +208,31 @@ public class MemberServlet extends HttpServlet {
 			String companyId = String.valueOf(req.getParameter("companyid"));
 			System.out.println("註冊的公司統編：" + companyId);  // 檢查公司統編是否正確接收
 			
-			String companyIdReg = "^\\d{8}$";
-			if (!companyId.trim().matches(companyIdReg)) {
-				errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");
+			if (companyId != null && !companyId.trim().isEmpty()) {
+				String companyIdReg = "^\\d{8}$";
+				if (!companyId.trim().matches(companyIdReg)) {
+					errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");					
+				}
 			}
 
 			String ereceiptCarrier = req.getParameter("ereceiptcarrier");
 			System.out.println("註冊的手機載具：" + ereceiptCarrier);  // 檢查手機載具是否正確接收
 			
-			String ereceiptCarrierReg = "^\\/[0-9A-Z.\\-\\+]{7}$";
-			if (!ereceiptCarrier.trim().matches(ereceiptCarrierReg)) {
-				errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");
+			if (ereceiptCarrier != null && !ereceiptCarrier.trim().isEmpty()) {
+				String ereceiptCarrierReg = "^\\/[0-9A-Z.\\-\\+]{7}$";
+				if (!ereceiptCarrier.trim().matches(ereceiptCarrierReg)) {
+					errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");					
+				}
 			}
 
 			String creditCard = req.getParameter("creditcard");
 			System.out.println("註冊的信用卡號：" + creditCard);  // 檢查信用卡號是否正確接收
 			
-			String creditCardReg = "^(\\d{4}[-\\s]?){3}\\d{4}$|^\\d{13,19}$";
-			if (!creditCard.trim().matches(creditCardReg)) {
-				errorMsgs.add("信用卡號輸入格式不正確，請輸入 13 至 19 位的數字");
+			if (creditCard != null && !creditCard.trim().isEmpty()) {
+				String creditCardReg = "^(\\d{4}[-\\s]?){3}\\d{4}$|^\\d{13,19}$";
+				if(!creditCard.trim().matches(creditCardReg)) {
+					errorMsgs.add("信用卡號輸入格式不正確，請輸入 13 至 19 位的數字");
+				}
 			}
 			
 			// 註冊時預設追蹤數為 0
@@ -333,9 +339,6 @@ public class MemberServlet extends HttpServlet {
             // 登入成功，導向到會員個人頁面
             res.sendRedirect(req.getContextPath() + "/member?cation=viewProfile");
             
-//            String url = "/frontend/personal_homepage.html";
-//            RequestDispatcher successView = req.getRequestDispatcher(url);
-//            successView.forward(req, res);
 		}
 		
 		if("viewProfile".equals(action)) {  // 登入後跳個人頁面查詢會員資料
@@ -422,7 +425,167 @@ public class MemberServlet extends HttpServlet {
 		}
 		
 		if("update".equals(action)) {  // 更新會員資訊
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
 			
+			// 取得 session 中的會員資料
+			HttpSession session = req.getSession();
+			MemberVO memberVO = (MemberVO)session.getAttribute("memberVO");
+			
+			if(memberVO == null) {
+				// 如果未登入，導回登入頁面
+				res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
+				return;
+			}
+			
+			// 取得會員 ID，這是資料庫的主鍵
+		    Integer memberId = memberVO.getMemberId();
+		    System.out.println("會員ID為:" + memberId);
+			
+		    // 使用 memberId 查詢會員資料，避免讓用戶修改不可更改的欄位
+		    memberVO = memberSvc.getOneMember(memberId);
+		    
+		    String email = memberVO.getEmail();  // 不可更改的欄位
+		    String account = memberVO.getAccount();  // 不可更改的欄位
+		    Timestamp createTime = memberVO.getCreateTime();  // 不可更改的欄位
+		    
+			// 接收使用者輸入的資料
+			String password = req.getParameter("password");
+			System.out.println("修改的密碼：" + password);  // 檢查密碼是否正確接收
+						
+			String passwordReg = "^[(a-zA-Z0-9_)]{5,15}$";
+			if (password == null || password.trim().length() == 0) {
+					errorMsgs.add("密碼請勿空白");
+			} else if (!password.trim().matches(passwordReg)) {
+					errorMsgs.add("密碼只能是英文字母數字和_，長度需在5~20之間");
+			}
+
+			String name = memberVO.getName();  // 不可更改的欄位
+			
+			String phone = req.getParameter("phone");
+			System.out.println("修改的電話：" + phone);  // 檢查電話是否正確接收
+						
+			String phoneReg = "^(09[0-9]{8}|0[2-8][0-9]{7,8}|0[2-8]-[0-9]{6,8})$";
+			if (phone == null || phone.trim().length() == 0) {
+				errorMsgs.add("聯絡電話請勿空白");
+			} else if (!phone.trim().matches(phoneReg)) {
+				errorMsgs.add("請輸入正確聯絡電話格式，手機或市話皆可，ex: 0912345678 或 02-12345678");
+			}
+			
+			String nickName = req.getParameter("nickname");
+			System.out.println("修改的暱稱：" + nickName);  // 檢查暱稱是否正確接收
+						
+			String nickNameReg = "^[\\u4E00-\\u9FFFa-zA-Z\\s]{2,20}$";
+			if (nickName == null || nickName.trim().length() == 0) {
+				errorMsgs.add("會員名稱請勿空白");
+			} else if (!nickName.trim().matches(nickNameReg)) {
+				errorMsgs.add("會員名稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~20之間，且不允許開頭或結尾有空格");
+			}
+			
+			// 狀態不需要更改
+			Integer status = memberVO.getStatus();
+
+			// 性別不需要更改
+			Integer gender = memberVO.getGender();
+
+			// 生日不需要更改
+			Date birthday = memberVO.getBirthday();
+
+			String companyId = req.getParameter("companyid");
+			System.out.println("修改的公司統編：" + companyId);  // 檢查公司統編是否正確接收
+			
+			if (companyId != null && !companyId.trim().isEmpty()) {
+				String companyIdReg = "^\\d{8}$";
+				if (!companyId.trim().matches(companyIdReg)) {
+					errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");					
+				}
+			}
+
+			String ereceiptCarrier = req.getParameter("ereceiptcarrier");
+			System.out.println("修改的手機載具：" + ereceiptCarrier);  // 檢查手機載具是否正確接收
+			
+			if (ereceiptCarrier != null && !ereceiptCarrier.trim().isEmpty()) {
+				String ereceiptCarrierReg = "^\\/[0-9A-Z.\\-\\+]{7}$";
+				if (!ereceiptCarrier.trim().matches(ereceiptCarrierReg)) {
+					errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");					
+				}
+			}
+
+			String creditCard = req.getParameter("creditcard");
+			System.out.println("修改的信用卡號：" + creditCard);  // 檢查信用卡號是否正確接收
+			
+			if (creditCard != null && !creditCard.trim().isEmpty()) {
+				String creditCardReg = "^(\\d{4}[-\\s]?){3}\\d{4}$|^\\d{13,19}$";
+				if(!creditCard.trim().matches(creditCardReg)) {
+					errorMsgs.add("信用卡號輸入格式不正確，請輸入 13 至 19 位的數字");
+				}
+			}
+			
+			// 註冊時預設追蹤數為 0
+			Integer trackingNumber = memberVO.getTrackingNumber();
+			System.out.println("註冊的追蹤數不可變更：" + trackingNumber);  // 檢查追蹤數是否正確接收
+			
+			// 註冊時預設粉絲數為 0
+			Integer fansNumber = memberVO.getFansNumber();
+			System.out.println("註冊的粉絲數不可變更：" + fansNumber);  // 檢查粉絲數是否正確接收
+			
+			byte[] photo = memberSvc.processPhoto(req);  // 調用 Service 層處理圖片邏輯
+						
+			if(photo == null) {
+				System.out.println("圖片處理錯誤");  // 顯示圖片處理錯誤
+				req.setAttribute("errorMsgs", "圖片處理錯誤");
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_update.html");
+				failureView.forward(req, res);
+				return;
+			}
+						
+			if (!errorMsgs.isEmpty()) {
+				req.setAttribute("errorMsgs", errorMsgs); 
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_update.html"); // 錯誤時導到原更新資訊頁面顯示錯誤頁面
+				failureView.forward(req, res);
+				return;
+			}
+
+			// 如果驗證成功，建立 MemberVO 物件並設置相應屬性
+			memberVO = new MemberVO();
+			memberVO.setMemberId(memberId);
+			memberVO.setEmail(email);
+			memberVO.setAccount(account);  // 帳號等於電子郵件
+			memberVO.setPassword(password);
+			memberVO.setName(name);
+			memberVO.setPhone(phone);
+			memberVO.setCreateTime(createTime);
+			memberVO.setNickName(nickName);
+			memberVO.setStatus(status);
+			memberVO.setGender(gender);
+			memberVO.setBirthday(birthday);
+			memberVO.setCompanyId(companyId);
+			memberVO.setEreceiptCarrier(ereceiptCarrier);
+			memberVO.setCreditCard(creditCard);
+			memberVO.setTrackingNumber(trackingNumber);
+			memberVO.setFansNumber(fansNumber);
+			memberVO.setPhoto(photo);
+			System.out.println(memberVO);
+			
+			// 調用 Service 層更新資料
+			MemberVO updatedMemberVO = memberSvc.updateMember(memberVO);
+			
+			if(updatedMemberVO == null || email == null) {
+				System.out.println("更新資料失敗，請再試一次");
+				errorMsgs.add("更新資料失敗，請再試一次");
+				RequestDispatcher failuserView = req.getRequestDispatcher("/frontend/member_update.html");
+				failuserView.forward(req, res);
+				return;
+			}
+			
+			// 更新成功，將更新後的資料放回 session
+			req.getSession().setAttribute("memberVO", updatedMemberVO);
+			
+			// 更新成功，導向個人頁面
+			System.out.println("會員資料更新成功");
+			req.setAttribute("successMessage", "會員資料更新成功");
+			RequestDispatcher successView = req.getRequestDispatcher("/frontend/personal_homepage.html");
+			successView.forward(req, res);
 		}
 	}
 
