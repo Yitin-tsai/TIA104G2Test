@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import chilltrip.member.model.MemberService;
 import chilltrip.member.model.MemberVO;
 import redis.clients.jedis.Jedis;
-
 
 @WebServlet("/member")
 @MultipartConfig
@@ -51,7 +51,7 @@ public class MemberServlet extends HttpServlet {
 		if ("randomcode".equals(action)) { // 傳送信箱驗證碼的請求
 			List<String> errorMsgs = new LinkedList<String>(); // 儲存錯誤訊息的列表
 			req.setAttribute("errorMsgs", errorMsgs);
-			
+
 			// 接收請求參數，輸入格式的錯誤處理
 			String email = req.getParameter("email");
 			String emailReg = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
@@ -64,67 +64,67 @@ public class MemberServlet extends HttpServlet {
 			if (memberSvc.checkEmailExists(email)) {
 				errorMsgs.add("此 email 已經註冊過，請使用其他 email");
 			}
-			
+
 			if (!errorMsgs.isEmpty()) {
-			    req.setAttribute("errorMsgs", errorMsgs);
-			    RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_registration.html");
-			    failureView.forward(req, res);
-			    return;
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_registration.html");
+				failureView.forward(req, res);
+				return;
 			}
-			
+
 			sendCode(email);
 		}
-		
-		if("checkrandomcode".equals(action)) {  // 確認信箱驗證碼的請求
+
+		if ("checkrandomcode".equals(action)) { // 確認信箱驗證碼的請求
 			List<String> errorMsgs = new LinkedList<String>(); // 儲存錯誤訊息的列表
 			req.setAttribute("errorMsgs", errorMsgs);
 
 			// 接收請求參數，驗證郵件驗證碼
 			String emailCode = req.getParameter("emailCode");
-			String email = req.getParameter("email").trim();  // 信箱去除前後空格
-			
+			String email = req.getParameter("email").trim(); // 信箱去除前後空格
+
 			if (emailCode == null || emailCode.trim().length() == 0) {
 				errorMsgs.add("信箱驗證碼請勿空白");
 			}
-			
+
 			// 從 Redis db5 中取出驗證碼
 			String storedCode = jedis.get("verification_code:" + email);
-			System.out.println("從 Redis 取得的驗證碼：" + storedCode);  // 確保儲存的驗證碼無誤
-			System.out.println("用戶輸入的驗證碼：" + emailCode);  // 確保用戶輸入的驗證碼無誤
+			System.out.println("從 Redis 取得的驗證碼：" + storedCode); // 確保儲存的驗證碼無誤
+			System.out.println("用戶輸入的驗證碼：" + emailCode); // 確保用戶輸入的驗證碼無誤
 
 			if (storedCode == null || !storedCode.trim().equalsIgnoreCase(emailCode.trim())) {
 				System.out.println("無效的驗證碼，請重新驗證");
-			    errorMsgs.add("無效的驗證碼，請重新驗證");
+				errorMsgs.add("無效的驗證碼，請重新驗證");
 			}
-			
+
 			if (!errorMsgs.isEmpty()) {
 				System.out.println("驗證碼確認失敗！");
-			    req.setAttribute("errorMsgs", errorMsgs);
-			    RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_registration.html");
-			    failureView.forward(req, res);
-			    return;
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_registration.html");
+				failureView.forward(req, res);
+				return;
 			} else {
-			    // 驗證成功，將結果傳遞到前端
-			    req.setAttribute("successMessage", "驗證碼確認成功！");
-			   
-			    System.out.println("驗證碼確認成功！");
-			    RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_registration.html");
-			    successView.forward(req, res);
-			    return;
+				// 驗證成功，將結果傳遞到前端
+				req.setAttribute("successMessage", "驗證碼確認成功！");
+
+				System.out.println("驗證碼確認成功！");
+				RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_registration.html");
+				successView.forward(req, res);
+				return;
 			}
 		}
 
 		if ("register".equals(action)) { // 註冊會員的請求
-			
+
 			System.out.println("開始註冊會員...");
 
 			List<String> errorMsgs = new LinkedList<String>(); // 儲存錯誤訊息的列表
 			req.setAttribute("errorMsgs", errorMsgs);
 
-			 // 接收請求參數，處理信箱(將信箱作為帳號)
-			String email = req.getParameter("email").trim();  // 信箱去除前後空格
-			System.out.println("註冊的 email：" + email);  // 檢查 email 是否正確接收
-			
+			// 接收請求參數，處理信箱(將信箱作為帳號)
+			String email = req.getParameter("email").trim(); // 信箱去除前後空格
+			System.out.println("註冊的 email：" + email); // 檢查 email 是否正確接收
+
 			String emailReg = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
 			if (email == null || email.trim().length() == 0) {
 				errorMsgs.add("信箱請勿空白");
@@ -139,8 +139,8 @@ public class MemberServlet extends HttpServlet {
 			String emailCode = req.getParameter("successMessage");
 
 			String password = req.getParameter("password");
-			System.out.println("註冊的密碼：" + password);  // 檢查密碼是否正確接收
-			
+			System.out.println("註冊的密碼：" + password); // 檢查密碼是否正確接收
+
 			String passwordReg = "^[(a-zA-Z0-9_)]{5,15}$";
 			if (password == null || password.trim().length() == 0) {
 				errorMsgs.add("密碼請勿空白");
@@ -149,8 +149,8 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			String name = req.getParameter("name");
-			System.out.println("註冊的姓名：" + name);  // 檢查姓名是否正確接收
-			
+			System.out.println("註冊的姓名：" + name); // 檢查姓名是否正確接收
+
 			String nameReg = "^[\\u4E00-\\u9FFFa-zA-Z\\s]{2,20}$";
 			if (name == null || name.trim().length() == 0) {
 				errorMsgs.add("姓名請勿空白");
@@ -159,8 +159,8 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			String phone = req.getParameter("phone");
-			System.out.println("註冊的電話：" + phone);  // 檢查電話是否正確接收
-			
+			System.out.println("註冊的電話：" + phone); // 檢查電話是否正確接收
+
 			String phoneReg = "^(09[0-9]{8}|0[2-8][0-9]{7,8}|0[2-8]-[0-9]{6,8})$";
 			if (phone == null || phone.trim().length() == 0) {
 				errorMsgs.add("聯絡電話請勿空白");
@@ -169,11 +169,11 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			Timestamp createTime = new Timestamp(System.currentTimeMillis()); // 生成當前時間
-			System.out.println("註冊的時間：" + createTime);  // 檢查註冊時間是否正確接收
+			System.out.println("註冊的時間：" + createTime); // 檢查註冊時間是否正確接收
 
 			String nickName = req.getParameter("nickname");
-			System.out.println("註冊的暱稱：" + nickName);  // 檢查暱稱是否正確接收
-			
+			System.out.println("註冊的暱稱：" + nickName); // 檢查暱稱是否正確接收
+
 			String nickNameReg = "^[\\u4E00-\\u9FFFa-zA-Z\\s]{2,20}$";
 			if (nickName == null || nickName.trim().length() == 0) {
 				errorMsgs.add("會員名稱請勿空白");
@@ -183,7 +183,7 @@ public class MemberServlet extends HttpServlet {
 
 			// 設置註冊後使用者的預設狀態為 0（一般狀態）
 			Integer status = 0; // 0 表示一般狀態
-			System.out.println("註冊的狀態：" + status);  // 檢查狀態是否正確接收
+			System.out.println("註冊的狀態：" + status); // 檢查狀態是否正確接收
 
 			// 接收前端傳來的性別選擇
 			String genderStr = req.getParameter("gender");
@@ -199,61 +199,60 @@ public class MemberServlet extends HttpServlet {
 					gender = 1; // 女性對應 1
 				}
 			}
-			System.out.println("註冊的性別：" + gender);  // 檢查性別是否正確接收
+			System.out.println("註冊的性別：" + gender); // 檢查性別是否正確接收
 
 			Date birthday = Date.valueOf(req.getParameter("birthday"));
-			System.out.println("註冊的生日：" + birthday);  // 檢查生日是否正確接收
-			
+			System.out.println("註冊的生日：" + birthday); // 檢查生日是否正確接收
 
 			String companyId = String.valueOf(req.getParameter("companyid"));
-			System.out.println("註冊的公司統編：" + companyId);  // 檢查公司統編是否正確接收
-			
+			System.out.println("註冊的公司統編：" + companyId); // 檢查公司統編是否正確接收
+
 			if (companyId != null && !companyId.trim().isEmpty()) {
 				String companyIdReg = "^\\d{8}$";
 				if (!companyId.trim().matches(companyIdReg)) {
-					errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");					
+					errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");
 				}
 			}
 
 			String ereceiptCarrier = req.getParameter("ereceiptcarrier");
-			System.out.println("註冊的手機載具：" + ereceiptCarrier);  // 檢查手機載具是否正確接收
-			
+			System.out.println("註冊的手機載具：" + ereceiptCarrier); // 檢查手機載具是否正確接收
+
 			if (ereceiptCarrier != null && !ereceiptCarrier.trim().isEmpty()) {
 				String ereceiptCarrierReg = "^\\/[0-9A-Z.\\-\\+]{7}$";
 				if (!ereceiptCarrier.trim().matches(ereceiptCarrierReg)) {
-					errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");					
+					errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");
 				}
 			}
 
 			String creditCard = req.getParameter("creditcard");
-			System.out.println("註冊的信用卡號：" + creditCard);  // 檢查信用卡號是否正確接收
-			
+			System.out.println("註冊的信用卡號：" + creditCard); // 檢查信用卡號是否正確接收
+
 			if (creditCard != null && !creditCard.trim().isEmpty()) {
 				String creditCardReg = "^(\\d{4}[-\\s]?){3}\\d{4}$|^\\d{13,19}$";
-				if(!creditCard.trim().matches(creditCardReg)) {
+				if (!creditCard.trim().matches(creditCardReg)) {
 					errorMsgs.add("信用卡號輸入格式不正確，請輸入 13 至 19 位的數字");
 				}
 			}
-			
+
 			// 註冊時預設追蹤數為 0
 			Integer trackingNumber = 0;
-			System.out.println("註冊的追蹤數：" + trackingNumber);  // 檢查追蹤數是否正確接收
+			System.out.println("註冊的追蹤數：" + trackingNumber); // 檢查追蹤數是否正確接收
 			// 註冊時預設粉絲數為 0
 			Integer fansNumber = 0;
-			System.out.println("註冊的粉絲數：" + fansNumber);  // 檢查粉絲數是否正確接收
+			System.out.println("註冊的粉絲數：" + fansNumber); // 檢查粉絲數是否正確接收
 
-			byte[] photo = memberSvc.processPhoto(req);  // 調用 Service 層處理圖片邏輯
-			
-			if(photo == null) {
-				System.out.println("圖片處理錯誤");  // 顯示圖片處理錯誤
+			byte[] photo = memberSvc.processPhoto(req); // 調用 Service 層處理圖片邏輯
+
+			if (photo == null) {
+				System.out.println("圖片處理錯誤"); // 顯示圖片處理錯誤
 				req.setAttribute("errorMsgs", "圖片處理錯誤");
 				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_registration.html");
 				failureView.forward(req, res);
 				return;
 			}
-			
+
 			if (!errorMsgs.isEmpty()) {
-				req.setAttribute("errorMsgs", errorMsgs); 
+				req.setAttribute("errorMsgs", errorMsgs);
 				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_registration.html"); // 錯誤時導到原註冊頁面顯示錯誤頁面
 				failureView.forward(req, res);
 				return;
@@ -262,7 +261,7 @@ public class MemberServlet extends HttpServlet {
 			// 如果驗證成功，建立 MemberVO 物件並設置相應屬性
 			MemberVO memberVO = new MemberVO();
 			memberVO.setEmail(email);
-			memberVO.setAccount(email);  // 帳號等於電子郵件
+			memberVO.setAccount(email); // 帳號等於電子郵件
 			memberVO.setPassword(password);
 			memberVO.setName(name);
 			memberVO.setPhone(phone);
@@ -282,9 +281,9 @@ public class MemberServlet extends HttpServlet {
 			// 開始新增資料
 			memberVO = memberSvc.addMember(memberVO);
 			if (memberVO == null) {
-			    System.out.println("資料庫新增失敗，請檢查 addMember 方法");
+				System.out.println("資料庫新增失敗，請檢查 addMember 方法");
 			} else {
-			    System.out.println("會員資料已成功保存");
+				System.out.println("會員資料已成功保存");
 			}
 
 			// 新增完成,準備轉交(Send the Success view)
@@ -295,85 +294,84 @@ public class MemberServlet extends HttpServlet {
 			successView.forward(req, res);
 
 		}
-		
-		
-		if("login".equals(action)) {  // 登入請求處理
-			List<String> errorMsgs = new LinkedList<String>();  // 儲存錯誤訊息的列表
+
+		if ("login".equals(action)) { // 登入請求處理
+			List<String> errorMsgs = new LinkedList<String>(); // 儲存錯誤訊息的列表
 			req.setAttribute("errorMsgs", errorMsgs);
-			
+
 			// 接收請求參數
 			// 取得登入表單中的帳號(信箱)和密碼
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
+			String email = req.getParameter("email");
+			String password = req.getParameter("password");
 
-            // 驗證帳號和密碼
-            if (email == null || email.trim().length() == 0) {
-                errorMsgs.add("請輸入信箱");
-            }
-            if (password == null || password.trim().length() == 0) {
-                errorMsgs.add("請輸入密碼");
-            }
-            
-            if (!errorMsgs.isEmpty()) {
-            	System.out.println("使用者:" + email + "登入失敗");
-                RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");  // 錯誤時導到原登入頁面顯示錯誤頁面
-                failureView.forward(req, res);
-                return;
-            }
-			
+			// 驗證帳號和密碼
+			if (email == null || email.trim().length() == 0) {
+				errorMsgs.add("請輸入信箱");
+			}
+			if (password == null || password.trim().length() == 0) {
+				errorMsgs.add("請輸入密碼");
+			}
+
+			if (!errorMsgs.isEmpty()) {
+				System.out.println("使用者:" + email + "登入失敗");
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html"); // 錯誤時導到原登入頁面顯示錯誤頁面
+				failureView.forward(req, res);
+				return;
+			}
+
 			// 開始查詢資料
 			MemberVO memberVO = memberSvc.login(email, password);
-			
+
 			if (memberVO == null) {
 				System.out.println("使用者:" + email + "登入失敗");
-                errorMsgs.add("帳號或密碼錯誤");
-                RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");
-                failureView.forward(req, res);
-                return;
-            }
-			
+				errorMsgs.add("帳號或密碼錯誤");
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");
+				failureView.forward(req, res);
+				return;
+			}
+
 			// 登入成功，將會員資料放入 session 中
-            req.getSession().setAttribute("memberVO", memberVO);
-            System.out.println("使用者:" + email + "登入成功");
-                      
-            // 登入成功，導向到會員個人頁面
-            res.sendRedirect(req.getContextPath() + "/member?cation=viewProfile");
-            
+			req.getSession().setAttribute("memberVO", memberVO);
+			System.out.println("使用者:" + email + "登入成功");
+
+			// 登入成功，導向到會員個人頁面
+			res.sendRedirect(req.getContextPath() + "/member?cation=viewProfile");
+
 		}
-		
-		if("viewProfile".equals(action)) {  // 登入後跳個人頁面查詢會員資料
+
+		if ("viewProfile".equals(action)) { // 登入後跳個人頁面查詢會員資料
 			// 確認 session 中的使用者是否存在
-			MemberVO memberVO = (MemberVO)req.getSession().getAttribute("memberVO");
-			if(memberVO == null) {
+			MemberVO memberVO = (MemberVO) req.getSession().getAttribute("memberVO");
+			if (memberVO == null) {
 				// 如果沒有登入，導回登入頁面
 				res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
 				return;
 			}
-			
+
 			// 取得 MemberVO 中的性別
 			Integer gender = memberVO.getGender();
-			
+
 			// 將性別從數字轉換成文字
 			String genderStr = "";
-			if(gender != null) {
-				if(gender == 0){
+			if (gender != null) {
+				if (gender == 0) {
 					genderStr = "男";
-				}else if(gender == 1) {
+				} else if (gender == 1) {
 					genderStr = "女";
 				}
 			}
-			
+
 			// 把轉換後的性別文字傳遞到前端頁面
 			req.setAttribute("gender", genderStr);
-			
+
 			// 將會員照片轉換為 Base64 字串
 			String photoBase64 = memberSvc.encodePhotoToBase64(memberVO);
-			req.setAttribute("photoBase64", photoBase64);   // 將 Base64 字串傳遞給前端頁面
-			
+			req.setAttribute("photoBase64", photoBase64); // 將 Base64 字串傳遞給前端頁面
+
 			try {
 				// 直接使用 session 中的 memberVO 資料，不必再重新查詢
 				req.setAttribute("memberVO", memberVO); // 將會員資料傳遞到前端
-				
+
 				// 將資料轉發到會員中心頁面
 				RequestDispatcher successView = req.getRequestDispatcher("/frontend/personal_homepage.html");
 				successView.forward(req, res);
@@ -395,93 +393,92 @@ public class MemberServlet extends HttpServlet {
 				System.out.println("會員追蹤數:" + memberVO.getTrackingNumber() + ",");
 				System.out.println("會員粉絲數:" + memberVO.getFansNumber() + ",");
 				System.out.println("會員照片:" + memberVO.getPhoto());
-				
 
-				}catch(Exception e) {
-					System.out.println("無法取得會員資料");
-					req.setAttribute("errorMessage", "無法取得會員資料：" + e.getMessage());
-					RequestDispatcher failuserView = req.getRequestDispatcher("/frontend/personal_homepage.html");
-					failuserView.forward(req, res);
+			} catch (Exception e) {
+				System.out.println("無法取得會員資料");
+				req.setAttribute("errorMessage", "無法取得會員資料：" + e.getMessage());
+				RequestDispatcher failuserView = req.getRequestDispatcher("/frontend/personal_homepage.html");
+				failuserView.forward(req, res);
 			}
 		}
-		
-		if("logout".equals(action)) {  // 登出請求處理
-			
+
+		if ("logout".equals(action)) { // 登出請求處理
+
 			// 取得當前session
-			HttpSession session = req.getSession(false);  // false: 如果當前請求沒有session，則返回 null
-			
+			HttpSession session = req.getSession(false); // false: 如果當前請求沒有session，則返回 null
+
 			// 若 session 存在並且有 memberVO 資料，進行登出
-			if(session != null) {
+			if (session != null) {
 				// 移除 session 中的 memberVO 資料
 				session.removeAttribute("memberVO");
-				
+
 				// 使 session 無效，確保完全登出
 				session.invalidate();
 			}
-			
+
 			// 導向未登入首頁
 			res.sendRedirect(req.getContextPath() + "/frontend/index_nologin.html");
 			System.out.println("登出成功");
 		}
-		
-		if("update".equals(action)) {  // 更新會員資訊
+
+		if ("update".equals(action)) { // 更新會員資訊
 			List<String> errorMsgs = new LinkedList<String>();
 			req.setAttribute("errorMsgs", errorMsgs);
-			
+
 			// 取得 session 中的會員資料
 			HttpSession session = req.getSession();
-			MemberVO memberVO = (MemberVO)session.getAttribute("memberVO");
-			
-			if(memberVO == null) {
+			MemberVO memberVO = (MemberVO) session.getAttribute("memberVO");
+
+			if (memberVO == null) {
 				// 如果未登入，導回登入頁面
 				res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
 				return;
 			}
-			
+
 			// 取得會員 ID，這是資料庫的主鍵
-		    Integer memberId = memberVO.getMemberId();
-		    System.out.println("會員ID為:" + memberId);
-			
-		    // 使用 memberId 查詢會員資料，避免讓用戶修改不可更改的欄位
-		    memberVO = memberSvc.getOneMember(memberId);
-		    
-		    String email = memberVO.getEmail();  // 不可更改的欄位
-		    String account = memberVO.getAccount();  // 不可更改的欄位
-		    Timestamp createTime = memberVO.getCreateTime();  // 不可更改的欄位
-		    
+			Integer memberId = memberVO.getMemberId();
+			System.out.println("會員ID為:" + memberId);
+
+			// 使用 memberId 查詢會員資料，避免讓用戶修改不可更改的欄位
+			memberVO = memberSvc.getOneMember(memberId);
+
+			String email = memberVO.getEmail(); // 不可更改的欄位
+			String account = memberVO.getAccount(); // 不可更改的欄位
+			Timestamp createTime = memberVO.getCreateTime(); // 不可更改的欄位
+
 			// 接收使用者輸入的資料
 			String password = req.getParameter("password");
-			System.out.println("修改的密碼：" + password);  // 檢查密碼是否正確接收
-						
+			System.out.println("修改的密碼：" + password); // 檢查密碼是否正確接收
+
 			String passwordReg = "^[(a-zA-Z0-9_)]{5,15}$";
 			if (password == null || password.trim().length() == 0) {
-					errorMsgs.add("密碼請勿空白");
+				errorMsgs.add("密碼請勿空白");
 			} else if (!password.trim().matches(passwordReg)) {
-					errorMsgs.add("密碼只能是英文字母數字和_，長度需在5~20之間");
+				errorMsgs.add("密碼只能是英文字母數字和_，長度需在5~20之間");
 			}
 
-			String name = memberVO.getName();  // 不可更改的欄位
-			
+			String name = memberVO.getName(); // 不可更改的欄位
+
 			String phone = req.getParameter("phone");
-			System.out.println("修改的電話：" + phone);  // 檢查電話是否正確接收
-						
+			System.out.println("修改的電話：" + phone); // 檢查電話是否正確接收
+
 			String phoneReg = "^(09[0-9]{8}|0[2-8][0-9]{7,8}|0[2-8]-[0-9]{6,8})$";
 			if (phone == null || phone.trim().length() == 0) {
 				errorMsgs.add("聯絡電話請勿空白");
 			} else if (!phone.trim().matches(phoneReg)) {
 				errorMsgs.add("請輸入正確聯絡電話格式，手機或市話皆可，ex: 0912345678 或 02-12345678");
 			}
-			
+
 			String nickName = req.getParameter("nickname");
-			System.out.println("修改的暱稱：" + nickName);  // 檢查暱稱是否正確接收
-						
+			System.out.println("修改的暱稱：" + nickName); // 檢查暱稱是否正確接收
+
 			String nickNameReg = "^[\\u4E00-\\u9FFFa-zA-Z\\s]{2,20}$";
 			if (nickName == null || nickName.trim().length() == 0) {
 				errorMsgs.add("會員名稱請勿空白");
 			} else if (!nickName.trim().matches(nickNameReg)) {
 				errorMsgs.add("會員名稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~20之間，且不允許開頭或結尾有空格");
 			}
-			
+
 			// 狀態不需要更改
 			Integer status = memberVO.getStatus();
 
@@ -492,55 +489,55 @@ public class MemberServlet extends HttpServlet {
 			Date birthday = memberVO.getBirthday();
 
 			String companyId = req.getParameter("companyid");
-			System.out.println("修改的公司統編：" + companyId);  // 檢查公司統編是否正確接收
-			
+			System.out.println("修改的公司統編：" + companyId); // 檢查公司統編是否正確接收
+
 			if (companyId != null && !companyId.trim().isEmpty()) {
 				String companyIdReg = "^\\d{8}$";
 				if (!companyId.trim().matches(companyIdReg)) {
-					errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");					
+					errorMsgs.add("公司統編為 8 位數字，且不能包含字母或特殊符號");
 				}
 			}
 
 			String ereceiptCarrier = req.getParameter("ereceiptcarrier");
-			System.out.println("修改的手機載具：" + ereceiptCarrier);  // 檢查手機載具是否正確接收
-			
+			System.out.println("修改的手機載具：" + ereceiptCarrier); // 檢查手機載具是否正確接收
+
 			if (ereceiptCarrier != null && !ereceiptCarrier.trim().isEmpty()) {
 				String ereceiptCarrierReg = "^\\/[0-9A-Z.\\-\\+]{7}$";
 				if (!ereceiptCarrier.trim().matches(ereceiptCarrierReg)) {
-					errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");					
+					errorMsgs.add("手機載具格式錯誤，總長度是 8 個字符，第一碼必須是\" / \"，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)");
 				}
 			}
 
 			String creditCard = req.getParameter("creditcard");
-			System.out.println("修改的信用卡號：" + creditCard);  // 檢查信用卡號是否正確接收
-			
+			System.out.println("修改的信用卡號：" + creditCard); // 檢查信用卡號是否正確接收
+
 			if (creditCard != null && !creditCard.trim().isEmpty()) {
 				String creditCardReg = "^(\\d{4}[-\\s]?){3}\\d{4}$|^\\d{13,19}$";
-				if(!creditCard.trim().matches(creditCardReg)) {
+				if (!creditCard.trim().matches(creditCardReg)) {
 					errorMsgs.add("信用卡號輸入格式不正確，請輸入 13 至 19 位的數字");
 				}
 			}
-			
+
 			// 註冊時預設追蹤數為 0
 			Integer trackingNumber = memberVO.getTrackingNumber();
-			System.out.println("註冊的追蹤數不可變更：" + trackingNumber);  // 檢查追蹤數是否正確接收
-			
+			System.out.println("註冊的追蹤數不可變更：" + trackingNumber); // 檢查追蹤數是否正確接收
+
 			// 註冊時預設粉絲數為 0
 			Integer fansNumber = memberVO.getFansNumber();
-			System.out.println("註冊的粉絲數不可變更：" + fansNumber);  // 檢查粉絲數是否正確接收
-			
-			byte[] photo = memberSvc.processPhoto(req);  // 調用 Service 層處理圖片邏輯
-						
-			if(photo == null) {
-				System.out.println("圖片處理錯誤");  // 顯示圖片處理錯誤
+			System.out.println("註冊的粉絲數不可變更：" + fansNumber); // 檢查粉絲數是否正確接收
+
+			byte[] photo = memberSvc.processPhoto(req); // 調用 Service 層處理圖片邏輯
+
+			if (photo == null) {
+				System.out.println("圖片處理錯誤"); // 顯示圖片處理錯誤
 				req.setAttribute("errorMsgs", "圖片處理錯誤");
 				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_update.html");
 				failureView.forward(req, res);
 				return;
 			}
-						
+
 			if (!errorMsgs.isEmpty()) {
-				req.setAttribute("errorMsgs", errorMsgs); 
+				req.setAttribute("errorMsgs", errorMsgs);
 				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_update.html"); // 錯誤時導到原更新資訊頁面顯示錯誤頁面
 				failureView.forward(req, res);
 				return;
@@ -550,7 +547,7 @@ public class MemberServlet extends HttpServlet {
 			memberVO = new MemberVO();
 			memberVO.setMemberId(memberId);
 			memberVO.setEmail(email);
-			memberVO.setAccount(account);  // 帳號等於電子郵件
+			memberVO.setAccount(account); // 帳號等於電子郵件
 			memberVO.setPassword(password);
 			memberVO.setName(name);
 			memberVO.setPhone(phone);
@@ -566,26 +563,171 @@ public class MemberServlet extends HttpServlet {
 			memberVO.setFansNumber(fansNumber);
 			memberVO.setPhoto(photo);
 			System.out.println(memberVO);
-			
+
 			// 調用 Service 層更新資料
 			MemberVO updatedMemberVO = memberSvc.updateMember(memberVO);
-			
-			if(updatedMemberVO == null || email == null) {
+
+			if (updatedMemberVO == null || email == null) {
 				System.out.println("更新資料失敗，請再試一次");
 				errorMsgs.add("更新資料失敗，請再試一次");
 				RequestDispatcher failuserView = req.getRequestDispatcher("/frontend/member_update.html");
 				failuserView.forward(req, res);
 				return;
 			}
-			
+
 			// 更新成功，將更新後的資料放回 session
 			req.getSession().setAttribute("memberVO", updatedMemberVO);
-			
+
 			// 更新成功，導向個人頁面
 			System.out.println("會員資料更新成功");
 			req.setAttribute("successMessage", "會員資料更新成功");
 			RequestDispatcher successView = req.getRequestDispatcher("/frontend/personal_homepage.html");
 			successView.forward(req, res);
+		}
+
+		if ("forgotPassword".equals(action)) { // 忘記密碼請求處理
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+			// 接收信箱
+			String email = req.getParameter("email");
+			String emailReg = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
+			if (email == null || email.trim().isEmpty()) {
+				errorMsgs.add("請輸入信箱");
+			} else if (!email.trim().matches(emailReg)) {
+				errorMsgs.add("信箱格式不正確");
+			}
+
+			if (!errorMsgs.isEmpty()) {
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_forget_password.html");
+				failureView.forward(req, res);
+				return;
+			}
+
+			// 驗證信箱是否存在於資料庫
+			if (!memberSvc.checkEmailExists(email)) {
+				errorMsgs.add("該信箱未註冊");
+			}
+
+			if (!errorMsgs.isEmpty()) {
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_forget_password.html");
+				failureView.forward(req, res);
+				return;
+			}
+
+			// 生成 Token 並儲存到 Redis
+			String token = UUID.randomUUID().toString();
+			int expirationTime = 3600; // 1 小時內有效
+			memberSvc.setTempPassword(email, expirationTime, token);
+
+			// 發送重設密碼連結
+			String resetLink = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort()
+					+ req.getContextPath() + "/member?action=resetPassword&token=" + token + "&email=" + email;
+			memberSvc.sendEmail(email, "重設密碼連結",
+					"點擊以下連結以重設密碼: \n" + resetLink + "\n" + "*請留意連結有效期限為 1 小時");
+
+			req.setAttribute("successMessage", "重設密碼連結已發送至您的信箱，請檢查郵件。");
+			RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_change_password.html");
+			successView.forward(req, res);
+		}
+
+		if ("resetPassword".equals(action)) { // 轉跳改密碼驗證 token 及 email
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+
+			// 接收 Token 和 Email
+			String token = req.getParameter("token");
+			String email = req.getParameter("email");
+
+			// 驗證 token 和 email 是否有效
+			if (token == null || email == null || token.trim().isEmpty() || email.trim().isEmpty()) {
+				errorMsgs.add("無效的連結或信箱");
+			}
+
+			if (!errorMsgs.isEmpty()) {
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_change_password.html");
+				failureView.forward(req, res);
+				return;
+			}
+
+			// 驗證 Redis 中的 Token 是否有效
+			String redisToken = memberSvc.getTempPassword(email);
+			if (redisToken == null || !redisToken.equals(token)) {
+				errorMsgs.add("無效或過期的重設密碼連結");
+			}
+
+			if (!errorMsgs.isEmpty()) {
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_change_password.html");
+				failureView.forward(req, res);
+				return;
+			}
+
+			// 如果 token 和 email 有效，顯示輸入新密碼的頁面
+			RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_change_password.html");
+			successView.forward(req, res);
+			return;
+		}
+
+		if ("newPassword".equals(action)) {  // 更新密碼的請求處理
+			List<String> errorMsgs = new LinkedList<String>();
+		    req.setAttribute("errorMsgs", errorMsgs);
+		    
+		    // 接收新密碼與確認密碼
+		    String newPassword = req.getParameter("newPassword");
+		    String confirmPassword = req.getParameter("confirmPassword");
+		    String email = req.getParameter("email");
+		    String token = req.getParameter("token");
+			
+		    // 驗證輸入欄位是否為空
+		    if (newPassword == null || confirmPassword == null || newPassword.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
+		        errorMsgs.add("密碼欄位不可為空");
+		    }
+
+		    // 驗證密碼是否一致
+		    if (!newPassword.equals(confirmPassword)) {
+		        errorMsgs.add("兩次輸入的密碼不一致");
+		    }
+
+		    // 密碼格式驗證
+		    String passwordReg = "^[(a-zA-Z0-9_)]{5,15}$";
+		    if (!newPassword.matches(passwordReg)) {
+		        errorMsgs.add("密碼只能是英文字母、數字和_，長度需在5~15之間");
+		    }
+
+		    // 驗證 Redis 中的 Token 是否有效
+		    String redisToken = memberSvc.getTempPassword(email);
+		    if (redisToken == null || !redisToken.equals(token)) {
+		        errorMsgs.add("無效或過期的重設密碼連結");
+		    }
+
+		    // 如果有錯誤，顯示錯誤訊息並返回
+		    if (!errorMsgs.isEmpty()) {
+		        req.setAttribute("errorMsgs", errorMsgs);
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/reset_password.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    // 更新 MySQL 資料庫中的密碼
+		    boolean isUpdated = memberSvc.updatePassword(email, newPassword);
+		    if (!isUpdated) {
+		        errorMsgs.add("更新密碼失敗，請稍後再試");
+		        req.setAttribute("errorMsgs", errorMsgs);
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/reset_password.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    // 刪除 Redis 中的 Token
+		    memberSvc.deleteTempPassword(email);
+
+		    req.setAttribute("successMessage", "密碼重設成功，請使用新密碼登入");
+		    RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_login.html");
+		    successView.forward(req, res);
 		}
 	}
 
