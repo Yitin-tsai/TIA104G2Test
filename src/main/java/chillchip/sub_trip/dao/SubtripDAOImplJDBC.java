@@ -63,7 +63,7 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT)) {
 			pstmt.setInt(1, subtripVO.getTripid());
 			pstmt.setInt(2, subtripVO.getIndex());
-			pstmt.setClob(3, subtripVO.getContent());
+			pstmt.setClob(3, subtripVO.getContentSQL());
 			pstmt.executeUpdate();
 
 		} catch (SQLException se) {
@@ -76,7 +76,7 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE)) {
 			pstmt.setInt(1, subtripVO.getTripid());
 			pstmt.setInt(2, subtripVO.getIndex());
-			pstmt.setClob(3, subtripVO.getContent());
+			pstmt.setClob(3, subtripVO.getContentSQL());
 			pstmt.setInt(4, subtripVO.getSubtripid());
 			pstmt.executeUpdate();
 
@@ -108,6 +108,7 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 				subtripVO.setTripid(rs.getInt("trip_id"));
 				subtripVO.setIndex(rs.getInt("index"));
 				Clob clob = rs.getClob("content");
+//				subtripVO.setContent(rs.getString("content"));
 				subtripVO.setContent(clob.getSubString(1, (int) clob.length()));
 				list.add(subtripVO);
 			}
@@ -135,6 +136,7 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 					map.put("trip_id", rs.getInt("trip_id"));
 					map.put("index", rs.getInt("index"));
 					map.put("content", rs.getClob("content"));
+					
 					list.add(map);
 				}
 			}

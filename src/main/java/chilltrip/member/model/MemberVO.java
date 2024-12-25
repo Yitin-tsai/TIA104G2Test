@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import chillchip.trip.entity.TripVO;
+import chillchip.trip.model.TripVO;
 import chilltrip.locationcomment.model.LocationCommentVO;
 import chilltrip.trackmember.model.TrackMemberVO;
 import chilltrip.tripcollection.model.TripCollectionVO;

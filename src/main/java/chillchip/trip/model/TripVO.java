@@ -1,4 +1,4 @@
-package chillchip.trip.entity;
+package chillchip.trip.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -31,7 +31,7 @@ public class TripVO implements Serializable{
 	@Column(name = "trip_id", updatable = false)
 	private Integer trip_id;
 	
-//	private Integer memberId; //這個格式與yuki對應
+	private Integer memberId; //這個格式與yuki對應
 	
 	@ManyToOne
 	@JoinColumn(name = "member_id",  referencedColumnName = "member_id")  //hibernate 關聯 et留
@@ -51,7 +51,7 @@ public class TripVO implements Serializable{
 	private String trip_abstract; //abstract是保留字，所以做了修改
 	
 	@Column(name = "create_time")
-	private Timestamp creat_time;
+	private Timestamp create_time;
 	
 	@Column(name = "collections")
 	private Integer collections;
@@ -83,23 +83,23 @@ public class TripVO implements Serializable{
 	public void setTrip_id(Integer trip_id) {
 		this.trip_id = trip_id;
 	}
-//	public Integer getMemberId() {
-//		return memberId;
-//	}
-//	public void setMemberId(Integer memberId) {
-//		this.memberId = memberId;
-//	}
+	public Integer getMemberId() {
+		return memberId;
+	}
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
+	}
 	public String getTrip_abstract() {
 		return trip_abstract;
 	}
 	public void setTrip_abstract(String trip_abstract) {
 		this.trip_abstract = trip_abstract;
 	}
-	public Timestamp getCreat_time() {
-		return creat_time;
+	public Timestamp getCreate_time() {
+		return create_time;
 	}
-	public void setCreat_time(Timestamp creat_time) {
-		this.creat_time = creat_time;
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
 	}
 	public Integer getCollections() {
 		return collections;

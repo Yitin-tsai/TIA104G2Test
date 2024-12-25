@@ -31,8 +31,8 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	private String userid = "root";
 	private String passwd = "123456";
 
-	private static final String INSERT_STMT = "INSERT INTO location (address, comments_number, score, location_name) VALUES (?,?,?,?);";
-	private static final String GET_ALL_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location order by location_id";
+	private static final String INSERT_STMT = "INSERT INTO location (address, comments_number, score, location_name) VALUES (?,?,?,?)";
+	private static final String GET_ALL_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location ORDER BY location_id";
 	private static final String GET_ONE_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location WHERE location_id=?";
 	private static final String GET_BY_LOCATION_NAME_STMT = "SELECT location_id, address, create_time, comments_number ,score, location_name FROM location WHERE location_name =?";
 	private static final String DELETE = "DELETE FROM location where location_id=?";
@@ -98,6 +98,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	private Session getSession() {
 		return factory.getCurrentSession();
 	}
+	
 	@Override
 	public List<LocationVO> getAll() {
 		List<LocationVO> list = new ArrayList<>();
@@ -131,7 +132,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
 				Map<String, Object> map = new HashMap<>();
 
-				map.put("Location_id", rs.getInt("location_id"));
+				map.put("location_id", rs.getInt("location_id"));
 				map.put("address", rs.getString("address"));
 				map.put("create_time", rs.getString("create_time"));
 				map.put("comments_number", rs.getString("comments_number"));

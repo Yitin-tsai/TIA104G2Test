@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import chillchip.trip.entity.TripVO;
+import chillchip.trip.model.TripVO;
 import chillchip.util.HibernateUtil;
 import chilltrip.tripactype.model.TripactypeVO;
 
