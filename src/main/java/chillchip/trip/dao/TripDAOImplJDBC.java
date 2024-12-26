@@ -9,11 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.hibernate.SessionFactory;
-
-import chillchip.location.dao.LocationDAO;
-import chillchip.location.model.LocationVO;
 import chillchip.trip.model.TripVO;
 
 public class TripDAOImplJDBC implements TripDAO, AutoCloseable {

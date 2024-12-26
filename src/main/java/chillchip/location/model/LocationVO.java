@@ -104,9 +104,15 @@ public class LocationVO  {
 
 	@Override
 	public String toString() {
-		return "locationVO [locationid=" + locationid + ", address=" + address + ", create_time=" + create_time
-				+ ", comments_number=" + comments_number + ", score=" + score + ", location_name=" + location_name
-				+ "]";
+	    return new StringBuilder("locationVO [")
+	        .append("locationid=").append(locationid)
+	        .append(", address=").append(address)
+	        .append(", create_time=").append(create_time)
+	        .append(", comments_number=").append(comments_number)
+	        .append(", score=").append(score)
+	        .append(", location_name=").append(location_name)
+	        .append("]")
+	        .toString();
 	}
 
 }
