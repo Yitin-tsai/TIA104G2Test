@@ -2,11 +2,13 @@ package chillchip.trip.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,11 +20,11 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import chilltrip.member.model.MemberVO;
+import chilltrip.tripactyperela.model.TripactyperelaVO;
 import chilltrip.tripcollection.model.TripCollectionVO;
 import chilltrip.triplike.model.TripLikeVO;
 
 @Entity
-
 @Table(name = "trip")
 public class TripVO implements Serializable{
 	
@@ -44,7 +46,9 @@ public class TripVO implements Serializable{
 	@OneToMany(mappedBy= "tripvo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
 	private Set<TripLikeVO> tripLikevo ;
-
+	
+	@OneToMany(mappedBy = "tripid", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TripactyperelaVO> tripactyperelas;
 	
 	@Column(name = "abstract")
 	@Lob
@@ -77,6 +81,18 @@ public class TripVO implements Serializable{
 	@Column(name = "likes")
 	private Integer likes;
 	
+	public Set<TripLikeVO> getTripLikevo() {
+		return tripLikevo;
+	}
+	public List<TripactyperelaVO> getTripactyperelas() {
+		return tripactyperelas;
+	}
+	public void setTripLikevo(Set<TripLikeVO> tripLikevo) {
+		this.tripLikevo = tripLikevo;
+	}
+	public void setTripactyperelas(List<TripactyperelaVO> tripactyperelas) {
+		this.tripactyperelas = tripactyperelas;
+	}
 	public Integer getTrip_id() {
 		return trip_id;
 	}

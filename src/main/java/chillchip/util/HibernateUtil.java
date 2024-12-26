@@ -21,6 +21,9 @@ public class HibernateUtil {
 					.build();
 
 			SessionFactory sessionFactory = new MetadataSources(registry)
+					.addAnnotatedClass(chillchip.trip.model.TripVO.class) // 註冊 TripVO
+	                .addAnnotatedClass(chilltrip.tripactype.model.TripactypeVO.class)
+	                .addAnnotatedClass(chilltrip.tripactyperela.model.TripactyperelaVO.class)
 					.buildMetadata()
 					.buildSessionFactory();
 
