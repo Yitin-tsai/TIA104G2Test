@@ -162,7 +162,24 @@ public class TripVO implements Serializable{
 		this.tripCollectionvo = tripCollectionvo;
 	}
 	
-	
+	@Override
+	public String toString() {
+	    return new StringBuilder("tripVO [")
+	        .append("tripid=").append(trip_id)
+	        .append(", memberid=").append(memberId)
+	        .append(", abstract=").append(trip_abstract)
+	        .append(", create_time=").append(create_time)
+	        .append(", collections=").append(collections)
+	        .append(", status=").append(status)
+	        .append(", overall_score=").append(overall_score)
+	        .append(", overall_scored_people=").append(overall_scored_people)
+	        .append(", location_number=").append(location_number)
+	        .append(", article_title=").append(article_title)
+	        .append(", visitors_number=").append(visitors_number)
+	        .append(", likes=").append(likes)
+	        .append("]")
+	        .toString();
+	}
 	
 
 }
