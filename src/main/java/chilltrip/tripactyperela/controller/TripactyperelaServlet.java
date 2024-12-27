@@ -39,18 +39,11 @@ public class TripactyperelaServlet extends HttpServlet {
 			
 			if ("addTripWithEventTypes".equals(action)) {  // 新增行程的同時也新增行程活動類型並建立關聯
 				System.out.println("開始新增...");
-				String tripTitle = req.getParameter("tripTitle");
-	            String tripDescription = req.getParameter("tripDescription");
+				Integer tripId = Integer.valueOf(req.getParameter("tripId"));
 		        String[] eventTypeIds = req.getParameterValues("eventTypeIds");
 
-		        System.out.println("tripTitle為:" + tripTitle);
-		        System.out.println("tripDescription為:" + tripDescription);
+		        System.out.println("tripId為:" + tripId);
 		        System.out.println("eventTypeIds為:" + eventTypeIds);
-		        
-		        if (tripTitle == null || tripTitle.trim().isEmpty()) {
-	                res.getWriter().write("行程標題必須提供");
-	                return;
-	            }
 
 	            if (eventTypeIds == null || eventTypeIds.length == 0) {
 	                res.getWriter().write("至少選擇一個活動類型");
@@ -58,17 +51,17 @@ public class TripactyperelaServlet extends HttpServlet {
 	            }
 
 	            // 創建行程並獲取 tripId
-	            TripVO tripVO = new TripVO();
-	            tripVO.setArticle_title(tripTitle);
-	            tripVO.setTrip_abstract(tripDescription);
+//	            TripVO tripVO = new TripVO();
+//	            tripVO.setArticle_title(tripTitle);
+//	            tripVO.setTrip_abstract(tripDescription);
+//	            
+//	            TripVO addedTrip = tripSvc.addTrip(tripVO);
+//	            if (addedTrip == null) {
+//	                res.getWriter().write("行程創建失敗");
+//	                return;
+//	            }
 	            
-	            TripVO addedTrip = tripSvc.addTrip(tripVO);
-	            if (addedTrip == null) {
-	                res.getWriter().write("行程創建失敗");
-	                return;
-	            }
-	            
-	            Integer tripId = addedTrip.getTrip_id(); // 從 TripVO 中拿取 tripId
+//	            Integer tripId = addedTrip.getTrip_id(); // 從 TripVO 中拿取 tripId
 
 	            // 轉換活動類型ID為整數
 	            List<Integer> eventTypeList = new ArrayList<>();
