@@ -95,6 +95,11 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>TIA104G2-SpringBoot</groupId>
+			<artifactId>TIA104G2-SpringBoot</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>TIA104G2Test</finalName>

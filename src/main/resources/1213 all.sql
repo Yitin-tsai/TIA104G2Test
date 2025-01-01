@@ -88,9 +88,9 @@ foreign key (member_id) references member(member_id),
 constraint trip_id_pk primary key(trip_id)
 )comment'行程表';
 
-insert into trip (member_id,abstract,collections,status,overall_score,location_number,article_title) values ('1','東京三日遊，第一天...第二天...第三天','0','1','0','0','東京三日遊'); -- 我是東京 --
-insert into trip (member_id,abstract,collections,status,overall_score,location_number,article_title) values ('1','京都三日遊，第一天...第二天...第三天','0','1','0','0','京都三日遊'); -- 我是京都 --
-insert into trip (member_id,abstract,collections,status,overall_score,location_number,article_title) values ('1','大阪三日遊，第一天...第二天...第三天','0','1','0','0','大阪三日遊'); -- 我是大阪 --
+insert into trip (member_id,abstract,create_time,collections,status,overall_score,overall_scored_people,location_number,article_title,visitors_number,likes) values ('1','東京三日遊，第一天...第二天...第三天','2024-12-9','3','0','5.0','10','3','東京三日遊','3','10'); -- 我是東京 --
+insert into trip (member_id,abstract,create_time,collections,status,overall_score,overall_scored_people,location_number,article_title,visitors_number,likes) values ('1','京都三日遊，第一天...第二天...第三天','2024-12-9','4','0','4.5','20','3','京都三日遊','3','11'); -- 我是京都 --
+insert into trip (member_id,abstract,create_time,collections,status,overall_score,overall_scored_people,location_number,article_title,visitors_number,likes) values ('1','大阪三日遊，第一天...第二天...第三天','2024-12-9','5','0','4.0','30','3','大阪三日遊','3','12'); -- 我是大阪 --
 
 
 -- 子行程 --
@@ -122,6 +122,7 @@ constraint pk_location_location_id primary key(location_id))comment'景點表';
 insert into location (address,create_time,comments_number,score,location_name) values ('日本東京都文京區後樂','2024-12-12 20:00','3','5.0','東京巨蛋'); -- 我是第一天的巨蛋 --
 insert into location (address,create_time,comments_number,score,location_name) values ('東京都港區芝公園4丁目','2024-12-12 20:00','3','5.0','東京鐵塔'); -- 我是第一天的鐵塔 --
 insert into location (address,create_time,comments_number,score,location_name) values ('澀谷區宇田川町1番1號','2024-12-12 20:00','3','5.0','東京澀谷'); -- 我是第一天的澀谷 --
+insert into location (address,create_time,comments_number,score,location_name) values ('台北市','2024-12-12 20:00','101','4.0','101'); -- 測試 --
 
 -- 公告 FK 平台方 --
  
@@ -300,6 +301,8 @@ photo_type					int(1),				-- 0封面照片，1內文照片 --
 constraint fk_trip_photo_trip_trip_id
 foreign key(trip_id) references trip(trip_id),
 constraint trip_photo_id primary key(trip_photo_id));
+-- 照片記得換成自己的 --
+insert into trip_photo (trip_id, photo, photo_type) values ('1','20BB660D-1CF8-4564-9642-1DCA0407BAC6.JPG','0');
 
 
 -- 交通方式 --
@@ -315,3 +318,19 @@ constraint fk_traffic_type_trip_location_relation_id foreign key (trip_location_
 
 insert into traffic_type (`type`,time_spent,`index`,trip_location_relation_id) values ('1','45','1','1');
 insert into traffic_type (`type`,time_spent,`index`,trip_location_relation_id) values ('1','50','6','1');
+
+
+-- 多表查詢 --
+SELECT DISTINCT trip.trip_id, trip.article_title, sub_trip.content, location.location_name FROM location JOIN trip_location_relation ON location.location_id = trip_location_relation.location_id JOIN sub_trip ON trip_location_relation.sub_trip_id = sub_trip.sub_trip_id JOIN trip ON sub_trip.trip_id = trip.trip_id WHERE location.location_name LIKE "%東京%" ORDER BY trip.trip_id, sub_trip.`index`;
+SELECT DISTINCT
+    trip.trip_id,
+    trip.article_title,
+    sub_trip.content,
+    sub_trip.`index`,
+    location.location_name
+FROM location
+JOIN trip_location_relation ON location.location_id = trip_location_relation.location_id
+JOIN sub_trip ON trip_location_relation.sub_trip_id = sub_trip.sub_trip_id
+JOIN trip ON sub_trip.trip_id = trip.trip_id
+WHERE location.location_name LIKE "%東京%"
+ORDER BY trip.trip_id, sub_trip.`index`;
