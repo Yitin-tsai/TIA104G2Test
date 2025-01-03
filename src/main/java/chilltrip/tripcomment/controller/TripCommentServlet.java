@@ -1,18 +1,11 @@
 package chilltrip.tripcomment.controller;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -20,19 +13,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import javax.sql.DataSource;
 
-import chilltrip.member.model.MemberService;
 import chilltrip.tripcomment.model.TripCommentService;
 import chilltrip.tripcomment.model.TripCommentVO;
 
 @MultipartConfig
-@WebServlet("/back-end/trip-comment/comment.do")
+@WebServlet("/tripcomment")
 public class TripCommentServlet extends HttpServlet {
+	
+	private TripCommentService tripCommentSvc;
 
 	@Override
 	public void init() throws ServletException {
+		tripCommentSvc = new TripCommentService();
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -44,300 +39,214 @@ public class TripCommentServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		String action = req.getParameter("action");
 
-		if ("getOne_For_Display".equals(action)) { // 來自select_page.jsp的請求
+		if ("getAllCommentsByTripId".equals(action)) { // 顯示行程的所有留言
+			System.out.println("開始準備顯示...");
+		    List<String> errorMsgs = new LinkedList<String>();
+		    req.setAttribute("errorMsgs", errorMsgs);
 
-			List<String> errorMsgs = new LinkedList<String>();
-			// 將此集合儲存在請求範圍中，以備需要時使用
-			// 傳送 ErrorPage
-			req.setAttribute("errorMsgs", errorMsgs);
+			HttpSession session = req.getSession();  // 確保取得當前請求的 session
+			Integer memberId = (Integer) session.getAttribute("memberId");
 
-			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 **********************/
-			String str = req.getParameter("tripCommentId");
-			if (str == null || (str.trim()).length() == 0) {
-				errorMsgs.add("請輸入行程留言ID");
-			}
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/select_page.jsp");
-				failureView.forward(req, res);
-				return;// 程式中斷
-			}
-
-			Integer tripCommentId = null;
-			try {
-				tripCommentId = Integer.valueOf(str);
-			} catch (Exception e) {
-				errorMsgs.add("行程留言ID格式不正確");
-			}
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/select_page.jsp");
-				failureView.forward(req, res);
-				return;// 程式中斷
-			}
-
-			/*************************** 2.開始查詢資料 *****************************************/
-			TripCommentService tripCommentService = new TripCommentService();
-			TripCommentVO tripCommentVO = tripCommentService.getTripComment(tripCommentId);
-			if (tripCommentVO == null) {
-				errorMsgs.add("查無資料");
-			}
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/select_page.jsp");
-				failureView.forward(req, res);
-				return;// 程式中斷
-			}
-
-			/*************************** 3.查詢完成,準備轉交(Send the Success view) *************/
-			req.setAttribute("tripCommentVO", tripCommentVO); // 資料庫取出的empVO物件,存入req
-			String url = "/back-end/trip-comment/listOneCom-1.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneCom.jsp
-			successView.forward(req, res);
-		}
-
-		if ("getOne_For_Update".equals(action)) { // 來自listAllCom.jsp的請求
-
-			List<String> errorMsgs = new LinkedList<String>();
-			// Store this set in the request scope, in case we need to
-			// send the ErrorPage view.
-			req.setAttribute("errorMsgs", errorMsgs);
-
-			/*************************** 1.接收請求參數 ****************************************/
-			Integer tripCommentId = Integer.valueOf(req.getParameter("tripCommentId"));
-
-			/*************************** 2.開始查詢資料 ****************************************/
-			TripCommentService tripCommentService = new TripCommentService();
-			TripCommentVO tripCommentVO = tripCommentService.getTripComment(tripCommentId);
-
-			/*************************** 3.查詢完成,準備轉交(Send the Success view) ************/
-			req.setAttribute("tripCommentVO", tripCommentVO); // 資料庫取出的empVO物件,存入req
-			String url = "/back-end/trip-comment/update_com_input.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);// 成功轉交 update_emp_input.jsp
-			successView.forward(req, res);
-		}
-
-		if ("update".equals(action)) { // 來自update_com_input.jsp的請求
-
-			List<String> errorMsgs = new LinkedList<String>();
-			// Store this set in the request scope, in case we need to
-			// send the ErrorPage view.
-			req.setAttribute("errorMsgs", errorMsgs);
-
-			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 **********************/
-			Integer tripCommentId = Integer.valueOf(req.getParameter("tripCommentId").trim());
-
-			Integer memberId = Integer.valueOf(req.getParameter("memberId").trim());
-
-			Integer tripId = Integer.valueOf(req.getParameter("tripId").trim());
-
-			Integer score = null;
-			try {
-				score = Integer.valueOf(req.getParameter("score").trim());
-			} catch (NumberFormatException e) {
-				errorMsgs.add("請評分星星數");
-			}
-
-			// 處理圖片上傳
-			byte[] photo = null; // 初始化圖片資料為 null
-			Part part = req.getPart("photo");
-			InputStream in = part.getInputStream();
-			if (in.available() != 0) {
-				photo = new byte[in.available()]; // byte[] buf = in.readAllBytes(); // Java 9 的新方法
-				in.read(photo);
-				in.close();
-			} else {
-				TripCommentService tripCommentService2 = new TripCommentService();
-				photo = tripCommentService2.getTripComment(tripCommentId).getPhoto();
-			}
-
-			java.sql.Timestamp createTime = null;
-			try {
-				createTime = java.sql.Timestamp.valueOf(req.getParameter("createTime").trim());
-			} catch (IllegalArgumentException e) {
-				createTime = new java.sql.Timestamp(System.currentTimeMillis());
-				errorMsgs.add("請輸入日期");
-			}
-
-			String content = null;
-			try {
-				content = String.valueOf(req.getParameter("content").trim());
-			} catch (NumberFormatException e) {
-				content = "";
-				errorMsgs.add("請填寫留言");
-			}
-			TripCommentVO tripCommentVO = new TripCommentVO();
-			tripCommentVO.setTripCommentId(tripCommentId);
-			tripCommentVO.setMemberId(memberId);
-			tripCommentVO.setTripId(tripId);
-			tripCommentVO.setScore(score);
-			tripCommentVO.setPhoto(photo);
-			tripCommentVO.setCreateTime(createTime);
-			tripCommentVO.setContent(content);
-
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				req.setAttribute("tripCommentVO", tripCommentVO); // 含有輸入格式錯誤的empVO物件,也存入req
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/update_com_input.jsp");
-				failureView.forward(req, res);
-				return; // 程式中斷
-			}
-
-			/*************************** 2.開始修改資料 *****************************************/
-			TripCommentService tripCommentService = new TripCommentService();
-			tripCommentVO = tripCommentService.updateTripComment(tripCommentId, memberId, tripId, score, photo,
-					createTime, content);
-
-			/*************************** 3.修改完成,準備轉交(Send the Success view) *************/
-			req.setAttribute("tripCommentVO", tripCommentVO); // 資料庫update成功後,正確的的empVO物件,存入req
-			String url = "/back-end/trip-comment/listOneCom.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url); // 修改成功後,轉交listOneCom.jsp
-			successView.forward(req, res);
-		}
-
-		if ("insert".equals(action)) { // 來自addCom.jsp的請求
-
-			List<String> errorMsgs = new LinkedList<String>();
-			// Store this set in the request scope, in case we need to
-			// send the ErrorPage view.
-			req.setAttribute("errorMsgs", errorMsgs);
-
-			/*********************** 1.接收請求參數 - 輸入格式的錯誤處理 *************************/
-
-			Integer memberId = Integer.valueOf(req.getParameter("memberId"));
-
-			Integer tripId = Integer.valueOf(req.getParameter("tripId"));
-
-			TripCommentVO tripCommentVO = new TripCommentVO();
-
-			Integer score = null;
-			try {
-				score = Integer.valueOf(req.getParameter("score").trim());
-			} catch (NumberFormatException e) {
-				score = 0;
-				errorMsgs.add("請評分星星數");
-			}
-
-			// 處理圖片上傳
-			byte[] photo = null; // 初始化圖片資料為 null
-			Part part = req.getPart("photo");
-			InputStream in = part.getInputStream();
-			photo = new byte[in.available()]; // byte[] buf = in.readAllBytes(); // Java 9 的新方法
-			in.read(photo);
-			in.close();
-
-			java.sql.Timestamp createTime = null;
-			try {
-				createTime = java.sql.Timestamp.valueOf(req.getParameter("createTime").trim());
-			} catch (IllegalArgumentException e) {
-				createTime = new java.sql.Timestamp(System.currentTimeMillis());
-				errorMsgs.add("請輸入日期");
-			}
-
-			String content = null;
-			try {
-				content = String.valueOf(req.getParameter("content").trim());
-			} catch (NumberFormatException e) {
-				content = "";
-				errorMsgs.add("請填寫留言");
-			}
-
-			tripCommentVO.setMemberId(memberId);
-			tripCommentVO.setTripId(tripId);
-			tripCommentVO.setScore(score);
-			tripCommentVO.setPhoto(photo);
-			tripCommentVO.setCreateTime(createTime);
-			tripCommentVO.setContent(content);
-
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				req.setAttribute("tripCommentVO", tripCommentVO); // 含有輸入格式錯誤的empVO物件,也存入req
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/addCom.jsp");
-				failureView.forward(req, res);
-				return;
-			}
-
-			/*************************** 2.開始新增資料 ***************************************/
-			TripCommentService tripCommentService = new TripCommentService();
-			tripCommentVO = tripCommentService.addTripComment(memberId, tripId, score, photo, createTime, content);
-
-			/*************************** 3.新增完成,準備轉交(Send the Success view) ***********/
-			String url = "/back-end/trip-comment/listAllCom.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url); // 新增成功後轉交listAllCom.jsp
-			successView.forward(req, res);
-		}
-
-		if ("delete".equals(action)) { // 來自listAllCom.jsp
-
-			List<String> errorMsgs = new LinkedList<String>();
-			// Store this set in the request scope, in case we need to
-			// send the ErrorPage view.
-			req.setAttribute("errorMsgs", errorMsgs);
-
-			/*************************** 1.接收請求參數 ***************************************/
-			Integer tripCommentId = Integer.valueOf(req.getParameter("tripCommentId"));
-
-			/*************************** 2.開始刪除資料 ***************************************/
-			TripCommentService tripCommentService = new TripCommentService();
-			tripCommentService.deleteTripComment(tripCommentId);
-
-			/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
-			String url = "/back-end/trip-comment/listAllCom.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);// 刪除成功後,轉交回送出刪除的來源網頁
-			successView.forward(req, res);
-		}
-		
-		
-		if("getOne_by_MemberId".equals(action)) {  // 來自select_page.jsp
-			List<String> errorMsgs = new LinkedList<String>();
+			System.out.println("Session ID: " + session.getId());  // 輸出 session ID
 			
-			req.setAttribute("errorMsgs", errorMsgs);
-			
-			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 **********************/
-			String str = req.getParameter("memberId");
-			if (str == null || (str.trim()).length() == 0) {
-				errorMsgs.add("請輸入會員ID");
-			}
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/select_page.jsp");
-				failureView.forward(req, res);
-				return;// 程式中斷
-			}
+		    Integer tripId = Integer.valueOf(req.getParameter("tripId"));
+		    
+			System.out.println("tripId為:" + tripId);
+		    System.out.println("memberId為:" + memberId);
 
-			Integer memberId = null;
-			try {
-				memberId = Integer.valueOf(str);
-			} catch (Exception e) {
-				errorMsgs.add("會員ID格式不正確");
-			}
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/select_page.jsp");
-				failureView.forward(req, res);
-				return;// 程式中斷
-			}
+		    if (memberId == null) {
+		    	System.out.println("請先登入");
+		        errorMsgs.add("請先登入");
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+		    
+		    if (session == null || memberId == null) {
+		        System.out.println("Session 已過期或未找到 memberId");
+		    } else {
+		        System.out.println("Session 有效，memberId: " + memberId);
+		    }
 
-			/*************************** 2.開始查詢資料 *****************************************/
-			MemberService memberService = new MemberService();
-			Set<TripCommentVO> tripCommentVOSet = memberService.getTripCommentByMember(memberId);
-			if (tripCommentVOSet == null) {
-				errorMsgs.add("查無資料");
-			}
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/back-end/trip-comment/select_page.jsp");
-				failureView.forward(req, res);
-				return;// 程式中斷
-			}
 
-			/*************************** 3.查詢完成,準備轉交(Send the Success view) *************/
-			req.setAttribute("tripCommentVOSet", tripCommentVOSet); // 資料庫取出的 MemberVO 物件,存入req
-			String url = "/back-end/trip-comment/listOneCom.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneCom.jsp
-			successView.forward(req, res);
-			
-			
+		    List<TripCommentVO> tripCommentList = tripCommentSvc.getCommentsByTripId(tripId);
+		    if (tripCommentList == null || tripCommentList.isEmpty()) {
+		        errorMsgs.add("查無該行程留言");
+		    }
+
+		    if (!errorMsgs.isEmpty()) {
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/go.html"); // 顯示行程頁面
+		        failureView.forward(req, res);
+		        return;
+		    }
+		    
+		    req.setAttribute("tripCommentList", tripCommentList);
+		    String url = "/frontend/go.html";  // 顯示行程和留言的頁面
+		    RequestDispatcher successView = req.getRequestDispatcher(url);
+		    successView.forward(req, res);
+		    System.out.println("找到 " + tripCommentList.size() + " 則行程留言,tripId為: " + tripId);
+		}
+
+		if ("updateComment".equals(action)) { // 更新留言請求
+
+		    List<String> errorMsgs = new LinkedList<String>();
+		    req.setAttribute("errorMsgs", errorMsgs);
+
+		    Integer memberId = (Integer) req.getSession().getAttribute("memberId");
+		    if (memberId == null) {
+		        errorMsgs.add("請先登入");
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    Integer tripCommentId = Integer.valueOf(req.getParameter("tripCommentId"));
+		    
+		    System.out.println("tripCommentId為: " + tripCommentId);
+
+		    TripCommentVO tripCommentVO = tripCommentSvc.getTripComment(tripCommentId);
+		    if (tripCommentVO == null) {
+		        errorMsgs.add("該留言不存在");
+		        System.out.println("該留言不存在");
+		    } else if (!tripCommentVO.getMemberId().equals(memberId)) {
+		        errorMsgs.add("您不能修改其他用戶的留言");
+		        System.out.println("您不能修改其他用戶的留言");
+		    }
+
+		    if (!errorMsgs.isEmpty()) {
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/go.html"); // 重定向到留言頁面
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    Integer score = Integer.valueOf(req.getParameter("score"));
+		    String content = req.getParameter("content");
+
+		    Integer tripId = tripCommentVO.getTripId();
+		    byte[] photo = tripCommentVO.getPhoto();
+		    java.sql.Timestamp createTime = tripCommentVO.getCreateTime();
+		    
+		    System.out.println("更新留言: tripId=" + tripId + ", score=" + score + ", content=" + content);
+
+		    tripCommentSvc.updateTripComment(tripCommentId, memberId, tripId, score, photo, createTime, content);
+
+		    req.setAttribute("tripCommentVO", tripCommentVO);
+		    String url = "/frontend/go.html";  // 顯示行程和留言的頁面
+		    RequestDispatcher successView = req.getRequestDispatcher(url);
+		    successView.forward(req, res);
+		}
+
+
+		if ("addComment".equals(action)) { // 新增留言請求
+
+		    List<String> errorMsgs = new LinkedList<String>();
+		    req.setAttribute("errorMsgs", errorMsgs);
+
+		    Integer memberId = (Integer) req.getSession().getAttribute("memberId");
+		    if (memberId == null) {
+		        errorMsgs.add("請先登入");
+		        // 登入檢查失敗，重定向到登入頁面
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    Integer tripId = Integer.valueOf(req.getParameter("tripId"));
+
+		    TripCommentVO tripCommentVO = new TripCommentVO();
+
+		    Integer score = null;
+		    try {
+		        score = Integer.valueOf(req.getParameter("score").trim());
+		    } catch (NumberFormatException e) {
+		        score = 0;
+		        errorMsgs.add("請評分星星數");
+		    }
+
+		    // 處理圖片上傳
+		    byte[] photo = null; // 初始化圖片資料為 null
+		    Part part = req.getPart("photo");
+		    // 若沒有圖片，photo 保持 null 或設為預設值
+		    if (part != null && part.getSize() > 0) {
+		        InputStream in = part.getInputStream();
+		        photo = new byte[in.available()];
+		        in.read(photo);
+		        in.close();
+		    }
+
+		    Timestamp createTime = new Timestamp(System.currentTimeMillis()); // 生成當前時間
+
+		    String content = null;
+		    try {
+		        content = String.valueOf(req.getParameter("content").trim());
+		    } catch (NumberFormatException e) {
+		        content = "";
+		        errorMsgs.add("請填寫留言");
+		    }
+
+		    tripCommentVO.setMemberId(memberId);
+		    tripCommentVO.setTripId(tripId);
+		    tripCommentVO.setScore(score);
+		    tripCommentVO.setPhoto(photo);
+		    tripCommentVO.setCreateTime(createTime);
+		    tripCommentVO.setContent(content);
+
+		    if (!errorMsgs.isEmpty()) {
+		        req.setAttribute("tripCommentVO", tripCommentVO);
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/go.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+		    
+		    System.out.println("新增行程留言: " + tripCommentVO);
+
+		    TripCommentService tripCommentService = new TripCommentService();
+		    tripCommentVO = tripCommentService.addTripComment(memberId, tripId, score, photo, createTime, content);
+
+		    String url = "/frontend/go.html"; // 這裡可以設置留言成功後的跳轉頁面
+		    RequestDispatcher successView = req.getRequestDispatcher(url);
+		    successView.forward(req, res);
+		}
+
+		if ("deleteComment".equals(action)) { // 刪除留言請求
+
+		    List<String> errorMsgs = new LinkedList<String>();
+		    req.setAttribute("errorMsgs", errorMsgs);
+
+		    Integer memberId = (Integer) req.getSession().getAttribute("memberId");
+		    if (memberId == null) {
+		        errorMsgs.add("請先登入");
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/member_login.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    Integer tripCommentId = Integer.valueOf(req.getParameter("tripCommentId"));
+		    
+		    System.out.println("刪除行程留言的tripCommentId: " + tripCommentId);
+
+		    TripCommentVO tripCommentVO = tripCommentSvc.getTripComment(tripCommentId);
+		    if (tripCommentVO == null) {
+		        errorMsgs.add("該留言不存在");
+		        System.out.println("該留言不存在");
+		    } else if (!tripCommentVO.getMemberId().equals(memberId)) {
+		        errorMsgs.add("您不能刪除其他用戶的留言");
+		        System.out.println("您不能刪除其他用戶的留言");
+		    }
+
+		    if (!errorMsgs.isEmpty()) {
+		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/go.html");
+		        failureView.forward(req, res);
+		        return;
+		    }
+
+		    tripCommentSvc.deleteTripComment(tripCommentId);
+		    
+		    System.out.println("成功刪除行程留言 tripCommentId: " + tripCommentId);
+
+		    String url = "/frontend/go.html";
+		    RequestDispatcher successView = req.getRequestDispatcher(url);
+		    successView.forward(req, res);
 		}
 	}
 }

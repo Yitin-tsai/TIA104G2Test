@@ -11,19 +11,9 @@
 		<welcome-file>index.htm</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-
-	<servlet>
-		<servlet-name>MemberRegistrationServlet</servlet-name>
-		<servlet-class>chilltrip.member.controller.MemberRegistrationServlet</servlet-class>
-		<multipart-config>
-			<!-- 設定最大檔案大小 -->
-			<max-file-size>10485760</max-file-size> <!-- 10MB -->
-			<!-- 設定最大請求大小 -->
-			<max-request-size>20971520</max-request-size> <!-- 20MB -->
-			<!-- 設定檔案閾值 -->
-			<file-size-threshold>2097152</file-size-threshold> <!-- 2MB -->
-		</multipart-config>
-	</servlet>
-
+	
+	<session-config>
+		<session-timeout>60</session-timeout> <!-- 設定為使用者未進行任何操作長達 60 分鐘，session 會自動過期並且資料會被清除 -->
+	</session-config>
 
 </web-app>

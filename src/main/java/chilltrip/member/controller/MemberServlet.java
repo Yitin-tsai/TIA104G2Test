@@ -331,7 +331,7 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			// 登入成功，將會員資料放入 session 中
-			req.getSession().setAttribute("memberVO", memberVO);
+			req.getSession().setAttribute("memberId", memberVO.getMemberId());
 			System.out.println("使用者:" + email + "登入成功");
 
 			// 登入成功，導向到會員個人頁面
@@ -341,9 +341,17 @@ public class MemberServlet extends HttpServlet {
 
 		if ("viewProfile".equals(action)) { // 登入後跳個人頁面查詢會員資料
 			// 確認 session 中的使用者是否存在
-			MemberVO memberVO = (MemberVO) req.getSession().getAttribute("memberVO");
-			if (memberVO == null) {
+			Integer memberId = (Integer) req.getSession().getAttribute("memberId"); // 取得 session 中的 memberId
+			if (memberId == null) {
 				// 如果沒有登入，導回登入頁面
+				res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
+				return;
+			}
+
+			// 使用 memberId 查詢會員資料
+			MemberVO memberVO = memberSvc.getOneMember(memberId);
+			if (memberVO == null) {
+				// 如果資料查詢失敗，跳回登入頁
 				res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
 				return;
 			}
@@ -369,8 +377,8 @@ public class MemberServlet extends HttpServlet {
 			req.setAttribute("photoBase64", photoBase64); // 將 Base64 字串傳遞給前端頁面
 
 			try {
-				// 直接使用 session 中的 memberVO 資料，不必再重新查詢
-				req.setAttribute("memberVO", memberVO); // 將會員資料傳遞到前端
+				// 把會員資料傳遞到前端頁面
+				req.setAttribute("memberId", memberVO);
 
 				// 將資料轉發到會員中心頁面
 				RequestDispatcher successView = req.getRequestDispatcher("/frontend/personal_homepage.html");
@@ -410,7 +418,7 @@ public class MemberServlet extends HttpServlet {
 			// 若 session 存在並且有 memberVO 資料，進行登出
 			if (session != null) {
 				// 移除 session 中的 memberVO 資料
-				session.removeAttribute("memberVO");
+				session.removeAttribute("memberId");
 
 				// 使 session 無效，確保完全登出
 				session.invalidate();
@@ -421,30 +429,27 @@ public class MemberServlet extends HttpServlet {
 			System.out.println("登出成功");
 		}
 
-		if ("update".equals(action)) { // 更新會員資訊
-			List<String> errorMsgs = new LinkedList<String>();
-			req.setAttribute("errorMsgs", errorMsgs);
+		if ("update".equals(action)) {  // 更新會員資訊
+		    List<String> errorMsgs = new LinkedList<String>();
+		    req.setAttribute("errorMsgs", errorMsgs);
+		    
+		    // 取得 session 中的會員資料
+		    HttpSession session = req.getSession();
+		    Integer memberId = (Integer) session.getAttribute("memberId");
+		    
+		    if (memberId == null) {
+		        // 如果未登入，導回登入頁面
+		        res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
+		        return;
+		    }
+		    
+		    // 使用 memberId 查詢會員資料，避免讓用戶修改不可更改的欄位
+		    MemberVO memberVO = memberSvc.getOneMember(memberId);
+		    System.out.println("會員ID為:" + memberId);
 
-			// 取得 session 中的會員資料
-			HttpSession session = req.getSession();
-			MemberVO memberVO = (MemberVO) session.getAttribute("memberVO");
-
-			if (memberVO == null) {
-				// 如果未登入，導回登入頁面
-				res.sendRedirect(req.getContextPath() + "/frontend/member_login.html");
-				return;
-			}
-
-			// 取得會員 ID，這是資料庫的主鍵
-			Integer memberId = memberVO.getMemberId();
-			System.out.println("會員ID為:" + memberId);
-
-			// 使用 memberId 查詢會員資料，避免讓用戶修改不可更改的欄位
-			memberVO = memberSvc.getOneMember(memberId);
-
-			String email = memberVO.getEmail(); // 不可更改的欄位
-			String account = memberVO.getAccount(); // 不可更改的欄位
-			Timestamp createTime = memberVO.getCreateTime(); // 不可更改的欄位
+		    String email = memberVO.getEmail();  // 不可更改的欄位
+		    String account = memberVO.getAccount();  // 不可更改的欄位
+		    Timestamp createTime = memberVO.getCreateTime();  // 不可更改的欄位
 
 			// 接收使用者輸入的資料
 			String password = req.getParameter("password");
@@ -576,7 +581,7 @@ public class MemberServlet extends HttpServlet {
 			}
 
 			// 更新成功，將更新後的資料放回 session
-			req.getSession().setAttribute("memberVO", updatedMemberVO);
+			req.getSession().setAttribute("memberId", updatedMemberVO);  // 更新 session 中的資料
 
 			// 更新成功，導向個人頁面
 			System.out.println("會員資料更新成功");
@@ -584,7 +589,6 @@ public class MemberServlet extends HttpServlet {
 			RequestDispatcher successView = req.getRequestDispatcher("/frontend/personal_homepage.html");
 			successView.forward(req, res);
 		}
-
 		if ("forgotPassword".equals(action)) { // 忘記密碼請求處理
 			List<String> errorMsgs = new LinkedList<String>();
 			req.setAttribute("errorMsgs", errorMsgs);
@@ -625,8 +629,7 @@ public class MemberServlet extends HttpServlet {
 			// 發送重設密碼連結
 			String resetLink = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort()
 					+ req.getContextPath() + "/member?action=resetPassword&token=" + token + "&email=" + email;
-			memberSvc.sendEmail(email, "重設密碼連結",
-					"點擊以下連結以重設密碼: \n" + resetLink + "\n" + "*請留意連結有效期限為 1 小時");
+			memberSvc.sendEmail(email, "重設密碼連結", "點擊以下連結以重設密碼: \n" + resetLink + "\n" + "*請留意連結有效期限為 1 小時");
 
 			req.setAttribute("successMessage", "重設密碼連結已發送至您的信箱，請檢查郵件。");
 			RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_change_password.html");
@@ -672,62 +675,63 @@ public class MemberServlet extends HttpServlet {
 			return;
 		}
 
-		if ("newPassword".equals(action)) {  // 更新密碼的請求處理
+		if ("newPassword".equals(action)) { // 更新密碼的請求處理
 			List<String> errorMsgs = new LinkedList<String>();
-		    req.setAttribute("errorMsgs", errorMsgs);
-		    
-		    // 接收新密碼與確認密碼
-		    String newPassword = req.getParameter("newPassword");
-		    String confirmPassword = req.getParameter("confirmPassword");
-		    String email = req.getParameter("email");
-		    String token = req.getParameter("token");
-			
-		    // 驗證輸入欄位是否為空
-		    if (newPassword == null || confirmPassword == null || newPassword.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
-		        errorMsgs.add("密碼欄位不可為空");
-		    }
+			req.setAttribute("errorMsgs", errorMsgs);
 
-		    // 驗證密碼是否一致
-		    if (!newPassword.equals(confirmPassword)) {
-		        errorMsgs.add("兩次輸入的密碼不一致");
-		    }
+			// 接收新密碼與確認密碼
+			String newPassword = req.getParameter("newPassword");
+			String confirmPassword = req.getParameter("confirmPassword");
+			String email = req.getParameter("email");
+			String token = req.getParameter("token");
 
-		    // 密碼格式驗證
-		    String passwordReg = "^[(a-zA-Z0-9_)]{5,15}$";
-		    if (!newPassword.matches(passwordReg)) {
-		        errorMsgs.add("密碼只能是英文字母、數字和_，長度需在5~15之間");
-		    }
+			// 驗證輸入欄位是否為空
+			if (newPassword == null || confirmPassword == null || newPassword.trim().isEmpty()
+					|| confirmPassword.trim().isEmpty()) {
+				errorMsgs.add("密碼欄位不可為空");
+			}
 
-		    // 驗證 Redis 中的 Token 是否有效
-		    String redisToken = memberSvc.getTempPassword(email);
-		    if (redisToken == null || !redisToken.equals(token)) {
-		        errorMsgs.add("無效或過期的重設密碼連結");
-		    }
+			// 驗證密碼是否一致
+			if (!newPassword.equals(confirmPassword)) {
+				errorMsgs.add("兩次輸入的密碼不一致");
+			}
 
-		    // 如果有錯誤，顯示錯誤訊息並返回
-		    if (!errorMsgs.isEmpty()) {
-		        req.setAttribute("errorMsgs", errorMsgs);
-		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/reset_password.html");
-		        failureView.forward(req, res);
-		        return;
-		    }
+			// 密碼格式驗證
+			String passwordReg = "^[(a-zA-Z0-9_)]{5,15}$";
+			if (!newPassword.matches(passwordReg)) {
+				errorMsgs.add("密碼只能是英文字母、數字和_，長度需在5~15之間");
+			}
 
-		    // 更新 MySQL 資料庫中的密碼
-		    boolean isUpdated = memberSvc.updatePassword(email, newPassword);
-		    if (!isUpdated) {
-		        errorMsgs.add("更新密碼失敗，請稍後再試");
-		        req.setAttribute("errorMsgs", errorMsgs);
-		        RequestDispatcher failureView = req.getRequestDispatcher("/frontend/reset_password.html");
-		        failureView.forward(req, res);
-		        return;
-		    }
+			// 驗證 Redis 中的 Token 是否有效
+			String redisToken = memberSvc.getTempPassword(email);
+			if (redisToken == null || !redisToken.equals(token)) {
+				errorMsgs.add("無效或過期的重設密碼連結");
+			}
 
-		    // 刪除 Redis 中的 Token
-		    memberSvc.deleteTempPassword(email);
+			// 如果有錯誤，顯示錯誤訊息並返回
+			if (!errorMsgs.isEmpty()) {
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/reset_password.html");
+				failureView.forward(req, res);
+				return;
+			}
 
-		    req.setAttribute("successMessage", "密碼重設成功，請使用新密碼登入");
-		    RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_login.html");
-		    successView.forward(req, res);
+			// 更新 MySQL 資料庫中的密碼
+			boolean isUpdated = memberSvc.updatePassword(email, newPassword);
+			if (!isUpdated) {
+				errorMsgs.add("更新密碼失敗，請稍後再試");
+				req.setAttribute("errorMsgs", errorMsgs);
+				RequestDispatcher failureView = req.getRequestDispatcher("/frontend/reset_password.html");
+				failureView.forward(req, res);
+				return;
+			}
+
+			// 刪除 Redis 中的 Token
+			memberSvc.deleteTempPassword(email);
+
+			req.setAttribute("successMessage", "密碼重設成功，請使用新密碼登入");
+			RequestDispatcher successView = req.getRequestDispatcher("/frontend/member_login.html");
+			successView.forward(req, res);
 		}
 	}
 
